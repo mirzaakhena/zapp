@@ -1,0 +1,55 @@
+<template>
+  <div id="app" :class="[{'collapsed' : collapsed}]" >
+    <sidebar-menu :menu="menu" width="200px" :collapsed="collapsed" @collapse="onCollapse" /> 
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+
+import { SidebarMenu } from 'vue-sidebar-menu'
+
+export default {
+  name: 'app',
+  components: {
+    SidebarMenu,
+  },
+  methods: {
+    onCollapse (collapsed) {
+      this.collapsed = collapsed
+    },
+  },
+  data () {
+    return {
+      collapsed: false,
+      menu: [
+        {
+          header: true,
+          title: 'Main Navigation',
+        },
+        {{range .Classes}} { 
+          href: '/{{LowerCase .Name}}',
+          title: '{{PascalCase .Name}}'
+        }, {{end}}
+                     
+      ]      
+    }
+  }
+}
+</script>
+
+<style>
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* -moz-osx-font-smoothing: grayscale; */
+  text-align: left;
+  color: #2c3e50;
+  margin-top: 0px;
+  padding-left: 200px;
+}
+
+#app.collapsed {
+  padding-left: 50px;
+}
+</style>

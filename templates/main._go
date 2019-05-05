@@ -1,0 +1,56 @@
+package main
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+	"{{PackageName}}/config"
+	"{{PackageName}}/controller"
+	"{{PackageName}}/dao"
+	log "{{PackageName}}/logger"
+	"{{PackageName}}/service"
+
+	_ "github.com/jinzhu/gorm/dialects/sqlite" //
+)
+
+func main() {
+
+	log.GetLog().WithFile("apps", 14)
+
+	log.GetLog().Info("main", "Apps run")
+
+	cf := config.NewRealtimeConfig("config", "$GOPATH/src/{{PackageName}}")
+
+	db, err := gorm.Open(cf.GetDialect(), cf.GetConnectionString())
+	if err != nil {
+		panic(err)
+	}
+	db.LogMode(true)
+
+	router := gin.Default()
+
+	router.Use(cors.New(cors.Config{
+		ExposeHeaders:   []string{"Data-Length"},		
+		AllowMethods:    []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
+		AllowAllOrigins: true,
+		AllowHeaders:    []string{"Content-Type"},
+		MaxAge:          12 * time.Hour,
+	}))
+	{{range .Classes}}
+	// {{PascalCase .Name}}
+	{
+		dao := dao.New{{PascalCase .Name}}Dao(db)
+		service := service.New{{PascalCase .Name}}Service(dao)
+		controller.New{{PascalCase .Name}}Controller(router, service)
+	}
+	{{end}}
+
+	router.Static("/static", "../static")
+	router.LoadHTMLGlob("../templates/*")
+
+	router.Run(fmt.Sprintf(":%s", cf.GetAPIPort()))
+
+}

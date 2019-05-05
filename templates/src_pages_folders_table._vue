@@ -1,0 +1,145 @@
+<template>
+  <div>
+    <b-container fluid>
+      
+      <!-- Button New -->
+      <b-button variant="success" style="margin-bottom:20px; margin-top:20px" size="sm" v-b-modal.dialogInput>New {{PascalCase .Name}}</b-button>
+
+      <!-- paging -->
+      <div class="float-right">
+        <b-pagination size="sm" @input="reload" style="margin-bottom:20px; margin-top:20px" v-model="paging.currentPage" :total-rows="TotalItems" :per-page="paging.perPage"></b-pagination>
+      </div>
+
+      <!-- Dialog -->
+      <dialog-input :input="selectedItem" @closed="dialogClosed"></dialog-input>
+
+      <!-- Tabel -->
+      <b-table small striped hover :items="GetAll" :fields="fields" :sort-by.sync="sort.sortBy" :sort-desc.sync="sort.sortDesc" :no-local-sorting="true" @sort-changed="sortingChanged">
+        <template slot="HEAD_action">
+          <b-button variant="warning" @click="resetSorting" size="sm">Reset Sorting</b-button>
+        </template> 
+        <template slot="HEAD_index">
+          #
+        </template> 
+        <template slot="index" slot-scope="data">
+          {{"{{"}} data.index + 1 {{"}}"}}
+        </template>        
+        <template slot="top-row" slot-scope="{ fields }">
+          <td v-for="field in fields" :key="field.key">
+            <b-button variant="warning" @click="resetFilter" v-if="field.key === 'action'" size="sm">Reset Filter</b-button>
+            <b-form-input v-if="field.key !== 'action' && field.key !== 'index'" size="sm" v-model="filters[field.key]" :placeholder="field.label" @input="filterChanged" trim> </b-form-input>
+          </td>
+        </template> 
+        <template slot="action" slot-scope="data">
+          <b-button-group>
+            <b-button v-b-modal.dialogInput @click="selectedItem=data.item" size="sm" variant="primary">Edit</b-button>
+            <b-button @click="deleteItem(data.item)" size="sm" variant="danger">Delete</b-button>
+          </b-button-group>
+        </template>        
+      </b-table>
+    </b-container>    
+  </div>
+</template>
+
+<script>
+
+import DialogInput from './input'
+
+export default {
+  components: {
+    DialogInput,
+  },
+  created () {
+    this.reload()
+  },
+  data() {
+    return {
+      sort: {
+        sortBy: null,
+        sortDir: null,
+      },
+      paging: {
+        currentPage: 1,
+        perPage: 20,
+      },  
+      filters: { {{range .Fields}}
+        {{CamelCase .Name}}: null, {{end}}
+      },                      
+      fields: [
+        'index',
+        'action', {{range .Fields}}
+        {key: '{{CamelCase .Name}}', sortable: true}, {{end}}
+      ],
+      selectedItem: null,
+      items: []
+    }
+  },
+  computed: {
+    GetAll () {
+      return this.$store.getters.GetAll{{PascalCase .Name}}
+    },
+    TotalItems () {
+      return this.$store.getters.TotalItems
+    }    
+  },   
+  methods: {
+    resetSorting () {
+      this.sort = {
+        sortBy: null,
+        sortDir: null,
+      }
+      this.sortingChanged(this.sort)    
+    },
+    resetFilter () {
+      this.filters = { {{range .Fields}}
+        {{CamelCase .Name}}: null, {{end}}
+      }
+      this.filterChanged()
+    },
+    filterChanged () {
+      this.paging.currentPage = 1
+      this.reload()
+    },
+    sortingChanged (ctx) {
+      this.sort.sortBy = ctx.sortBy
+      if (this.sort.sortBy === null) {
+        this.sort.sortDir = null
+      } else {
+        if (ctx.sortDesc === true) {
+          this.sort.sortDir = "desc"
+        } else {
+          this.sort.sortDir = "asc"
+        }
+      }
+      this.reload()
+    },    
+    reload () {
+      this.$store.dispatch('GetAll{{PascalCase .Name}}', {page: this.paging.currentPage, size:this.paging.perPage, filters: this.filters, sort: this.sort})
+    },    
+    dialogClosed () {
+      this.selectedItem = null
+    },    
+    deleteItem (item) {
+      this.$swal({
+        title: 'Are you sure?',
+        text: 'You will delete the item',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: true,
+      }).then(willDelete => {
+        if (willDelete) {
+          this.$store.dispatch('Delete{{PascalCase .Name}}', item.id).then((response) => {
+            this.$swal('Record is deleted', response.message, 'success')
+          }).catch((error) => {
+            this.$swal('Something wrong', error.response.data.message, 'error')
+          })  
+        }
+      })     
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>

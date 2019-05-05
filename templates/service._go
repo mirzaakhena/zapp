@@ -1,0 +1,66 @@
+package service
+
+import (
+	"{{PackageName}}/dao"
+	"{{PackageName}}/model"
+	"{{PackageName}}/utils"
+)
+
+// I{{PascalCase .Name}}Service is
+type I{{PascalCase .Name}}Service interface {
+	Create(obj model.Create{{PascalCase .Name}}Request) (string, error)
+	GetOne(ID string) *model.{{PascalCase .Name}}
+	GetAll(page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
+	Delete(ID string) error
+	Update(ID string, obj model.Update{{PascalCase .Name}}Request) error
+}
+
+// {{PascalCase .Name}}Service is
+type {{PascalCase .Name}}Service struct {
+	{{CamelCase .Name}}Dao dao.I{{PascalCase .Name}}Dao
+}
+
+// New{{PascalCase .Name}}Service is
+func New{{PascalCase .Name}}Service({{CamelCase .Name}}Dao dao.I{{PascalCase .Name}}Dao) *{{PascalCase .Name}}Service {
+	return &{{PascalCase .Name}}Service{ 
+		{{CamelCase .Name}}Dao,
+	}
+}
+
+// Create is
+func (g *{{PascalCase .Name}}Service) Create(dto model.Create{{PascalCase .Name}}Request) (string, error) {
+
+	var obj model.{{PascalCase .Name}}
+
+	obj.ID = utils.GenID()
+	{{range .Fields}}
+	obj.{{.Name}} = dto.{{.Name}} {{end}}
+
+	g.{{CamelCase .Name}}Dao.Create(g.{{CamelCase .Name}}Dao.GetDB(false), &obj)
+	return obj.ID, nil
+}
+
+// GetOne is
+func (g *{{PascalCase .Name}}Service) GetOne(ID string) *model.{{PascalCase .Name}} {
+	return g.{{CamelCase .Name}}Dao.GetOne(g.{{CamelCase .Name}}Dao.GetDB(false), ID)
+}
+
+// GetAll is
+func (g *{{PascalCase .Name}}Service) GetAll(page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint) {
+	return g.{{CamelCase .Name}}Dao.GetAll(g.{{CamelCase .Name}}Dao.GetDB(false), page, size, sortBy, sortDir, filter)
+}
+
+// Delete is
+func (g *{{PascalCase .Name}}Service) Delete(ID string) error {
+	return g.{{CamelCase .Name}}Dao.Delete(g.{{CamelCase .Name}}Dao.GetDB(false), ID)
+}
+
+// Update is
+func (g *{{PascalCase .Name}}Service) Update(ID string, dto model.Update{{PascalCase .Name}}Request) error {
+
+	var obj model.{{PascalCase .Name}}
+	{{range .Fields}}
+	obj.{{.Name}} = dto.{{.Name}} {{end}}
+
+	return g.{{CamelCase .Name}}Dao.Update(g.{{CamelCase .Name}}Dao.GetDB(false), ID, &obj)
+}

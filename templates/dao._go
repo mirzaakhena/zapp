@@ -1,0 +1,92 @@
+package dao
+
+import (
+	"fmt"
+
+	"github.com/jinzhu/gorm"
+	"{{PackageName}}/database"
+	"{{PackageName}}/model"
+)
+
+// I{{PascalCase .Name}}Dao is
+type I{{PascalCase .Name}}Dao interface {
+	database.ITransaction
+	Create(db interface{}, obj *model.{{PascalCase .Name}}) error
+	GetOne(db interface{}, ID string) *model.{{PascalCase .Name}}
+	GetAll(db interface{}, page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
+	Delete(db interface{}, ID string) error
+	Update(db interface{}, ID string, obj *model.{{PascalCase .Name}}) error
+}
+
+// {{PascalCase .Name}}Dao is
+type {{PascalCase .Name}}Dao struct {
+	database.GormDB
+}
+
+// New{{PascalCase .Name}}Dao is
+func New{{PascalCase .Name}}Dao(db *gorm.DB) *{{PascalCase .Name}}Dao {
+	db.AutoMigrate(&model.{{PascalCase .Name}}{})
+	return &{{PascalCase .Name}}Dao{
+		GormDB: database.GormDB{
+			DB: db,
+		},
+	}
+}
+
+// Create is
+func (g *{{PascalCase .Name}}Dao) Create(db interface{}, obj *model.{{PascalCase .Name}}) error {
+	return db.(*gorm.DB).Create(obj).Error
+}
+
+// GetOne is
+func (g *{{PascalCase .Name}}Dao) GetOne(db interface{}, ID string) *model.{{PascalCase .Name}} {
+	var obj model.{{PascalCase .Name}}
+	db.(*gorm.DB).First(&obj, "id = ?", ID)
+	if obj.ID == "" {
+		return nil
+	}
+	return &obj
+}
+
+// GetAll is
+func (g *{{PascalCase .Name}}Dao) GetAll(db interface{}, page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint) {
+	var objs []model.{{PascalCase .Name}}
+	var count uint
+	
+	query := db.(*gorm.DB).Model(&model.{{PascalCase .Name}}{})
+
+	// filtering
+	for k, v := range filter {
+		query = query.Where(fmt.Sprintf("%s LIKE ?", k), fmt.Sprintf("%s%%", v))
+	}
+
+	// count
+	query.Count(&count)
+
+	// sorting
+	if sortBy != "" {
+		query = query.Order(fmt.Sprintf("%s %s", sortBy, sortDir))
+	}
+
+	// paging
+	query = query.Offset((page - 1) * size).Limit(size)
+
+	query.Find(&objs)
+	return objs, count
+}
+
+// Delete is
+func (g *{{PascalCase .Name}}Dao) Delete(db interface{}, ID string) error {
+	return db.(*gorm.DB).Delete(model.{{PascalCase .Name}}{}, "id = ?", ID).Error
+}
+
+// Update is
+func (g *{{PascalCase .Name}}Dao) Update(db interface{}, ID string, obj *model.{{PascalCase .Name}}) error {
+	oldObj := g.GetOne(db, ID)
+	if oldObj == nil {
+		return fmt.Errorf("ID %s not found", ID)
+	}
+	oldObj = obj
+	oldObj.ID = ID
+	return db.(*gorm.DB).Save(oldObj).Error
+}

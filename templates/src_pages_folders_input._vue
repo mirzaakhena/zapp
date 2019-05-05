@@ -1,0 +1,78 @@
+<template>
+
+  <b-modal id="dialogInput" ref="dialogInput" title="Input {{PascalCase .Name}}" @shown="reset" @ok="handleOk">{{range .Fields}}{{if (eq .DataType "string")}}
+    <b-form-group label="{{PascalCase .Name}}">
+      <b-form-input type="text" v-model="obj.{{CamelCase .Name}}" required></b-form-input>
+    </b-form-group>{{else if (eq .DataType "int")}}
+    <b-form-group label="{{PascalCase .Name}}">
+      <b-form-input type="text" v-model.number="obj.{{CamelCase .Name}}" required></b-form-input>
+    </b-form-group>{{else if (eq .DataType "float64")}}
+    <b-form-group label="{{PascalCase .Name}}">
+      <b-form-input type="text" v-model.number="obj.{{CamelCase .Name}}" required></b-form-input>
+    </b-form-group>{{else if (eq .DataType "bool")}}
+    <b-form-group label="{{PascalCase .Name}}">
+      <b-form-checkbox v-model="obj.{{CamelCase .Name}}"></b-form-checkbox>
+    </b-form-group>{{else if (eq .DataType "time.Time")}}
+    <b-form-group label="{{PascalCase .Name}}">
+      <b-form-input type="text" v-model="obj.{{CamelCase .Name}}" required></b-form-input>
+    </b-form-group>{{end}}{{end}}      
+  </b-modal>
+
+</template>
+
+<script>
+export default {
+  props: ['input'],
+  data () {
+    return {
+      obj: {},
+    }
+  },
+  methods: {
+    handleOk (evt) {
+      evt.preventDefault()
+      if (this.input === null) {
+
+        this.$store.dispatch('Create{{PascalCase .Name}}', this.obj).then((response) => {
+          this.reset()
+          this.$refs.dialogInput.hide()          
+          this.$emit('closed', 'created')
+          this.$swal('Record is created', response.message, 'success')
+        }).catch((error) => {
+          this.$swal('Something wrong', error.response.data.message, 'error')
+        })        
+
+      } else {
+        this.$store.dispatch('Update{{PascalCase .Name}}', this.obj).then((response) => {        
+          this.reset()
+          this.$refs.dialogInput.hide()          
+          this.$emit('closed', 'updated')          
+          this.$swal('Record is updated', response.message, 'success')
+        }).catch((error) => {
+          this.$swal('Something wrong', error.response.data.message, 'error')
+        })     
+
+      }
+    },
+    reset () {
+      if (this.input == null) {
+        this.obj = {
+          id: '', {{range .Fields}} {{if (eq .DataType "string")}}
+          {{CamelCase .Name}}: '',{{else if (eq .DataType "int")}}
+          {{CamelCase .Name}}: 0,{{else if (eq .DataType "float64")}}
+          {{CamelCase .Name}}: 0.0,{{else if (eq .DataType "bool")}}
+          {{CamelCase .Name}}: false,{{else if (eq .DataType "time.Time")}}
+          {{CamelCase .Name}}: '2019-06-07T05:43:21Z', {{end}}{{end}}
+        }
+      } else {
+        this.obj = this.input
+      }
+    }
+  }      
+
+}
+</script>
+
+<style>
+
+</style>

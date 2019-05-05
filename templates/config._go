@@ -1,0 +1,49 @@
+package config
+
+import (
+	"github.com/spf13/viper"
+)
+
+// RealtimeConfig is
+type RealtimeConfig struct {
+	APIPort          string `` //
+	Dialect          string `` //
+	ConnectionString string `` //
+}
+
+// NewRealtimeConfig is
+func NewRealtimeConfig(confiName, path string) *RealtimeConfig {
+	viper.SetConfigName(confiName)
+	viper.AddConfigPath(path)
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
+	rc := RealtimeConfig{}
+	rc.reload()
+	return &rc
+}
+
+func (r *RealtimeConfig) reload() {
+
+	r.APIPort = viper.GetString("server.rest_api_port")
+
+	r.Dialect = viper.GetString("database.dialect")
+	r.ConnectionString = viper.GetString("database.connection_string")
+
+}
+
+// GetAPIPort is
+func (r *RealtimeConfig) GetAPIPort() string {
+	return r.APIPort
+}
+
+// GetDialect is
+func (r *RealtimeConfig) GetDialect() string {
+	return r.Dialect
+}
+
+// GetConnectionString is
+func (r *RealtimeConfig) GetConnectionString() string {
+	return r.ConnectionString
+}

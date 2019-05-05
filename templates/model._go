@@ -1,0 +1,22 @@
+package model
+
+import ({{if HasTime .Fields}}
+	"time"{{end}}
+	"{{PackageName}}/database"
+)
+
+// {{PascalCase .Name}} is
+type {{PascalCase .Name}} struct {
+	database.BaseModel{{range .Fields}}
+	{{.Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}
+}
+
+// Create{{PascalCase .Name}}Request is
+type Create{{PascalCase .Name}}Request struct { {{range .Fields}}
+	{{.Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}
+}
+
+// Update{{PascalCase .Name}}Request is
+type Update{{PascalCase .Name}}Request struct { {{range .Fields}}
+	{{.Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}
+}

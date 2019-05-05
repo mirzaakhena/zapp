@@ -1,0 +1,12 @@
+github.com/mirzaakhena/sample
+
+class, Person	
+field, Name, string 
+field, Age, int 
+field, BirthDate, time.Time 
+
+class, Car	
+field, Brand, string 
+field, MaxSpeed, int 
+field, IsSportCar, bool   
+field, Price, float64

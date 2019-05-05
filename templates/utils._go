@@ -1,0 +1,19 @@
+package utils
+
+import (
+	"encoding/json"
+
+	uuid "github.com/satori/go.uuid"
+)
+
+// GenID is
+func GenID() string {
+	x, _ := uuid.NewV4()
+	return x.String()
+}
+
+// GetJSON is
+func GetJSON(x interface{}) string {
+	y, _ := json.Marshal(x)
+	return string(y)
+}
