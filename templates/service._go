@@ -8,11 +8,15 @@ import (
 
 // I{{PascalCase .Name}}Service is
 type I{{PascalCase .Name}}Service interface {
-	Create(obj model.Create{{PascalCase .Name}}Request) (string, error)
+	Create(obj model.Create{{PascalCase .Name}}Request) (string, error) 	{{if (eq DataTypeId "int")}}
+	GetOne(ID uint64) *model.{{PascalCase .Name}}
+	GetAll(page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
+	Delete(ID uint64) error
+	Update(ID uint64, obj model.Update{{PascalCase .Name}}Request) error {{else}}
 	GetOne(ID string) *model.{{PascalCase .Name}}
 	GetAll(page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
 	Delete(ID string) error
-	Update(ID string, obj model.Update{{PascalCase .Name}}Request) error
+	Update(ID string, obj model.Update{{PascalCase .Name}}Request) error {{end}}
 }
 
 // {{PascalCase .Name}}Service is
@@ -31,17 +35,17 @@ func New{{PascalCase .Name}}Service({{CamelCase .Name}}Dao dao.I{{PascalCase .Na
 func (g *{{PascalCase .Name}}Service) Create(dto model.Create{{PascalCase .Name}}Request) (string, error) {
 
 	var obj model.{{PascalCase .Name}}
-
-	obj.ID = utils.GenID()
-	{{range .Fields}}
+	{{if (eq DataTypeId "guid")}}
+	obj.ID = utils.GenID() {{end}} {{range .Fields}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}}
 
 	g.{{CamelCase .Name}}Dao.Create(g.{{CamelCase .Name}}Dao.GetDB(false), &obj)
 	return obj.ID, nil
 }
 
-// GetOne is
-func (g *{{PascalCase .Name}}Service) GetOne(ID string) *model.{{PascalCase .Name}} {
+// GetOne is {{if (eq DataTypeId "int")}}
+func (g *{{PascalCase .Name}}Service) GetOne(ID uint64) *model.{{PascalCase .Name}} { {{else}}
+func (g *{{PascalCase .Name}}Service) GetOne(ID string) *model.{{PascalCase .Name}} { {{end}}
 	return g.{{CamelCase .Name}}Dao.GetOne(g.{{CamelCase .Name}}Dao.GetDB(false), ID)
 }
 
@@ -50,15 +54,17 @@ func (g *{{PascalCase .Name}}Service) GetAll(page, size int, sortBy, sortDir str
 	return g.{{CamelCase .Name}}Dao.GetAll(g.{{CamelCase .Name}}Dao.GetDB(false), page, size, sortBy, sortDir, filter)
 }
 
-// Delete is
-func (g *{{PascalCase .Name}}Service) Delete(ID string) error {
+// Delete is {{if (eq DataTypeId "int")}}
+func (g *{{PascalCase .Name}}Service) Delete(ID uint64) error { {{else}}
+func (g *{{PascalCase .Name}}Service) Delete(ID string) error {	{{end}}
 	return g.{{CamelCase .Name}}Dao.Delete(g.{{CamelCase .Name}}Dao.GetDB(false), ID)
 }
 
-// Update is
-func (g *{{PascalCase .Name}}Service) Update(ID string, dto model.Update{{PascalCase .Name}}Request) error {
+// Update is {{if (eq DataTypeId "int")}}
+func (g *{{PascalCase .Name}}Service) Update(ID uint64, dto model.Update{{PascalCase .Name}}Request) error { {{else}}
+func (g *{{PascalCase .Name}}Service) Update(ID string, dto model.Update{{PascalCase .Name}}Request) error { {{end}}
 
-	var obj model.{{PascalCase .Name}}
+	var obj model.{{PascalCase .Name}} 
 	{{range .Fields}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}}
 

@@ -1,12 +1,142 @@
-github.com/mirzaakhena/sample
+package, github.com/mirzaakhena/zappsample
 
-class, Person	
-field, Name, string 
-field, Age, int 
-field, BirthDate, time.Time 
+datatypeid, int
 
-class, Car	
-field, Brand, string 
-field, MaxSpeed, int 
-field, IsSportCar, bool   
-field, Price, float64
+class, Global	
+field, Cond, string 
+field, Code, string 
+field, Description, string
+endclass
+
+class, Item	
+field, ItemCode, string 
+field, ItemDescription, string 
+endclass
+
+class, MenuGroup	
+field, OutletCode, string 
+field, MenuGroupCode, string 
+endclass
+
+class, MenuGroupLimit	
+field, OutletCode, string 
+field, MenuGroupCode, string 
+field, OrderType, string 
+endclass
+
+class, MenuItem	
+field, OutletCode, string 
+field, MenuItemCode, string 
+field, MenuGroupCode, string 
+field, IsTaxable, bool   
+field, IsActive, bool   
+field, IsMenuset, bool   
+endclass
+
+class, MenuPrice	
+field, MenuItemCode, string  
+field, PriceType, string  
+field, Price, float64 
+endclass
+
+class, MenuItemLimit	
+field, OutletCode, string 
+field, MenuItemCode, string 
+field, OrderType, string 
+endclass
+
+class, MenuSet	
+field, OutletCode, string 
+field, MenuSetCode, string 
+field, MenuSetItemCode, string 
+field, ModifierGroupCode, string 
+field, Sequence, int    
+field, Quantity, int    
+field, IsActive, bool   
+endclass
+
+class, ModifierItem	
+field, OutletCode, string 
+field, ModifierGroupCode, string 
+field, ModifierItemCode, string 
+field, Sequence, int    
+field, IsTaxable, bool   
+field, IsActive, bool   
+
+class, ModifierPrice	
+field, ModifierItemCode, string  
+field, ModifierGroupCode, string  
+field, PriceType, string  
+field, Price, float64 
+endclass
+
+class, OutletPrice	
+field, OutletCode, string 
+field, OrderType, string 
+field, PriceType, string 
+endclass
+
+class, SaleMenuSchedule	
+field, OutletCode, string    
+field, MenuItemCode, string    
+field, BeginDate, time.Time 
+field, EndDate, time.Time 
+field, BeginDay, int
+field, EndDay, int  
+field, BeginHour, time.Time 
+field, EndHour, time.Time 
+endclass
+
+class, Store 	
+field, Name, string   
+field, Address, string   
+field, IPAddress, string   
+field, Port, string   
+field, PhoneNumber, string   
+field, FaxNumber, string   
+field, TaxPercentage, float64  
+field, DeliveryChargeAmount, float64  
+field, TakeAwayChargeAmount, float64  
+field, RegionCode, string   
+field, RegionName, string   
+field, AreaCode, string   
+field, OutletCode, string   
+field, CityCode, string   
+field, CityName, string   
+field, RscCode, string   
+field, Type, string   
+field, IsActive, bool     
+field, Latitude, float64  
+field, Longitude, float64  
+field, IsOpen24Hours, bool     
+endclass
+
+class, StoreOpenSchedule 	
+field, OutletCode, string    
+field, OrderType, string    
+field, BeginDate, time.Time 
+field, EndDate, time.Time 
+field, BeginDay, int       
+field, EndDay, int       
+field, BeginHour, time.Time 
+field, EndHour, time.Time 
+endclass
+
+class, StoreGeofence
+field, OutletCode, string 
+field, Type, string 
+field, Sequence, int    
+field, Latitude, float64
+field, Longitude, float64
+endclass
+
+class, StoreOpenSchedule 	
+field, OutletCode, string    
+field, OrderType, string    
+field, BeginDate, time.Time 
+field, EndDate, time.Time 
+field, BeginDay, int       
+field, EndDay, int       
+field, BeginHour, time.Time 
+field, EndHour, time.Time 
+endclass

@@ -63,16 +63,24 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 	id := c.Param("{{CamelCase .Name}}ID")
 
 	log.GetLog().Info("{{PascalCase .Name}}.GetOne", "Called with {{CamelCase .Name}}ID %v", id)
+	{{if (eq DataTypeId "int")}}
+	idInt, err := strconv.ParseUint(id, 10, 64)
+	if err != nil {
+		log.GetLog().Info("{{PascalCase .Name}}.GetOne", "ID must integer")
+		c.JSON(http.StatusOK, map[string]interface{}{"message": "ID must integer", "data": nil})
+		return
+	}
 
-	obj := g.{{CamelCase .Name}}Service.GetOne(id)
+	obj := g.{{CamelCase .Name}}Service.GetOne(idInt) {{else}}
+	obj := g.{{CamelCase .Name}}Service.GetOne(id) {{end}}
 	if obj == nil {
 		log.GetLog().Info("{{PascalCase .Name}}.GetOne", "No record found with {{CamelCase .Name}}ID %v", id)
-		c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("No record found with ID %s", id), "data": nil})
+		c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("No record found with ID %v", id), "data": nil})
 		return
 	}
 
 	log.GetLog().Info("{{PascalCase .Name}}.GetOne", "Record with {{CamelCase .Name}}ID %v found", id)
-	c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Record with ID %s found", id), "data": obj})
+	c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Record with ID %v found", id), "data": obj})
 }
 
 // GetAll is
@@ -118,6 +126,13 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 	id := c.Param("{{CamelCase .Name}}ID")
 
 	log.GetLog().Info("{{PascalCase .Name}}.Update", "Called with {{CamelCase .Name}}ID %v", id)
+	{{if (eq DataTypeId "int")}}
+	idInt, err := strconv.ParseUint(id, 10, 64)
+	if err != nil {
+		log.GetLog().Info("{{PascalCase .Name}}.Update", "ID must integer")
+		c.JSON(http.StatusOK, map[string]interface{}{"message": "ID must integer", "data": nil})
+		return
+	} {{end}}
 
 	var obj model.Update{{PascalCase .Name}}Request
 	if err := c.BindJSON(&obj); err != nil {
@@ -127,15 +142,16 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 	}
 
 	log.GetLog().Info("{{PascalCase .Name}}.Update", "Request %v", utils.GetJSON(obj))
-
-	if err := g.{{CamelCase .Name}}Service.Update(id, obj); err != nil {
+	{{if (eq DataTypeId "int")}}
+	if err := g.{{CamelCase .Name}}Service.Update(idInt, obj); err != nil { {{else}}
+	if err := g.{{CamelCase .Name}}Service.Update(id, obj); err != nil { {{end}}
 		log.GetLog().Error("{{PascalCase .Name}}.Update", "%v", err.Error())
 		c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Error when update record with ID %v", id), "data": nil})
 		return
 	}
 
-	log.GetLog().Info("{{PascalCase .Name}}.Update", "Success. %v", fmt.Sprintf("Record with {{CamelCase .Name}}ID %s updated", id))
-	c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Record with ID %s updated", id), "data": nil})
+	log.GetLog().Info("{{PascalCase .Name}}.Update", "Success. %v", fmt.Sprintf("Record with {{CamelCase .Name}}ID %v updated", id))
+	c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Record with ID %v updated", id), "data": nil})
 
 }
 
@@ -145,14 +161,22 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 	id := c.Param("{{CamelCase .Name}}ID")
 
 	log.GetLog().Info("{{PascalCase .Name}}.Delete", "Called with {{CamelCase .Name}}ID %v", id)
-
-	if err := g.{{CamelCase .Name}}Service.Delete(id); err != nil {
+	{{if (eq DataTypeId "int")}}
+	idInt, err := strconv.ParseUint(id, 10, 64)
+	if err != nil {
+		log.GetLog().Info("{{PascalCase .Name}}.Delete", "ID must integer")
+		c.JSON(http.StatusOK, map[string]interface{}{"message": "ID must integer", "data": nil})
+		return
+	}
+	
+	if err := g.{{CamelCase .Name}}Service.Delete(idInt); err != nil { {{else}}
+	if err := g.{{CamelCase .Name}}Service.Delete(id); err != nil { {{end}}
 		log.GetLog().Error("{{PascalCase .Name}}.Delete", "%v", err.Error())
 		c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Error when delete record with ID %v", id), "data": nil})
 		return
 	}
 
-	log.GetLog().Info("{{PascalCase .Name}}.Delete", "Success. %v", fmt.Sprintf("Record with {{CamelCase .Name}}ID %s deleted", id))
-	c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Record with ID %s deleted", id), "data": nil})
+	log.GetLog().Info("{{PascalCase .Name}}.Delete", "Success. %v", fmt.Sprintf("Record with {{CamelCase .Name}}ID %v deleted", id))
+	c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Record with ID %v deleted", id), "data": nil})
 
 }
