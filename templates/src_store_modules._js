@@ -3,20 +3,20 @@ import api from '@/api';
 const store = {
   state: {
     {{CamelCase .Name}}s: [],
-    totalItems: 0,
+    total{{PascalCase .Name}}: 0,
   },
 
   mutations: {
     SET_{{UpperCase .Name}}: (state, payload) => {
       state.{{CamelCase .Name}}s = payload
     },
-    SET_TOTAL_ITEMS: (state, payload) => {
-      state.totalItems = payload
+    SET_TOTAL_{{UpperCase .Name}}: (state, payload) => {
+      state.total{{PascalCase .Name}} = payload
     },   
   },
 
   getters: {
-    TotalItems: state => state.totalItems,    
+    Total{{PascalCase .Name}}: state => state.total{{PascalCase .Name}},    
     GetAll{{PascalCase .Name}}: state => state.{{CamelCase .Name}}s,
     GetOne{{PascalCase .Name}}: state => (id) => state.{{CamelCase .Name}}s.find({{CamelCase .Name}} => {{CamelCase .Name}}.id === id)
   },
@@ -25,7 +25,7 @@ const store = {
    
     async GetAll{{PascalCase .Name}} ({commit}, payload) {      
       const result = await api.GetAll{{PascalCase .Name}}(payload)
-      commit('SET_TOTAL_ITEMS', result.headers["data-length"])
+      commit('SET_TOTAL_{{UpperCase .Name}}', result.headers["data-length"])
       commit('SET_{{UpperCase .Name}}', result.data.data)
       return result.data
     },

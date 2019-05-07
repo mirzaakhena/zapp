@@ -2,17 +2,18 @@ package service
 
 import (
 	"{{PackageName}}/dao"
-	"{{PackageName}}/model"
-	"{{PackageName}}/utils"
+	"{{PackageName}}/model" {{if (eq DataTypeId "guid")}}
+	"{{PackageName}}/utils" {{end}}
 )
 
 // I{{PascalCase .Name}}Service is
-type I{{PascalCase .Name}}Service interface {
-	Create(obj model.Create{{PascalCase .Name}}Request) (string, error) 	{{if (eq DataTypeId "int")}}
+type I{{PascalCase .Name}}Service interface { {{if (eq DataTypeId "int")}}
+	Create(obj model.Create{{PascalCase .Name}}Request) (uint64, error) 	
 	GetOne(ID uint64) *model.{{PascalCase .Name}}
 	GetAll(page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
 	Delete(ID uint64) error
 	Update(ID uint64, obj model.Update{{PascalCase .Name}}Request) error {{else}}
+	Create(obj model.Create{{PascalCase .Name}}Request) (string, error) 
 	GetOne(ID string) *model.{{PascalCase .Name}}
 	GetAll(page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
 	Delete(ID string) error
@@ -31,8 +32,9 @@ func New{{PascalCase .Name}}Service({{CamelCase .Name}}Dao dao.I{{PascalCase .Na
 	}
 }
 
-// Create is
-func (g *{{PascalCase .Name}}Service) Create(dto model.Create{{PascalCase .Name}}Request) (string, error) {
+// Create is {{if (eq DataTypeId "int")}}
+func (g *{{PascalCase .Name}}Service) Create(dto model.Create{{PascalCase .Name}}Request) (uint64, error) { {{else}}
+func (g *{{PascalCase .Name}}Service) Create(dto model.Create{{PascalCase .Name}}Request) (uint64, error) {	{{end}}
 
 	var obj model.{{PascalCase .Name}}
 	{{if (eq DataTypeId "guid")}}

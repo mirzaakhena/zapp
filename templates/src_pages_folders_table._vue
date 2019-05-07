@@ -7,7 +7,7 @@
 
       <!-- paging -->
       <div class="float-right">
-        <b-pagination size="sm" @input="reload" style="margin-bottom:20px; margin-top:20px" v-model="paging.currentPage" :total-rows="TotalItems" :per-page="paging.perPage"></b-pagination>
+        <b-pagination size="sm" @input="reload" style="margin-bottom:20px; margin-top:20px" v-model="paging.currentPage" :total-rows="Total{{PascalCase .Name}}" :per-page="paging.perPage"></b-pagination>
       </div>
 
       <!-- Dialog -->
@@ -78,8 +78,8 @@ export default {
     GetAll () {
       return this.$store.getters.GetAll{{PascalCase .Name}}
     },
-    TotalItems () {
-      return this.$store.getters.TotalItems
+    Total{{PascalCase .Name}} () {
+      return this.$store.getters.Total{{PascalCase .Name}}
     }    
   },   
   methods: {

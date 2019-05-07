@@ -12,7 +12,7 @@ const api = {
 
   GetOne{{PascalCase .Name}}({{CamelCase .Name}}ID) {
     return request({
-      url: `/{{CamelCase .Name}}/${ {{CamelCase .Name}}ID}`,
+      url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
       method: 'get',
     })
   },  
@@ -33,7 +33,7 @@ const api = {
 
   Update{{PascalCase .Name}}({{CamelCase .Name}}ID, payload) {
     return request({
-      url: `/{{CamelCase .Name}}/${ {{CamelCase .Name}}ID}`,
+      url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
       method: 'put',
       data: payload,
     })
@@ -41,7 +41,7 @@ const api = {
 
   Delete{{PascalCase .Name}}({{CamelCase .Name}}ID) {
     return request({
-      url: `/{{CamelCase .Name}}/${ {{CamelCase .Name}}ID}`,
+      url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
       method: 'delete',
     })
   },  

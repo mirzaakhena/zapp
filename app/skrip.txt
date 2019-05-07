@@ -62,6 +62,7 @@ field, ModifierItemCode, string
 field, Sequence, int    
 field, IsTaxable, bool   
 field, IsActive, bool   
+endclass
 
 class, ModifierPrice	
 field, ModifierItemCode, string  
@@ -128,15 +129,4 @@ field, Type, string
 field, Sequence, int    
 field, Latitude, float64
 field, Longitude, float64
-endclass
-
-class, StoreOpenSchedule 	
-field, OutletCode, string    
-field, OrderType, string    
-field, BeginDate, time.Time 
-field, EndDate, time.Time 
-field, BeginDay, int       
-field, EndDay, int       
-field, BeginHour, time.Time 
-field, EndHour, time.Time 
 endclass
