@@ -55,7 +55,7 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 	}
 
 	log.GetLog().Info("{{PascalCase .Name}}.Create", "Success. %v", fmt.Sprintf("Record with {{CamelCase .Name}}ID %v created", id))
-	c.JSON(http.StatusCreated, map[string]interface{}{"message": fmt.Sprintf("Record with ID %s created", id), "data": nil})
+	c.JSON(http.StatusCreated, map[string]interface{}{"message": fmt.Sprintf("Record with ID %v created", id), "data": nil})
 }
 
 // GetOne is
@@ -66,7 +66,7 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 	{{if (eq DataTypeId "int")}}
 	idInt, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
-		log.GetLog().Info("{{PascalCase .Name}}.GetOne", "ID must integer")
+		log.GetLog().Error("{{PascalCase .Name}}.GetOne", "ID must integer")
 		c.JSON(http.StatusOK, map[string]interface{}{"message": "ID must integer", "data": nil})
 		return
 	}
@@ -129,7 +129,7 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 	{{if (eq DataTypeId "int")}}
 	idInt, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
-		log.GetLog().Info("{{PascalCase .Name}}.Update", "ID must integer")
+		log.GetLog().Error("{{PascalCase .Name}}.Update", "ID must integer")
 		c.JSON(http.StatusOK, map[string]interface{}{"message": "ID must integer", "data": nil})
 		return
 	} {{end}}
@@ -164,7 +164,7 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 	{{if (eq DataTypeId "int")}}
 	idInt, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
-		log.GetLog().Info("{{PascalCase .Name}}.Delete", "ID must integer")
+		log.GetLog().Error("{{PascalCase .Name}}.Delete", "ID must integer")
 		c.JSON(http.StatusOK, map[string]interface{}{"message": "ID must integer", "data": nil})
 		return
 	}

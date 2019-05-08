@@ -41,7 +41,9 @@ func (g *{{PascalCase .Name}}Service) Create(dto model.Create{{PascalCase .Name}
 	obj.ID = utils.GenID() {{end}} {{range .Fields}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}}
 
-	g.{{CamelCase .Name}}Dao.Create(g.{{CamelCase .Name}}Dao.GetDB(false), &obj)
+	tx := g.{{CamelCase .Name}}Dao.GetDB(true)
+	g.{{CamelCase .Name}}Dao.Create(tx, &obj)
+	g.{{CamelCase .Name}}Dao.CommitTransaction(tx)
 	return obj.ID, nil
 }
 
@@ -59,7 +61,10 @@ func (g *{{PascalCase .Name}}Service) GetAll(page, size int, sortBy, sortDir str
 // Delete is {{if (eq DataTypeId "int")}}
 func (g *{{PascalCase .Name}}Service) Delete(ID uint64) error { {{else}}
 func (g *{{PascalCase .Name}}Service) Delete(ID string) error {	{{end}}
-	return g.{{CamelCase .Name}}Dao.Delete(g.{{CamelCase .Name}}Dao.GetDB(false), ID)
+	tx := g.{{CamelCase .Name}}Dao.GetDB(true)
+	a := g.{{CamelCase .Name}}Dao.Delete(tx, ID)
+	g.{{CamelCase .Name}}Dao.CommitTransaction(tx)
+	return a
 }
 
 // Update is {{if (eq DataTypeId "int")}}
@@ -70,5 +75,8 @@ func (g *{{PascalCase .Name}}Service) Update(ID string, dto model.Update{{Pascal
 	{{range .Fields}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}}
 
-	return g.{{CamelCase .Name}}Dao.Update(g.{{CamelCase .Name}}Dao.GetDB(false), ID, &obj)
+	tx := g.{{CamelCase .Name}}Dao.GetDB(true)
+	a := g.{{CamelCase .Name}}Dao.Update(tx, ID, &obj)
+	g.{{CamelCase .Name}}Dao.CommitTransaction(tx)
+	return a
 }

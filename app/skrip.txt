@@ -80,12 +80,10 @@ endclass
 class, SaleMenuSchedule	
 field, OutletCode, string    
 field, MenuItemCode, string    
-field, BeginDate, time.Time 
-field, EndDate, time.Time 
-field, BeginDay, int
-field, EndDay, int  
-field, BeginHour, time.Time 
-field, EndHour, time.Time 
+field, Status, string
+field, Date, string 
+field, Day, string       
+field, Hour, string
 endclass
 
 class, Store 	
@@ -96,8 +94,8 @@ field, Port, string
 field, PhoneNumber, string   
 field, FaxNumber, string   
 field, TaxPercentage, float64  
-field, DeliveryChargeAmount, float64  
-field, TakeAwayChargeAmount, float64  
+field, DeliveryCharge, float64  
+field, TakeAwayCharge, float64  
 field, RegionCode, string   
 field, RegionName, string   
 field, AreaCode, string   
@@ -115,12 +113,10 @@ endclass
 class, StoreOpenSchedule 	
 field, OutletCode, string    
 field, OrderType, string    
-field, BeginDate, time.Time 
-field, EndDate, time.Time 
-field, BeginDay, int       
-field, EndDay, int       
-field, BeginHour, time.Time 
-field, EndHour, time.Time 
+field, Status, string
+field, Date, string 
+field, Day, string       
+field, Hour, string
 endclass
 
 class, StoreGeofence
