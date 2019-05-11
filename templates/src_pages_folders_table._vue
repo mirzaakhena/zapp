@@ -61,10 +61,8 @@ export default {
     return {                    
       fields: [
         'index',
-        'action', 
-        {key: 'cond', sortable: true}, 
-        {key: 'code', sortable: true}, 
-        {key: 'description', sortable: true}, 
+        'action', {{range .Fields}}
+        {key: '{{CamelCase .Name}}', sortable: true}, {{end}}
       ],
       selectedItem: null,
     }
