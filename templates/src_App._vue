@@ -26,8 +26,7 @@ export default {
         {
           header: true,
           title: 'Main Navigation',
-        },
-        {{range .Classes}} { 
+        }, {{range .Classes}}{ 
           href: '/{{LowerCase .Name}}',
           title: '{{PascalCase .Name}}'
         }, {{end}}
