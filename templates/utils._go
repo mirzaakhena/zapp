@@ -2,7 +2,9 @@ package utils
 
 import (
 	"encoding/json"
-
+	"regexp"
+	"strings"
+	
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -16,4 +18,14 @@ func GenID() string {
 func GetJSON(x interface{}) string {
 	y, _ := json.Marshal(x)
 	return string(y)
+}
+
+var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
+var matchAllCap = regexp.MustCompile("([a-z0-9])([A-Z])")
+
+// SnakeCase is
+func SnakeCase(str string) string {
+	snake := matchFirstCap.ReplaceAllString(str, "${1}_${2}")
+	snake = matchAllCap.ReplaceAllString(snake, "${1}_${2}")
+	return strings.ToLower(snake)
 }

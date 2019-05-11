@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"{{PackageName}}/database"
 	"{{PackageName}}/model"
+	"{{PackageName}}/utils"
 )
 
 // I{{PascalCase .Name}}Dao is
@@ -64,7 +65,7 @@ func (g *{{PascalCase .Name}}Dao) GetAll(db interface{}, page, size int, sortBy,
 
 	// filtering
 	for k, v := range filter {
-		query = query.Where(fmt.Sprintf("%s LIKE ?", k), fmt.Sprintf("%s%%", v))
+		query = query.Where(fmt.Sprintf("%s LIKE ?", utils.SnakeCase(k)), fmt.Sprintf("%s%%", v))
 	}
 
 	// count
@@ -72,7 +73,7 @@ func (g *{{PascalCase .Name}}Dao) GetAll(db interface{}, page, size int, sortBy,
 
 	// sorting
 	if sortBy != "" {
-		query = query.Order(fmt.Sprintf("%s %s", sortBy, sortDir))
+		query = query.Order(fmt.Sprintf("%s %s", utils.SnakeCase(sortBy), sortDir))
 	}
 
 	// paging

@@ -1,20 +1,23 @@
 <template>
   <div>
-    <b-container fluid>
-      
-      <!-- Button New -->
-      <b-button variant="success" style="margin-bottom:20px; margin-top:20px" size="sm" v-b-modal.dialogInput>New {{PascalCase .Name}}</b-button>
+    <b-container fluid>      
 
-      <!-- paging -->
-      <div class="float-right">
-        <b-pagination size="sm" @input="reload" style="margin-bottom:20px; margin-top:20px" v-model="paging.currentPage" :total-rows="Total{{PascalCase .Name}}" :per-page="paging.perPage"></b-pagination>
+      <div style="margin-bottom:20px; margin-top:20px">
+        <!-- Button New -->
+        <b-button variant="success" size="sm" v-b-modal.dialogInput>New {{PascalCase .Name}}</b-button>
+        <b-button variant="info" style="margin-left:10px" size="sm" @click="reload">Refresh</b-button>
+
+        <!-- paging -->
+        <div class="float-right">
+          <b-pagination size="sm" @input="reload" v-model="paging.page" :total-rows="paging.total" :per-page="paging.size"></b-pagination>
+        </div>
       </div>
 
       <!-- Dialog -->
       <dialog-input :input="selectedItem" @closed="dialogClosed"></dialog-input>
 
       <!-- Tabel -->
-      <b-table small striped hover :items="GetAll" :fields="fields" :sort-by.sync="sort.sortBy" :sort-desc.sync="sort.sortDesc" :no-local-sorting="true" @sort-changed="sortingChanged">
+      <b-table small striped hover :items="items" :fields="fields" :sort-by.sync="sorting.byField" :sort-desc.sync="sorting.isDesc" :no-local-sorting="true" @sort-changed="sortingChanged">
         <template slot="HEAD_action">
           <b-button variant="warning" @click="resetSorting" size="sm">Reset Sorting</b-button>
         </template> 
@@ -26,8 +29,8 @@
         </template>        
         <template slot="top-row" slot-scope="{ fields }">
           <td v-for="field in fields" :key="field.key">
-            <b-button variant="warning" @click="resetFilter" v-if="field.key === 'action'" size="sm">Reset Filter</b-button>
-            <b-form-input v-if="field.key !== 'action' && field.key !== 'index'" size="sm" v-model="filters[field.key]" :placeholder="field.label" @input="filterChanged" trim> </b-form-input>
+            <b-button variant="warning" @click="resetFilter" v-if="field.key === 'action'" size="sm">Reset Filtering</b-button>
+            <b-form-input v-if="field.key !== 'action' && field.key !== 'index'" size="sm" v-model="filtering[field.key]" :placeholder="field.label" @input="reload" trim> </b-form-input>
           </td>
         </template> 
         <template slot="action" slot-scope="data">
@@ -50,71 +53,51 @@ export default {
     DialogInput,
   },
   created () {
-    this.reload()
+    if (this.items.length == 0) {
+      this.reload()
+    }    
   },
   data() {
-    return {
-      sort: {
-        sortBy: null,
-        sortDir: null,
-      },
-      paging: {
-        currentPage: 1,
-        perPage: 20,
-      },  
-      filters: { {{range .Fields}}
-        {{CamelCase .Name}}: null, {{end}}
-      },                      
+    return {                    
       fields: [
         'index',
-        'action', {{range .Fields}}
-        {key: '{{CamelCase .Name}}', sortable: true}, {{end}}
+        'action', 
+        {key: 'cond', sortable: true}, 
+        {key: 'code', sortable: true}, 
+        {key: 'description', sortable: true}, 
       ],
       selectedItem: null,
-      items: []
     }
   },
   computed: {
-    GetAll () {
+    items () {
       return this.$store.getters.GetAll{{PascalCase .Name}}
     },
-    Total{{PascalCase .Name}} () {
-      return this.$store.getters.Total{{PascalCase .Name}}
-    }    
+    paging () {
+      return this.$store.getters.Paging{{PascalCase .Name}}
+    },
+    sorting () {
+      return this.$store.getters.Sorting{{PascalCase .Name}}
+    },
+    filtering () {
+      return this.$store.getters.Filtering{{PascalCase .Name}}
+    }
   },   
   methods: {
     resetSorting () {
-      this.sort = {
-        sortBy: null,
-        sortDir: null,
-      }
-      this.sortingChanged(this.sort)    
+      this.sortingChanged({sortBy: '', sortDesc: ''})    
     },
     resetFilter () {
-      this.filters = { {{range .Fields}}
-        {{CamelCase .Name}}: null, {{end}}
-      }
-      this.filterChanged()
-    },
-    filterChanged () {
-      this.paging.currentPage = 1
-      this.reload()
+      this.filterChanged(true)
     },
     sortingChanged (ctx) {
-      this.sort.sortBy = ctx.sortBy
-      if (this.sort.sortBy === null) {
-        this.sort.sortDir = null
-      } else {
-        if (ctx.sortDesc === true) {
-          this.sort.sortDir = "desc"
-        } else {
-          this.sort.sortDir = "asc"
-        }
-      }
-      this.reload()
-    },    
-    reload () {
-      this.$store.dispatch('GetAll{{PascalCase .Name}}', {page: this.paging.currentPage, size:this.paging.perPage, filters: this.filters, sort: this.sort})
+      this.$store.dispatch('UpdateSorting{{PascalCase .Name}}', {byField: ctx.sortBy, isDesc: ctx.sortDesc})
+    },
+    filterChanged (isResetFilter) {
+      this.$store.dispatch('UpdateFiltering{{PascalCase .Name}}', {isResetFilter: isResetFilter})
+    },   
+    reload () {      
+      this.$store.dispatch('GetAll{{PascalCase .Name}}')
     },    
     dialogClosed () {
       this.selectedItem = null

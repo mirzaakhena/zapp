@@ -1,4 +1,4 @@
-package, github.com/mirzaakhena/zappsample
+package, github.com/bayuseno/sample
 
 datatypeid, int
 
@@ -89,7 +89,7 @@ endclass
 class, Store 	
 field, Name, string   
 field, Address, string   
-field, IPAddress, string   
+field, IpAddress, string   
 field, Port, string   
 field, PhoneNumber, string   
 field, FaxNumber, string   

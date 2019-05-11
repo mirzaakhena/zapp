@@ -100,7 +100,7 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 	log.GetLog().Info("{{PascalCase .Name}}.GetAll", "Called with page %v and size %v", page, size)
 
 	filter := map[string]string{ {{range .Fields}}
-		"{{SnakeCase .Name}}": c.DefaultQuery("f_{{CamelCase .Name}}", ""), {{end}}
+		"{{CamelCase .Name}}": c.DefaultQuery("f_{{CamelCase .Name}}", ""), {{end}}
 	}
 
 	sortBy := c.DefaultQuery("sortBy", "")

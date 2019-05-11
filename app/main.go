@@ -30,6 +30,12 @@ type ThePackage struct {
 }
 
 func CamelCase(name string) string {
+
+	// force it!
+	if name == "IPAddress" {
+		return "ipAddress"
+	}
+
 	out := []rune(name)
 	out[0] = unicode.ToLower([]rune(name)[0])
 	return string(out)

@@ -17,16 +17,16 @@ const api = {
     })
   },  
 
-  GetAll{{PascalCase .Name}}(payload) {    
+  GetAll{{PascalCase .Name}}(paging, sorting, filtering) {    
     return request({
       url: `/{{CamelCase .Name}}`,
       method: 'get',
       params: {
-        page: payload.page,
-        size: payload.size,
-        sortBy: payload.sort.sortBy,
-        sortDir: payload.sort.sortDir, {{range .Fields}}
-        f_{{CamelCase .Name}}: payload.filters.{{CamelCase .Name}}, {{end}}
+        page: paging.page,
+        size: paging.size,
+        sortBy: sorting.byField,
+        sortDir: sorting.isDesc? 'desc': 'asc', {{range .Fields}}
+        f_{{CamelCase .Name}}: filtering.{{CamelCase .Name}}, {{end}}
       }
     })
   },    
