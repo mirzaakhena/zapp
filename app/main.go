@@ -211,12 +211,6 @@ func (tp *ThePackage) Run() {
 		os.MkdirAll(dir, 0777)
 	}
 
-	// create pages folder
-	{
-		f := fmt.Sprintf("../../../../%s/webapp/src/pages", tp.packageName)
-		os.Mkdir(f, 0777)
-	}
-
 	{
 		f := fmt.Sprintf("../../../../%s/webapp/src/components", tp.packageName)
 		os.Mkdir(f, 0777)
@@ -276,12 +270,6 @@ func (tp *ThePackage) Run() {
 			templateFile := fmt.Sprintf("../templates/src_router_modules._js")
 			outputFile := fmt.Sprintf("../../../../%s/webapp/src/router/modules/%s.js", tp.packageName, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
-		}
-
-		// create pages folder
-		{
-			f := fmt.Sprintf("../../../../%s/webapp/src/pages/%s", tp.packageName, LowerCase(et.Name))
-			os.Mkdir(f, 0777)
 		}
 
 		// create file table under folder
@@ -381,6 +369,36 @@ func (tp *ThePackage) Run() {
 	{
 		templateFile := fmt.Sprintf("../templates/src_App._vue")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/App.vue", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/src_pages_forgotpassword._vue")
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/forgotpassword.vue", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/src_pages_home._vue")
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/home.vue", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/src_pages_login._vue")
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/login.vue", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/src_pages_notfound._vue")
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/notfound.vue", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/src_pages_register._vue")
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/register.vue", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
