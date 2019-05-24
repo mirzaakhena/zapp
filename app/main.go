@@ -212,6 +212,11 @@ func (tp *ThePackage) Run() {
 	}
 
 	{
+		f := fmt.Sprintf("../../../../%s/webapp/src/pages", tp.packageName)
+		os.Mkdir(f, 0777)
+	}
+
+	{
 		f := fmt.Sprintf("../../../../%s/webapp/src/components", tp.packageName)
 		os.Mkdir(f, 0777)
 	}
@@ -272,18 +277,25 @@ func (tp *ThePackage) Run() {
 			basic(tp, templateFile, outputFile, et)
 		}
 
-		// create file table under folder
 		{
-			templateFile := fmt.Sprintf("../templates/src_pages_folders_table._vue")
-			outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/table.vue", tp.packageName, LowerCase(et.Name))
-			basic(tp, templateFile, outputFile, et)
-		}
+			// create folder pages
+			f := fmt.Sprintf("../../../../%s/webapp/src/pages/%s", tp.packageName, LowerCase(et.Name))
+			os.Mkdir(f, 0777)
 
-		// create file input under folder
-		{
-			templateFile := fmt.Sprintf("../templates/src_pages_folders_input._vue")
-			outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/input.vue", tp.packageName, LowerCase(et.Name))
-			basic(tp, templateFile, outputFile, et)
+			// create file table under folder
+			{
+				templateFile := fmt.Sprintf("../templates/src_pages_folders_table._vue")
+				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/table.vue", tp.packageName, LowerCase(et.Name))
+				basic(tp, templateFile, outputFile, et)
+			}
+
+			// create file input under folder
+			{
+				templateFile := fmt.Sprintf("../templates/src_pages_folders_input._vue")
+				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/input.vue", tp.packageName, LowerCase(et.Name))
+				basic(tp, templateFile, outputFile, et)
+			}
+
 		}
 
 	}
@@ -479,7 +491,7 @@ func basic(pkg *ThePackage, templateFile, outputFile string, object interface{})
 		panic(err)
 	}
 
-	ioutil.WriteFile(outputFile, bf.Bytes(), 0664)
+	err = ioutil.WriteFile(outputFile, bf.Bytes(), 0664)
 	if err != nil {
 		panic(err)
 	}
