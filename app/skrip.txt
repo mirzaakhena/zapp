@@ -9,4 +9,10 @@ field, BirthDate, time.Time
 field, Point, float64
 endclass
 
+class, Location
+field, StreetAddress, string
+field, PostalCode, string
+field, City, string
+field, StateProvince, string
+endclass
 
