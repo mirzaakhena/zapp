@@ -1,10 +1,36 @@
+# GENERATE YOUR PROJECT
+Notice that you have `app/skrip.txt` that describe the model you want to generated
 
-A bidirectional one-to-many relationship
+
+# COMPILE THE PROJECT
+Open this project with your IDE and then run with console
+```
+cd app/
+go run main.go
+```
+Then project will generated in `$GOPATH/src/github.com/mirzaakhena/sample
 
 
-A unidirectional many-to-one relationship
-A unidirectional one-to-many relationship
-Two one-to-many relationships on the same two entities
-A many-to-many relationship
-A one-to-one relationship
-A unidirectional one-to-one relationship
+# WORKING ON GENERATED CODE
+Open that new project with your IDE And you need 2 console to run in development mode
+
+First console
+```
+cd webapp/
+npm install
+npm run build
+npm run serve
+```
+
+Second console
+
+```
+cd app/
+go run main.go
+```
+
+# In Development Mode
+Open browser then access `http://localhost:4000`
+
+# In Production Mode
+Open browser then access `http://localhost:8081`

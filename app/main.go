@@ -13,22 +13,27 @@ import (
 	"github.com/alecthomas/template"
 )
 
+// TheField is
 type TheField struct {
 	Name     string
 	DataType string
 }
 
+// TheClass is
 type TheClass struct {
 	Name   string
 	Fields []TheField
 }
 
+// ThePackage is
 type ThePackage struct {
+	appName     string
 	packageName string
 	datatypeid  string
 	Classes     []TheClass
 }
 
+// CamelCase is
 func CamelCase(name string) string {
 
 	// force it!
@@ -41,14 +46,17 @@ func CamelCase(name string) string {
 	return string(out)
 }
 
+// UpperCase is
 func UpperCase(name string) string {
 	return strings.ToUpper(name)
 }
 
+// LowerCase is
 func LowerCase(name string) string {
 	return strings.ToLower(name)
 }
 
+// PascalCase is
 func PascalCase(name string) string {
 	return name
 }
@@ -56,12 +64,14 @@ func PascalCase(name string) string {
 var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
 var matchAllCap = regexp.MustCompile("([a-z0-9])([A-Z])")
 
+// SnakeCase is
 func SnakeCase(str string) string {
 	snake := matchFirstCap.ReplaceAllString(str, "${1}_${2}")
 	snake = matchAllCap.ReplaceAllString(snake, "${1}_${2}")
 	return strings.ToLower(snake)
 }
 
+// HasTime is
 func HasTime(dataTypes []TheField) bool {
 	for _, tm := range dataTypes {
 		if tm.DataType == "time.Time" {
@@ -96,8 +106,11 @@ func main() {
 
 		if strings.HasPrefix(row, "package") {
 			pkgs := strings.Split(row, ",")
-			tp.packageName = strings.TrimSpace(pkgs[1])
+			packageName := pkgs[1]
+			tp.packageName = strings.TrimSpace(packageName)
 			tp.Classes = []TheClass{}
+			s := strings.Split(packageName, "/")
+			tp.appName = s[len(s)-1]
 			continue
 		}
 
@@ -472,6 +485,7 @@ func basic(pkg *ThePackage, templateFile, outputFile string, object interface{})
 		"SnakeCase":   SnakeCase,
 		"UpperCase":   UpperCase,
 		"LowerCase":   LowerCase,
+		"AppName":     func() string { return pkg.appName },
 		"PackageName": func() string { return pkg.packageName },
 		"DataTypeId":  func() string { return pkg.datatypeid },
 	}

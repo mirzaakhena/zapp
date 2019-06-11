@@ -67,7 +67,7 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 	idInt, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
 		log.GetLog().Error("{{PascalCase .Name}}.GetOne", "ID must integer")
-		c.JSON(http.StatusOK, map[string]interface{}{"message": "ID must integer", "data": nil})
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "ID must integer", "data": nil})
 		return
 	}
 
@@ -130,7 +130,7 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 	idInt, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
 		log.GetLog().Error("{{PascalCase .Name}}.Update", "ID must integer")
-		c.JSON(http.StatusOK, map[string]interface{}{"message": "ID must integer", "data": nil})
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "ID must integer", "data": nil})
 		return
 	} {{end}}
 
@@ -146,7 +146,7 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 	if err := g.{{CamelCase .Name}}Service.Update(idInt, obj); err != nil { {{else}}
 	if err := g.{{CamelCase .Name}}Service.Update(id, obj); err != nil { {{end}}
 		log.GetLog().Error("{{PascalCase .Name}}.Update", "%v", err.Error())
-		c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Error when update record with ID %v", id), "data": nil})
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Error when update record with ID %v", id), "data": nil})
 		return
 	}
 
@@ -165,14 +165,14 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 	idInt, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
 		log.GetLog().Error("{{PascalCase .Name}}.Delete", "ID must integer")
-		c.JSON(http.StatusOK, map[string]interface{}{"message": "ID must integer", "data": nil})
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "ID must integer", "data": nil})
 		return
 	}
 	
 	if err := g.{{CamelCase .Name}}Service.Delete(idInt); err != nil { {{else}}
 	if err := g.{{CamelCase .Name}}Service.Delete(id); err != nil { {{end}}
 		log.GetLog().Error("{{PascalCase .Name}}.Delete", "%v", err.Error())
-		c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Error when delete record with ID %v", id), "data": nil})
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Error when delete record with ID %v", id), "data": nil})
 		return
 	}
 

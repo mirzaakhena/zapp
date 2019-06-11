@@ -1,0 +1,12 @@
+package, github.com/mirzaakhena/sample
+
+datatypeid, int
+
+class, Person	
+field, Name, string 
+field, Age, int 
+field, BirthDate, time.Time
+field, Point, float64
+endclass
+
+
