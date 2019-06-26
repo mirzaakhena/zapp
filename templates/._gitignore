@@ -22,5 +22,7 @@ yarn-error.log*
 
 *.db
 
-
 *.log
+*._go
+*.log.*
+/aaa

@@ -157,33 +157,9 @@ func (tp *ThePackage) Run() {
 		os.MkdirAll(dir, 0777)
 	}
 
-	// create config folder
-	{
-		dir := fmt.Sprintf("../../../../%s/config", tp.packageName)
-		os.MkdirAll(dir, 0777)
-	}
-
 	// create controller folder
 	{
 		dir := fmt.Sprintf("../../../../%s/controller", tp.packageName)
-		os.MkdirAll(dir, 0777)
-	}
-
-	// create dao folder
-	{
-		dir := fmt.Sprintf("../../../../%s/dao", tp.packageName)
-		os.MkdirAll(dir, 0777)
-	}
-
-	// create database folder
-	{
-		dir := fmt.Sprintf("../../../../%s/database", tp.packageName)
-		os.MkdirAll(dir, 0777)
-	}
-
-	// create logger folder
-	{
-		dir := fmt.Sprintf("../../../../%s/logger", tp.packageName)
 		os.MkdirAll(dir, 0777)
 	}
 
@@ -199,8 +175,50 @@ func (tp *ThePackage) Run() {
 		os.MkdirAll(dir, 0777)
 	}
 
+	// create dao folder
 	{
-		dir := fmt.Sprintf("../../../../%s/utils", tp.packageName)
+		dir := fmt.Sprintf("../../../../%s/dao", tp.packageName)
+		os.MkdirAll(dir, 0777)
+	}
+
+	// create config folder
+	{
+		dir := fmt.Sprintf("../../../../%s/shared/config", tp.packageName)
+		os.MkdirAll(dir, 0777)
+	}
+
+	// create database folder
+	{
+		dir := fmt.Sprintf("../../../../%s/shared/transaction", tp.packageName)
+		os.MkdirAll(dir, 0777)
+	}
+
+	// create logger folder
+	{
+		dir := fmt.Sprintf("../../../../%s/shared/logger", tp.packageName)
+		os.MkdirAll(dir, 0777)
+	}
+
+	// create email folder
+	{
+		dir := fmt.Sprintf("../../../../%s/shared/email", tp.packageName)
+		os.MkdirAll(dir, 0777)
+	}
+
+	// create password folder
+	{
+		dir := fmt.Sprintf("../../../../%s/shared/password", tp.packageName)
+		os.MkdirAll(dir, 0777)
+	}
+
+	// create token folder
+	{
+		dir := fmt.Sprintf("../../../../%s/shared/token", tp.packageName)
+		os.MkdirAll(dir, 0777)
+	}
+
+	{
+		dir := fmt.Sprintf("../../../../%s/shared/utils", tp.packageName)
 		os.MkdirAll(dir, 0777)
 	}
 
@@ -320,26 +338,110 @@ func (tp *ThePackage) Run() {
 	}
 
 	{
+		templateFile := fmt.Sprintf("../templates/model_table._go")
+		outputFile := fmt.Sprintf("../../../../%s/model/table.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/model_request._go")
+		outputFile := fmt.Sprintf("../../../../%s/model/request.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/model_response._go")
+		outputFile := fmt.Sprintf("../../../../%s/model/response.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/service_backoffice.user._go")
+		outputFile := fmt.Sprintf("../../../../%s/service/backoffice.user.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/service_backoffice.guest._go")
+		outputFile := fmt.Sprintf("../../../../%s/service/backoffice.guest.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/service_backoffice.admin._go")
+		outputFile := fmt.Sprintf("../../../../%s/service/backoffice.admin.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/dao_backofficeuser._go")
+		outputFile := fmt.Sprintf("../../../../%s/dao/backofficeuser.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/dao_workingspace._go")
+		outputFile := fmt.Sprintf("../../../../%s/dao/workingspace.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/dao_workingspaceaccount._go")
+		outputFile := fmt.Sprintf("../../../../%s/dao/workingspaceaccount.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/controller_controller._go")
+		outputFile := fmt.Sprintf("../../../../%s/controller/controller.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
 		templateFile := fmt.Sprintf("../templates/config._go")
-		outputFile := fmt.Sprintf("../../../../%s/config/config.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/shared/config/config.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/transaction._go")
-		outputFile := fmt.Sprintf("../../../../%s/database/transaction.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/shared/transaction/transaction.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/justlog._go")
-		outputFile := fmt.Sprintf("../../../../%s/logger/justlog.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/shared/logger/logger.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/shared_email._go")
+		outputFile := fmt.Sprintf("../../../../%s/shared/email/email.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/shared_password._go")
+		outputFile := fmt.Sprintf("../../../../%s/shared/password/password.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/shared_jwttoken._go")
+		outputFile := fmt.Sprintf("../../../../%s/shared/token/jwttoken.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/shared_secret._go")
+		outputFile := fmt.Sprintf("../../../../%s/shared/token/secretkey.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/utils._go")
-		outputFile := fmt.Sprintf("../../../../%s/utils/utils.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/shared/utils/utils.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
@@ -351,7 +453,7 @@ func (tp *ThePackage) Run() {
 
 	{
 		templateFile := fmt.Sprintf("../templates/config._toml")
-		outputFile := fmt.Sprintf("../../../../%s/config.toml", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/shared/config/config.toml", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
@@ -428,6 +530,12 @@ func (tp *ThePackage) Run() {
 	}
 
 	{
+		templateFile := fmt.Sprintf("../templates/src_pages_successregister._vue")
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/successregister.vue", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
 		templateFile := fmt.Sprintf("../templates/src_main._js")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/main.js", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
@@ -454,6 +562,12 @@ func (tp *ThePackage) Run() {
 	{
 		templateFile := fmt.Sprintf("../templates/src_utils_httprequest._js")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/utils/httprequest.js", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/src_utils_auth._js")
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/utils/auth.js", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 

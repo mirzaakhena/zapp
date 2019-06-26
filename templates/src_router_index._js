@@ -1,8 +1,10 @@
 import Vue from 'vue'
-import Router from 'vue-router' {{range .Classes}}
+import Router from 'vue-router' 
+import Auth from '@/utils/auth' {{range .Classes}}
 import {{CamelCase .Name}} from './modules/{{LowerCase .Name}}' {{end}}
 
 Vue.use(Router)
+Vue.use(Auth)
 
 const router = new Router({
   routes: [ 
@@ -35,7 +37,15 @@ const router = new Router({
       component: () => import('@/pages/notfound.vue'),
       meta: {
       },
-    },      
+    },     
+
+    {
+      path: '/successregister',
+      component: () => import('@/pages/successregister.vue'),
+      meta: {
+        authorities: 'GUEST'
+      },
+    },   
     
     {
       path: '/',
@@ -47,7 +57,35 @@ const router = new Router({
         ...{{CamelCase .Name}}, {{end}}
       ],
     },        
+
+    { path: '*', redirect: 'login' }       
   ],
 })
+
+router.beforeEach((to, from, next) => {
+
+  console.log(to, Vue.auth.isAuthenticated())
+
+  if (to.matched.some(record => record.meta.authorities === 'GUEST')) {
+    if (Vue.auth.isAuthenticated()) {      
+      next({
+        path: '/'
+      })
+    } else {
+     next()
+    }
+  } else if (to.matched.some(record => record.meta.authorities === 'USER')) {
+    if (!Vue.auth.isAuthenticated()) {
+      next({
+        path: '/login'
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
 
 export default router

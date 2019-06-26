@@ -1,21 +1,98 @@
 <template>
-  <div>
-    <b-card title="Login" style="max-width: 20rem;" class="mb-2">
-      <b-card-text>
-        Some quick example text to build on the card title and make up the bulk of the card's content.
-      </b-card-text>
+  <div class="container">
 
-      <b-button href="#" variant="primary">Login</b-button>
-    </b-card>
-  </div>  
+    <form class="form-signin">
+      <h2 class="form-signin-heading">Login</h2>
+
+      <label for="inputEmail" class="sr-only">Email address</label>
+      <input type="email" id="inputEmail" autocomplete="username" v-model="loginRequest.email" class="form-control" placeholder="Your Email" required autofocus>
+
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="inputPassword" autocomplete="password" v-model="loginRequest.password" class="form-control" placeholder="Your Password" required>
+
+      <b-button block variant="primary" size="lg" @click="onSubmit">Sign in</b-button>
+      <div class="textcenter">
+        or
+      </div>          
+      <b-button block variant="danger" size="lg" to='/register'>Register</b-button>        
+    </form>
+
+  </div>
 </template>
 
 <script>
-export default {
+import request from "@/utils/httprequest";
+import to from 'await-to-js';
 
+export default {
+  data () {
+    return {
+      loginRequest: {
+        email: 'mirza@gmail.com',
+        password: '123456'
+      }
+    } 
+  },
+  methods : {
+    async onSubmit () {
+      const [error, response] = await to(request({
+        url: `/login`,
+        method: 'post',
+        data: this.loginRequest,
+      }))
+      if (error) {
+        this.$swal('Something wrong', error.response.data.message, 'error')
+        return
+      } 
+      this.$auth.setToken(response.data.data)
+      this.$router.push('/')      
+    },
+
+    onReset () {
+
+    },
+
+  } 
 }
 </script>
 
 <style>
-
+.form-signin {
+  max-width: 360px;
+  padding: 15px;
+  padding-top: 80px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .textcenter {
+  text-align: center;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[id="inputPassword"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
 </style>
+

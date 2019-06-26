@@ -1,4 +1,4 @@
-package, github.com/mirzaakhena/sample
+package, github.com/mirzaakhena/zappsample
 
 datatypeid, int
 

@@ -1,7 +1,14 @@
 [server]
-rest_api_port = "8081"
+protocol = "http"
+port = 8081
 
 [database]
 dialect = "sqlite3"
 connection_string = "database.db"
 
+[email]
+from = "apps@mail.com"
+
+[link]
+activation = "/activate"
+resetpassword = "/resetpassword"

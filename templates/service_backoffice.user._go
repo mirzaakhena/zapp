@@ -1,0 +1,109 @@
+package service
+
+import (
+	"{{PackageName}}/dao"
+	model "{{PackageName}}/model"
+	log "{{PackageName}}/shared/logger"
+	"{{PackageName}}/shared/utils"		
+)
+
+// IBackofficeUserService is
+type IBackofficeUserService interface {
+	IBackofficeGuestService
+	GetBasicUserInfo(sc model.ServiceContext, req model.GetBasicUserInfoRequest) *model.GetBasicUserInfoResponse
+	UpdateBasicUserInfo(sc model.ServiceContext, req model.UpdateBasicUserInfoRequest) (*model.UpdateBasicUserInfoResponse, error)
+	UpdatePassword(sc model.ServiceContext, req model.UpdatePasswordRequest) (*model.UpdatePasswordResponse, error)
+	GetAllWorkingSpaceAccount(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.WorkingSpaceAccount, uint64)
+	GetAllPermission(sc model.ServiceContext, req model.GetAllBasicRequest) (*model.GetAllPermissionResponse, uint64)
+}
+
+// BackofficeUserService is
+type BackofficeUserService struct {
+	BackofficeGuestService
+	workingSpace        dao.IWorkingSpaceDao
+	workingSpaceAccount dao.IWorkingSpaceAccountDao
+}
+
+// GetBasicUserInfo is
+func (o *BackofficeUserService) GetBasicUserInfo(sc model.ServiceContext, req model.GetBasicUserInfoRequest) *model.GetBasicUserInfoResponse {
+
+	userID, _ := o.getUserIDFromServiceContext(sc)
+
+	bu := o.User.GetOneByID(o.Trx.GetDB(false), userID)
+
+	response := model.GetBasicUserInfoResponse{
+		User: bu,
+	}
+
+	return &response
+}
+
+// UpdateBasicUserInfo is
+func (o *BackofficeUserService) UpdateBasicUserInfo(sc model.ServiceContext, req model.UpdateBasicUserInfoRequest) (*model.UpdateBasicUserInfoResponse, error) {
+	userID, _ := o.getUserIDFromServiceContext(sc)
+
+	tx := o.Trx.GetDB(true)
+
+	bu := o.User.GetOneByID(tx, userID)
+
+	bu.Address = req.Address
+	bu.Firstname = req.Firstname
+	bu.Lastname = req.Lastname
+	bu.Phone = req.Phone
+
+	o.User.Update(tx, bu)
+
+	response := model.UpdateBasicUserInfoResponse{}
+
+	o.Trx.CommitTransaction(tx)
+
+	return &response, nil
+}
+
+// UpdatePassword is
+func (o *BackofficeUserService) UpdatePassword(sc model.ServiceContext, req model.UpdatePasswordRequest) (*model.UpdatePasswordResponse, error) {
+
+	userID, logInfo := o.getUserIDFromServiceContext(sc)
+
+	tx := o.Trx.GetDB(true)
+
+	bu := o.User.GetOneByID(tx, userID)
+
+	if !o.Password.IsValidPassword(req.OldPassword, bu.Password) {
+		log.GetLog().Error(logInfo, "Old Password does not match")
+		o.Trx.RollbackTransaction(tx)
+		return nil, utils.PrintError(model.ConstErrorUnExistingEmailAddress, "Old Password does not match ")
+	}
+
+	bu.Password = o.Password.GenerateHashPassword(req.NewPassword)
+
+	o.User.Update(tx, bu)
+
+	o.Trx.CommitTransaction(tx)
+
+	return nil, nil
+}
+
+// GetAllWorkingSpaceAccount is
+func (o *BackofficeAdminService) GetAllWorkingSpaceAccount(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.WorkingSpaceAccount, uint64) {
+	return o.workingSpaceAccount.GetAll(o.Trx.GetDB(false), req)
+}
+
+// GetAllPermission is
+func (o *BackofficeUserService) GetAllPermission(sc model.ServiceContext, req model.GetAllBasicRequest) (*model.GetAllPermissionResponse, uint64) {
+
+	// userID, logInfo := o.getUserIDFromServiceContext(sc)
+
+	return nil, 0
+}
+
+func (o *BackofficeUserService) getUserIDFromServiceContext(sc model.ServiceContext) (string, interface{}) {
+	logInfo := sc["logInfo"]
+	userIDInterface, ok := sc["user.id"]
+	if !ok {
+		log.GetLog().Panic(logInfo, "user.id not setup yet")
+	}
+
+	userID := userIDInterface.(string)
+	return userID, logInfo
+}

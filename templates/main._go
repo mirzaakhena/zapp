@@ -8,53 +8,94 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"{{PackageName}}/config"
+	_ "github.com/jinzhu/gorm/dialects/mysql"  //
+	_ "github.com/jinzhu/gorm/dialects/sqlite" //
 	"{{PackageName}}/controller"
 	"{{PackageName}}/dao"
-	log "{{PackageName}}/logger"
+	"{{PackageName}}/model"
 	"{{PackageName}}/service"
-
-	_ "github.com/jinzhu/gorm/dialects/sqlite" //
+	"{{PackageName}}/shared/config"
+	"{{PackageName}}/shared/email"
+	log "{{PackageName}}/shared/logger"
+	"{{PackageName}}/shared/password"
+	"{{PackageName}}/shared/token"	
+	"{{PackageName}}/shared/transaction"
+	
 )
 
 func main() {
 
-	log.GetLog().WithFile("apps", 14)
+	log.GetLog().WithFile("{{AppName}}", "apps", 14)
 
 	log.GetLog().Info("main", "Apps run")
 
 	cf := config.NewRealtimeConfig("config", "$GOPATH/src/{{PackageName}}")
 
-	db, err := gorm.Open(cf.GetDialect(), cf.GetConnectionString())
+	db, err := gorm.Open(cf.GetString("database.dialect", "sqlite3"), cf.GetString("database.connection_string", "database.db"))
 	if err != nil {
 		panic(err)
 	}
 	db.LogMode(true)
 
+	{
+		db.AutoMigrate(&model.BackofficeUser{})
+		db.AutoMigrate(&model.WorkingSpace{})
+		db.AutoMigrate(&model.WorkingSpaceAccount{})
+	}
+	
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
 		ExposeHeaders:   []string{"Data-Length"},		
-		AllowMethods:    []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
+		AllowMethods:    []string{"GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"},
 		AllowAllOrigins: true,
 		AllowHeaders:    []string{"Content-Type"},
 		MaxAge:          12 * time.Hour,
 	}))
+	
+	trx := transaction.NewGormTransactionDB(db)
 	{{range .Classes}}
 	// {{PascalCase .Name}}
 	{
 		dao := dao.New{{PascalCase .Name}}Dao(db)
-		service := service.New{{PascalCase .Name}}Service(dao)
+		service := service.New{{PascalCase .Name}}Service(trx, dao)
 		controller.New{{PascalCase .Name}}Controller(router, service)
 	}
 	{{end}}
-
-	router.Static("/static", "../static")
-	router.LoadHTMLGlob("../templates/*")
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{"title": "MainMenu"})
 	})	
 
-	router.Run(fmt.Sprintf(":%s", cf.GetAPIPort()))
+	router.Static("/static", "../static")
+	router.LoadHTMLGlob("../templates/*")
+
+	em := email.NewEmailImpl()
+
+	ps := password.NewPassword()
+
+	tk := token.NewToken()
+
+	us := dao.BackofficeUserDao{}
+
+	guestService := service.BackofficeGuestService{
+		Config:   cf,
+		Trx:      trx,
+		Email:    em,
+		Password: ps,
+		Token:    tk,
+		User:     &us,
+	}
+
+	api := controller.MyApi{
+		GuestService: &guestService,
+	}
+
+	router.POST("/register", api.Register)
+	router.POST("/login", api.Login)
+	router.GET("/activate", api.Activate)
+	router.POST("/password/forgot/init", api.ForgotPasswordInit)
+	router.POST("/password/forgot/reset", api.ForgotPasswordReset)
+
+	router.Run(fmt.Sprintf(":%d", cf.GetInt("server.port", "8081")))	
 
 }

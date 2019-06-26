@@ -24,7 +24,7 @@
             <template slot="button-content"><em>User</em></template>
             <b-dropdown-item href="#">Profile</b-dropdown-item>
             <b-dropdown-item href="#">Setting</b-dropdown-item>
-            <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+            <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -47,6 +47,10 @@ export default {
     onCollapse (collapsed) {
       this.collapsed = collapsed
     },
+    logout () {
+      this.$auth.removeToken()
+      this.$router.push('/login')      
+    }      
   },
   data () {
     return {

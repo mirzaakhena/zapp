@@ -2,12 +2,12 @@ package model
 
 import ({{if HasTime .Fields}}
 	"time"{{end}}
-	"{{PackageName}}/database"
+	"{{PackageName}}/shared/transaction"
 )
 
 // {{PascalCase .Name}} is
 type {{PascalCase .Name}} struct {
-	database.BaseModel{{range .Fields}}
+	transaction.BaseModel{{range .Fields}}
 	{{.Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}
 }
 

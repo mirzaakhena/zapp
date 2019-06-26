@@ -1,14 +1,16 @@
 package config
 
-import (
-	"github.com/spf13/viper"
-)
+import "github.com/spf13/viper"
+
+// IConfig is
+type IConfig interface {
+	GetString(key, defaultValue string) string
+	GetInt(key, defaultValue string) int
+	GetBool(key, defaultValue string) bool
+}
 
 // RealtimeConfig is
 type RealtimeConfig struct {
-	APIPort          string `` //
-	Dialect          string `` //
-	ConnectionString string `` //
 }
 
 // NewRealtimeConfig is
@@ -20,30 +22,26 @@ func NewRealtimeConfig(confiName, path string) *RealtimeConfig {
 		panic(err)
 	}
 	rc := RealtimeConfig{}
-	rc.reload()
+	// rc.reload()
 	return &rc
 }
 
-func (r *RealtimeConfig) reload() {
-
-	r.APIPort = viper.GetString("server.rest_api_port")
-
-	r.Dialect = viper.GetString("database.dialect")
-	r.ConnectionString = viper.GetString("database.connection_string")
-
+func (r *RealtimeConfig) GetString(key, defaultValue string) string {
+	v := viper.GetString(key)
+	if v == "" {
+		return defaultValue
+	}
+	return v
 }
 
-// GetAPIPort is
-func (r *RealtimeConfig) GetAPIPort() string {
-	return r.APIPort
+func (r *RealtimeConfig) GetInt(key, defaultValue string) int {
+	v := viper.GetInt(key)
+
+	return v
 }
 
-// GetDialect is
-func (r *RealtimeConfig) GetDialect() string {
-	return r.Dialect
-}
+func (r *RealtimeConfig) GetBool(key, defaultValue string) bool {
+	v := viper.GetBool(key)
 
-// GetConnectionString is
-func (r *RealtimeConfig) GetConnectionString() string {
-	return r.ConnectionString
+	return v
 }

@@ -1,0 +1,16 @@
+package dao
+
+import "{{PackageName}}/model"
+
+// IWorkingSpaceAccountDao is
+type IWorkingSpaceAccountDao interface {
+	Create(dc model.DaoContext, bu model.WorkingSpaceAccount) error
+	GetOne(dc model.DaoContext, workingSpaceID, userID string) *model.WorkingSpaceAccount
+	GetAll(dc model.DaoContext, req model.GetAllBasicRequest) ([]model.WorkingSpaceAccount, uint64)
+	Delete(dc model.DaoContext, ID string) error
+	Update(dc model.DaoContext, ID string, obj *model.WorkingSpaceAccount) error
+}
+
+// WorkingSpaceAccountDao is
+type WorkingSpaceAccountDao struct {
+}

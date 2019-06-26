@@ -1,0 +1,115 @@
+package model
+
+// FilterRequest is
+type FilterRequest map[string]string //
+
+// GetAllBasicRequest is
+type GetAllBasicRequest struct {
+	PageNumber int           `` //
+	PageSize   int           `` //
+	SortBy     string        `` //
+	SortDir    string        `` //
+	Filter     FilterRequest `` //
+}
+
+// RegisterRequest is
+type RegisterRequest struct {
+	Firstname string `json:"firstname"` //
+	Lastname  string `json:"lastname"`  //
+	Email     string `json:"email"`     //
+	Password  string `json:"password"`  //
+}
+
+// LoginRequest is
+type LoginRequest struct {
+	Email    string `json:"email"`    //
+	Password string `json:"password"` //
+}
+
+// ActivateRequest is
+type ActivateRequest struct {
+	RegisterToken string `json:"registerToken"` //
+}
+
+// ForgotPasswordInitRequest is
+type ForgotPasswordInitRequest struct {
+	Email string `json:"email"` //
+}
+
+// ForgotPasswordResetRequest is
+type ForgotPasswordResetRequest struct {
+	ResetPasswordToken string `json:"resetPasswordToken"` //
+	NewPassword        string `json:"newPassword"`        //
+}
+
+// UpdateStatusRequest is
+type UpdateStatusRequest struct {
+	WorkingSpaceID string `json:"workingSpaceId"` //
+	UserID         string `json:"userId"`         //
+	Status         string `json:"status"`         //
+}
+
+// GenerateInvitationAccountRequest is
+type GenerateInvitationAccountRequest struct {
+	WorkingSpaceID string `json:"workingSpaceId"`
+}
+
+// UpdatePasswordRequest is
+type UpdatePasswordRequest struct {
+	OldPassword string `json:"oldPassword"` //
+	NewPassword string `json:"newPassword"` //
+}
+
+// CreateWorkingSpaceRequest is
+type CreateWorkingSpaceRequest struct {
+	Name               string `json:"name"`               //
+	Description        string `json:"description"`        //
+	WorkingSpacePlanID string `json:"workingSpacePlanID"` //
+}
+
+// GetBasicUserInfoRequest is
+type GetBasicUserInfoRequest struct{}
+
+// UpdateBasicUserInfoRequest is
+type UpdateBasicUserInfoRequest struct {
+	Firstname string `json:"firstName"` //
+	Lastname  string `json:"lastName"`  //
+	Phone     string `json:"phone"`     //
+	Address   string `json:"address"`   //
+}
+
+// RemoveAccountRequest is
+type RemoveAccountRequest struct {
+	WorkingSpaceID string `json:"workingSpaceId"` //
+	UserID         string `json:"userId"`         //
+}
+
+// RemoveWaitingAccountRequest is
+type RemoveWaitingAccountRequest struct{}
+
+// GetAllUserRolePermissionRequest is
+type GetAllUserRolePermissionRequest struct{}
+
+// CreateUserRolePermissionRequest is
+type CreateUserRolePermissionRequest struct{}
+
+// UpdateUserRolePermissionRequest is
+type UpdateUserRolePermissionRequest struct{}
+
+// DeleteUserRolePermissionRequest is
+type DeleteUserRolePermissionRequest struct{}
+
+// GetAllAccountUserRoleRequest is
+type GetAllAccountUserRoleRequest struct{}
+
+// UpdateAccountUserRoleRequest is
+type UpdateAccountUserRoleRequest struct{}
+
+// ApplyForPermissionRequest is
+type ApplyForPermissionRequest struct{}
+
+// GrantAppliedPermissionRequest is
+type GrantAppliedPermissionRequest struct{}
+
+// RefuseAppliedPermissionRequest is
+type RefuseAppliedPermissionRequest struct{}

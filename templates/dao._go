@@ -4,14 +4,12 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	"{{PackageName}}/database"
 	"{{PackageName}}/model"
-	"{{PackageName}}/utils"
+	"{{PackageName}}/shared/utils"	
 )
 
 // I{{PascalCase .Name}}Dao is
-type I{{PascalCase .Name}}Dao interface {
-	database.ITransaction {{if (eq DataTypeId "int")}}
+type I{{PascalCase .Name}}Dao interface { {{if (eq DataTypeId "int")}}
 	Create(db interface{}, obj *model.{{PascalCase .Name}}) error
 	GetOne(db interface{}, ID uint64) *model.{{PascalCase .Name}}
 	GetAll(db interface{}, page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
@@ -25,18 +23,12 @@ type I{{PascalCase .Name}}Dao interface {
 }
 
 // {{PascalCase .Name}}Dao is
-type {{PascalCase .Name}}Dao struct {
-	database.GormDB
-}
+type {{PascalCase .Name}}Dao struct {}
 
 // New{{PascalCase .Name}}Dao is
 func New{{PascalCase .Name}}Dao(db *gorm.DB) *{{PascalCase .Name}}Dao {
 	db.AutoMigrate(&model.{{PascalCase .Name}}{})
-	return &{{PascalCase .Name}}Dao{
-		GormDB: database.GormDB{
-			DB: db,
-		},
-	}
+	return &{{PascalCase .Name}}Dao{}
 }
 
 // Create is

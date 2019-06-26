@@ -1,0 +1,46 @@
+package model
+
+import (
+	"time"
+)
+
+// BaseModel is
+type BaseModel struct {
+	ID        string     `json:"id" gorm:"primary_key"` //
+	CreatedAt time.Time  `json:"-"`                     //
+	UpdatedAt time.Time  `json:"-"`                     //
+	DeletedAt *time.Time `json:"-" sql:"index"`         //
+}
+
+// WorkingSpace is
+type WorkingSpace struct {
+	BaseModel
+	Name              string    ``         //
+	Description       string    ``         //
+	Expired           time.Time `json:"-"` //
+	MaxBackofficeUser int       `json:"-"` //
+	TotalCurrentUser  int       `json:"-"` //
+}
+
+// BackofficeUser is
+type BackofficeUser struct {
+	BaseModel
+	Firstname          string `json:"firstName"` //
+	Lastname           string `json:"lastName"`  //
+	Email              string `json:"email"`     //
+	Phone              string `json:"phone"`     //
+	Address            string `json:"address"`   //
+	Password           string `json:"-"`         //
+	LoginToken         string `json:"-"`         //
+	ResetPasswordToken string `json:"-"`         //
+	Status             string `json:"-"`         //
+}
+
+// WorkingSpaceAccount is
+type WorkingSpaceAccount struct {
+	BaseModel
+	WorkingSpaceID   string `json:"-"` //
+	BackofficeUserID string `json:"-"` //
+	AccountRole      string `json:"-"` // ADMIN | USER
+	Status           string `json:"-"` // ACTIVE | REQUEST | SUSPEND
+}

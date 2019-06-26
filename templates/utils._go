@@ -2,9 +2,11 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"regexp"
 	"strings"
-	
+
+	gonanoid "github.com/matoous/go-nanoid"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -28,4 +30,18 @@ func SnakeCase(str string) string {
 	snake := matchFirstCap.ReplaceAllString(str, "${1}_${2}")
 	snake = matchAllCap.ReplaceAllString(snake, "${1}_${2}")
 	return strings.ToLower(snake)
+}
+
+// PrintError is
+func PrintError(code int, message string, args ...interface{}) error {
+	return fmt.Errorf("Error (%d). %s", code, fmt.Sprintf(message, args...))
+}
+
+const nanoidstr = "A2BC3DE4FG5HJ6KL7MN8PQ9RSTUVWXYZ"
+
+// GenerateUniqueID is
+func GenerateUniqueID() string {
+	// return ksuid.New().String()
+	a, _ := gonanoid.Generate(nanoidstr, 12)
+	return a
 }

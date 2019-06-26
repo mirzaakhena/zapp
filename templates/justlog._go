@@ -1,6 +1,9 @@
-package log
+package logger
 
 import (
+	"bytes"
+	"runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -14,15 +17,23 @@ import (
 var defaultLogger logrusImpl
 var defaultLoggerOnce sync.Once
 
+// Data is
+type Data struct {
+	ClientIP string `` // c.ClientIP() set from controller before entering service
+	Session  string `` // ksuid.New().String() or gonanoid.Generate(x, 12) set from first caller
+	UserID   string `` // from client
+	Type     string `` // MOB/BOF/MSQ/SYS/SCH --> mobile / backoffice / message queuing / system / scheduller
+}
+
 // ILogger is
 type ILogger interface {
-	Debug(title string, description string, args ...interface{})
-	Info(title string, description string, args ...interface{})
-	Warn(title string, description string, args ...interface{})
-	Error(title string, description string, args ...interface{})
-	Fatal(title string, description string, args ...interface{})
-	Panic(title string, description string, args ...interface{})
-	WithFile(filename string, maxAge int)
+	Debug(data interface{}, description string, args ...interface{})
+	Info(data interface{}, description string, args ...interface{})
+	Warn(data interface{}, description string, args ...interface{})
+	Error(data interface{}, description string, args ...interface{})
+	Fatal(data interface{}, description string, args ...interface{})
+	Panic(data interface{}, description string, args ...interface{})
+	WithFile(appsName, filename string, maxAge int)
 }
 
 // LogrusImpl is
@@ -37,8 +48,10 @@ func GetLog() ILogger {
 		defaultLogger = logrusImpl{theLogger: logrus.New()}
 		defaultLogger.useFile = false
 		defaultLogger.theLogger.SetFormatter(&nested.Formatter{
-			NoColors: true,
-			HideKeys: true,
+			NoColors:        false,
+			HideKeys:        true,
+			TimestampFormat: "0102 150405.000",
+			FieldsOrder:     []string{"func"},
 		})
 	})
 	return &defaultLogger
@@ -50,7 +63,7 @@ func GetLog() ILogger {
 // filename is just a name of log file without any extension
 //
 // maxAge is age (in days) of the logs file before it gets purged from the file system
-func (l *logrusImpl) WithFile(filename string, maxAge int) {
+func (l *logrusImpl) WithFile(appsName, filename string, maxAge int) {
 
 	if !l.useFile {
 
@@ -60,7 +73,7 @@ func (l *logrusImpl) WithFile(filename string, maxAge int) {
 
 		path := filename + ".log"
 		writer, _ := rotatelogs.New(
-			"/var/log/{{AppName}}/logs/"+path+".%Y%m%d",
+			"./"+appsName+"/"+path+".%Y%m%d",
 			rotatelogs.WithLinkName(path),
 			rotatelogs.WithMaxAge(time.Duration(maxAge*24)*time.Hour),
 			rotatelogs.WithRotationTime(time.Duration(1*24)*time.Hour),
@@ -80,32 +93,71 @@ func (l *logrusImpl) WithFile(filename string, maxAge int) {
 	}
 }
 
+func (l *logrusImpl) getLogEntry(data map[string]string) *logrus.Entry {
+	pc, _, _, _ := runtime.Caller(2)
+	funcName := runtime.FuncForPC(pc).Name()
+
+	var buffer bytes.Buffer
+
+	buffer.WriteString("|FN:")
+
+	x := strings.LastIndex(funcName, "/")
+
+	buffer.WriteString(funcName[x+1:])
+
+	if data == nil {
+		return l.theLogger.WithField("info", buffer.String())
+	}
+
+	if clientIP, ok := data["clientIP"]; ok {
+		buffer.WriteString("|IP:")
+		buffer.WriteString(clientIP)
+	}
+
+	if session, ok := data["session"]; ok {
+		buffer.WriteString("|SS:")
+		buffer.WriteString(session)
+	}
+
+	if userID, ok := data["userId"]; ok {
+		buffer.WriteString("|US:")
+		buffer.WriteString(userID)
+	}
+
+	if types, ok := data["types"]; ok {
+		buffer.WriteString("|TY:")
+		buffer.WriteString(types)
+	}
+
+	return l.theLogger.WithField("info", buffer.String())
+}
+
 // Debug is
-func (l *logrusImpl) Debug(title string, description string, args ...interface{}) {
-	l.theLogger.WithField("key", title).Debugf(description, args...)
+func (l *logrusImpl) Debug(data interface{}, description string, args ...interface{}) {
+	l.getLogEntry(nil).Debugf(description, args...)
 }
 
 // Info is
-func (l *logrusImpl) Info(title string, description string, args ...interface{}) {
-	l.theLogger.WithField("key", title).Infof(description, args...)
+func (l *logrusImpl) Info(data interface{}, description string, args ...interface{}) {
+	l.getLogEntry(nil).Infof(description, args...)
 }
 
 // Warn is
-func (l *logrusImpl) Warn(title string, description string, args ...interface{}) {
-	l.theLogger.WithField("key", title).Warnf(description, args...)
+func (l *logrusImpl) Warn(data interface{}, description string, args ...interface{}) {
+	l.getLogEntry(nil).Warnf(description, args...)
 }
 
 // Error is
-func (l *logrusImpl) Error(title string, description string, args ...interface{}) {
-	l.theLogger.WithField("key", title).Errorf(description, args...)
+func (l *logrusImpl) Error(data interface{}, description string, args ...interface{}) {
+	l.getLogEntry(nil).Errorf(description, args...)
 }
 
 // Fatal is
-func (l *logrusImpl) Fatal(title string, description string, args ...interface{}) {
-	l.theLogger.WithField("key", title).Fatalf(description, args...)
+func (l *logrusImpl) Fatal(data interface{}, description string, args ...interface{}) {
+	l.getLogEntry(nil).Fatalf(description, args...)
 }
 
 // Panic is
-func (l *logrusImpl) Panic(title string, description string, args ...interface{}) {
-	l.theLogger.WithField("key", title).Panicf(description, args...)
+func (l *logrusImpl) Panic(data interface{}, description string, args ...interface{}) {
+	l.getLogEntry(nil).Panicf(description, args...)
 }
