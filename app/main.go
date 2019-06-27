@@ -339,19 +339,19 @@ func (tp *ThePackage) Run() {
 
 	{
 		templateFile := fmt.Sprintf("../templates/model_table._go")
-		outputFile := fmt.Sprintf("../../../../%s/model/table.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/model/backoffice.table.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/model_request._go")
-		outputFile := fmt.Sprintf("../../../../%s/model/request.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/model/backoffice.request.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/model_response._go")
-		outputFile := fmt.Sprintf("../../../../%s/model/response.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/model/backoffice.response.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
@@ -375,25 +375,25 @@ func (tp *ThePackage) Run() {
 
 	{
 		templateFile := fmt.Sprintf("../templates/dao_backofficeuser._go")
-		outputFile := fmt.Sprintf("../../../../%s/dao/backofficeuser.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/dao/backoffice.user.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/dao_workingspace._go")
-		outputFile := fmt.Sprintf("../../../../%s/dao/workingspace.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/dao/backoffice.space.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/dao_workingspaceaccount._go")
-		outputFile := fmt.Sprintf("../../../../%s/dao/workingspaceaccount.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/dao/backoffice.spaceaccount.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/controller_controller._go")
-		outputFile := fmt.Sprintf("../../../../%s/controller/controller.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/controller/backoffice.guest.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 

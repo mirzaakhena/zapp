@@ -44,14 +44,14 @@ type ForgotPasswordResetRequest struct {
 
 // UpdateStatusRequest is
 type UpdateStatusRequest struct {
-	WorkingSpaceID string `json:"workingSpaceId"` //
-	UserID         string `json:"userId"`         //
-	Status         string `json:"status"`         //
+	SpaceID        string `json:"spaceId"` //
+	UserID         string `json:"userId"`  //
+	Status         string `json:"status"`  //
 }
 
 // GenerateInvitationAccountRequest is
 type GenerateInvitationAccountRequest struct {
-	WorkingSpaceID string `json:"workingSpaceId"`
+	SpaceID string `json:"spaceId"`
 }
 
 // UpdatePasswordRequest is
@@ -60,11 +60,11 @@ type UpdatePasswordRequest struct {
 	NewPassword string `json:"newPassword"` //
 }
 
-// CreateWorkingSpaceRequest is
-type CreateWorkingSpaceRequest struct {
-	Name               string `json:"name"`               //
-	Description        string `json:"description"`        //
-	WorkingSpacePlanID string `json:"workingSpacePlanID"` //
+// CreateSpaceRequest is
+type CreateSpaceRequest struct {
+	Name        string `json:"name"`        //
+	Description string `json:"description"` //
+	SpacePlanID string `json:"spacePlanID"` //
 }
 
 // GetBasicUserInfoRequest is
@@ -80,8 +80,8 @@ type UpdateBasicUserInfoRequest struct {
 
 // RemoveAccountRequest is
 type RemoveAccountRequest struct {
-	WorkingSpaceID string `json:"workingSpaceId"` //
-	UserID         string `json:"userId"`         //
+	SpaceID string `json:"spaceId"` //
+	UserID  string `json:"userId"`  //
 }
 
 // RemoveWaitingAccountRequest is

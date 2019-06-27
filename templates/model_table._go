@@ -12,18 +12,18 @@ type BaseModel struct {
 	DeletedAt *time.Time `json:"-" sql:"index"`         //
 }
 
-// WorkingSpace is
-type WorkingSpace struct {
+// Space is
+type Space struct {
 	BaseModel
-	Name              string    ``         //
-	Description       string    ``         //
-	Expired           time.Time `json:"-"` //
-	MaxBackofficeUser int       `json:"-"` //
-	TotalCurrentUser  int       `json:"-"` //
+	Name             string    ``         //
+	Description      string    ``         //
+	Expired          time.Time `json:"-"` //
+	MaxUser          int       `json:"-"` //
+	TotalCurrentUser int       `json:"-"` //
 }
 
-// BackofficeUser is
-type BackofficeUser struct {
+// User is
+type User struct {
 	BaseModel
 	Firstname          string `json:"firstName"` //
 	Lastname           string `json:"lastName"`  //
@@ -36,11 +36,11 @@ type BackofficeUser struct {
 	Status             string `json:"-"`         //
 }
 
-// WorkingSpaceAccount is
-type WorkingSpaceAccount struct {
+// SpaceAccount is
+type SpaceAccount struct {
 	BaseModel
-	WorkingSpaceID   string `json:"-"` //
-	BackofficeUserID string `json:"-"` //
-	AccountRole      string `json:"-"` // ADMIN | USER
-	Status           string `json:"-"` // ACTIVE | REQUEST | SUSPEND
+	SpaceID     string `json:"-"` //
+	UserID      string `json:"-"` //
+	AccountRole string `json:"-"` // ADMIN | USER
+	Status      string `json:"-"` // ACTIVE | REQUEST | SUSPEND
 }

@@ -8,11 +8,11 @@ import (
 	"{{PackageName}}/model"
 	"{{PackageName}}/service"
 	log "{{PackageName}}/shared/logger"
-	"{{PackageName}}/shared/utils"	
+	"{{PackageName}}/shared/utils"
 )
 
 type MyApi struct {
-	GuestService service.IBackofficeGuestService
+	GuestService service.IGuestService
 }
 
 func (m *MyApi) Register(c *gin.Context) {

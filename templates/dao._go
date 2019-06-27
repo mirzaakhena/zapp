@@ -23,7 +23,7 @@ type I{{PascalCase .Name}}Dao interface { {{if (eq DataTypeId "int")}}
 }
 
 // {{PascalCase .Name}}Dao is
-type {{PascalCase .Name}}Dao struct {}
+type {{PascalCase .Name}}Dao struct{}
 
 // New{{PascalCase .Name}}Dao is
 func New{{PascalCase .Name}}Dao(db *gorm.DB) *{{PascalCase .Name}}Dao {

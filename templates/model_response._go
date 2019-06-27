@@ -28,21 +28,21 @@ type UpdateStatusResponse struct{}
 
 // GenerateInvitationAccountResponse is
 type GenerateInvitationAccountResponse struct {
-	WorkingSpaceInvitationToken string
+	SpaceInvitationToken string
 }
 
 // UpdatePasswordResponse is
 type UpdatePasswordResponse struct{}
 
-// CreateWorkingSpaceResponse is
-type CreateWorkingSpaceResponse struct{}
+// CreateSpaceResponse is
+type CreateSpaceResponse struct{}
 
 // GetAllPermissionResponse is
 type GetAllPermissionResponse struct{}
 
 // GetBasicUserInfoResponse is
 type GetBasicUserInfoResponse struct {
-	User *BackofficeUser `json:"user"` //
+	User *User `json:"user"` //
 }
 
 // UpdateBasicUserInfoResponse is

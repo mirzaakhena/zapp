@@ -12,11 +12,11 @@ import (
 	myPassword "{{PackageName}}/shared/password"
 	myToken "{{PackageName}}/shared/token"
 	"{{PackageName}}/shared/transaction"
-	"{{PackageName}}/shared/utils"		
+	"{{PackageName}}/shared/utils"
 )
 
-// IBackofficeGuestService is
-type IBackofficeGuestService interface {
+// IGuestService is
+type IGuestService interface {
 	Register(sc model.ServiceContext, req model.RegisterRequest) (*model.RegisterResponse, error)
 	Activate(sc model.ServiceContext, req model.ActivateRequest) (*model.ActivateResponse, error)
 	Login(sc model.ServiceContext, req model.LoginRequest) (*model.LoginResponse, error)
@@ -24,18 +24,18 @@ type IBackofficeGuestService interface {
 	ForgotPasswordReset(sc model.ServiceContext, req model.ForgotPasswordResetRequest) (*model.ForgotPasswordResetResponse, error)
 }
 
-// BackofficeGuestService is
-type BackofficeGuestService struct {
+// GuestService is
+type GuestService struct {
 	Trx      transaction.ITransaction
 	Email    myEmail.IEmail
-	User     dao.IBackofficeUserDao
+	User     dao.IUserDao
 	Token    myToken.IToken
 	Password myPassword.IPassword
 	Config   myConfig.IConfig
 }
 
 // Register is
-func (o *BackofficeGuestService) Register(sc model.ServiceContext, req model.RegisterRequest) (*model.RegisterResponse, error) {
+func (o *GuestService) Register(sc model.ServiceContext, req model.RegisterRequest) (*model.RegisterResponse, error) {
 
 	logInfo := sc["logInfo"]
 
@@ -67,7 +67,7 @@ func (o *BackofficeGuestService) Register(sc model.ServiceContext, req model.Reg
 
 	registerToken := o.Token.GenerateToken("ACTIVATION", "APPS", "GUEST", data, 1)
 
-	var us model.BackofficeUser
+	var us model.User
 	us.ID = userID
 	us.Firstname = req.Firstname
 	us.Lastname = req.Lastname
@@ -104,7 +104,7 @@ func (o *BackofficeGuestService) Register(sc model.ServiceContext, req model.Reg
 }
 
 // Activate is
-func (o *BackofficeGuestService) Activate(sc model.ServiceContext, req model.ActivateRequest) (*model.ActivateResponse, error) {
+func (o *GuestService) Activate(sc model.ServiceContext, req model.ActivateRequest) (*model.ActivateResponse, error) {
 
 	logInfo := sc["logInfo"]
 
@@ -152,7 +152,7 @@ func (o *BackofficeGuestService) Activate(sc model.ServiceContext, req model.Act
 }
 
 // Login is
-func (o *BackofficeGuestService) Login(sc model.ServiceContext, req model.LoginRequest) (*model.LoginResponse, error) {
+func (o *GuestService) Login(sc model.ServiceContext, req model.LoginRequest) (*model.LoginResponse, error) {
 
 	logInfo := sc["logInfo"]
 
@@ -206,7 +206,7 @@ func (o *BackofficeGuestService) Login(sc model.ServiceContext, req model.LoginR
 }
 
 // ForgotPasswordInit is
-func (o *BackofficeGuestService) ForgotPasswordInit(sc model.ServiceContext, req model.ForgotPasswordInitRequest) (*model.ForgotPasswordInitResponse, error) {
+func (o *GuestService) ForgotPasswordInit(sc model.ServiceContext, req model.ForgotPasswordInitRequest) (*model.ForgotPasswordInitResponse, error) {
 
 	logInfo := sc["logInfo"]
 
@@ -266,7 +266,7 @@ func (o *BackofficeGuestService) ForgotPasswordInit(sc model.ServiceContext, req
 }
 
 // ForgotPasswordReset is
-func (o *BackofficeGuestService) ForgotPasswordReset(sc model.ServiceContext, req model.ForgotPasswordResetRequest) (*model.ForgotPasswordResetResponse, error) {
+func (o *GuestService) ForgotPasswordReset(sc model.ServiceContext, req model.ForgotPasswordResetRequest) (*model.ForgotPasswordResetResponse, error) {
 
 	logInfo := sc["logInfo"]
 

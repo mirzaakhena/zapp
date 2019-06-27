@@ -5,31 +5,31 @@ import (
 	"{{PackageName}}/model"
 )
 
-// IBackofficeUserDao is
-type IBackofficeUserDao interface {
-	Create(dc model.DaoContext, bu *model.BackofficeUser) error
-	GetAll(dc model.DaoContext, req model.GetAllBasicRequest) ([]model.BackofficeUser, uint64)
-	GetOneByEmail(dc model.DaoContext, email string) *model.BackofficeUser
-	GetOneByID(dc model.DaoContext, id string) *model.BackofficeUser
+// IUserDao is
+type IUserDao interface {
+	Create(dc model.DaoContext, bu *model.User) error
+	GetAll(dc model.DaoContext, req model.GetAllBasicRequest) ([]model.User, uint64)
+	GetOneByEmail(dc model.DaoContext, email string) *model.User
+	GetOneByID(dc model.DaoContext, id string) *model.User
 	Delete(dc model.DaoContext, ID string) error
-	Update(dc model.DaoContext, obj *model.BackofficeUser) error
+	Update(dc model.DaoContext, obj *model.User) error
 }
 
-// BackofficeUserDao is
-type BackofficeUserDao struct {
+// UserDao is
+type UserDao struct {
 }
 
-func (b *BackofficeUserDao) GetAll(dc model.DaoContext, req model.GetAllBasicRequest) ([]model.BackofficeUser, uint64) {
+func (b *UserDao) GetAll(dc model.DaoContext, req model.GetAllBasicRequest) ([]model.User, uint64) {
 
 	return nil, 0
 }
 
-func (b *BackofficeUserDao) Create(dc model.DaoContext, bu *model.BackofficeUser) error {
+func (b *UserDao) Create(dc model.DaoContext, bu *model.User) error {
 	return dc.(*gorm.DB).Create(bu).Error
 }
 
-func (b *BackofficeUserDao) GetOneByEmail(dc model.DaoContext, email string) *model.BackofficeUser {
-	var obj model.BackofficeUser
+func (b *UserDao) GetOneByEmail(dc model.DaoContext, email string) *model.User {
+	var obj model.User
 	dc.(*gorm.DB).First(&obj, "email = ?", email)
 	if obj.ID == "" {
 		return nil
@@ -37,8 +37,8 @@ func (b *BackofficeUserDao) GetOneByEmail(dc model.DaoContext, email string) *mo
 	return &obj
 }
 
-func (b *BackofficeUserDao) GetOneByID(dc model.DaoContext, id string) *model.BackofficeUser {
-	var obj model.BackofficeUser
+func (b *UserDao) GetOneByID(dc model.DaoContext, id string) *model.User {
+	var obj model.User
 	dc.(*gorm.DB).First(&obj, "id = ?", id)
 	if obj.ID == "" {
 		return nil
@@ -46,10 +46,10 @@ func (b *BackofficeUserDao) GetOneByID(dc model.DaoContext, id string) *model.Ba
 	return &obj
 }
 
-func (b *BackofficeUserDao) Delete(dc model.DaoContext, id string) error {
-	return dc.(*gorm.DB).Delete(model.BackofficeUser{}, "id = ?", id).Error
+func (b *UserDao) Delete(dc model.DaoContext, id string) error {
+	return dc.(*gorm.DB).Delete(model.User{}, "id = ?", id).Error
 }
 
-func (b *BackofficeUserDao) Update(dc model.DaoContext, obj *model.BackofficeUser) error {
+func (b *UserDao) Update(dc model.DaoContext, obj *model.User) error {
 	return dc.(*gorm.DB).Save(obj).Error
 }

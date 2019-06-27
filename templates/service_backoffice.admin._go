@@ -8,10 +8,10 @@ import (
 	"{{PackageName}}/shared/utils"	
 )
 
-// IBackofficeAdminService is
-type IBackofficeAdminService interface {
-	IBackofficeUserService
-	CreateWorkingSpace(sc model.ServiceContext, req model.CreateWorkingSpaceRequest) (*model.CreateWorkingSpaceResponse, error)
+// IAdminService is
+type IAdminService interface {
+	IUserService
+	CreateSpace(sc model.ServiceContext, req model.CreateSpaceRequest) (*model.CreateSpaceResponse, error)
 
 	GenerateInvitationAccount(sc model.ServiceContext, req model.GenerateInvitationAccountRequest) (*model.GenerateInvitationAccountResponse, error)
 	UpdateAccountStatus(sc model.ServiceContext, req model.UpdateStatusRequest) (*model.UpdateStatusResponse, error)
@@ -28,76 +28,76 @@ type IBackofficeAdminService interface {
 	UpdateAccountUserRole(sc model.ServiceContext, req model.UpdateAccountUserRoleRequest) (*model.UpdateAccountUserRoleResponse, error)
 }
 
-// BackofficeAdminService is
-type BackofficeAdminService struct {
-	BackofficeUserService
+// AdminService is
+type AdminService struct {
+	UserService
 }
 
-// CreateWorkingSpace is
-func (o *BackofficeUserService) CreateWorkingSpace(sc model.ServiceContext, req model.CreateWorkingSpaceRequest) (*model.CreateWorkingSpaceResponse, error) {
+// CreateSpace is
+func (o *UserService) CreateSpace(sc model.ServiceContext, req model.CreateSpaceRequest) (*model.CreateSpaceResponse, error) {
 
 	userID, logInfo := o.getUserIDFromServiceContext(sc)
 
 	tx := o.Trx.GetDB(true)
 
-	if !o.workingSpace.IsUniqueNamePerUserID(tx, req.Name, userID) {
-		log.GetLog().Error(logInfo, "working space with name %s is exist", req.Name)
+	if !o.space.IsUniqueNamePerUserID(tx, req.Name, userID) {
+		log.GetLog().Error(logInfo, "space with name %s is exist", req.Name)
 		o.Trx.RollbackTransaction(tx)
-		return nil, utils.PrintError(model.ConstErrorUnExistingEmailAddress, "working space with name %s is exist. ", req.Name)
+		return nil, utils.PrintError(model.ConstErrorUnExistingEmailAddress, "space with name %s is exist. ", req.Name)
 	}
 
-	var ws model.WorkingSpace
+	var ws model.Space
 	{
 		ws.ID = utils.GenID()
 		ws.Name = req.Name
 		ws.Description = req.Description
-		ws.MaxBackofficeUser = 5
+		ws.MaxUser = 5
 		ws.TotalCurrentUser = 1
 		ws.Expired = time.Now().Add(time.Hour * 24 * 100000)
-		o.workingSpace.Create(tx, ws)
+		o.space.Create(tx, ws)
 	}
 
-	var wsa model.WorkingSpaceAccount
+	var wsa model.SpaceAccount
 	{
 		wsa.ID = utils.GenID()
-		wsa.BackofficeUserID = userID
-		wsa.WorkingSpaceID = ws.ID
+		wsa.UserID = userID
+		wsa.SpaceID = ws.ID
 		wsa.AccountRole = "ADMIN"
 		wsa.Status = "ACTIVE"
-		o.workingSpaceAccount.Create(tx, wsa)
+		o.spaceAccount.Create(tx, wsa)
 	}
 
 	o.Trx.CommitTransaction(tx)
 
-	response := model.CreateWorkingSpaceResponse{}
+	response := model.CreateSpaceResponse{}
 
 	return &response, nil
 }
 
 // GenerateInvitationAccount is
-func (o *BackofficeAdminService) GenerateInvitationAccount(sc model.ServiceContext, req model.GenerateInvitationAccountRequest) (*model.GenerateInvitationAccountResponse, error) {
+func (o *AdminService) GenerateInvitationAccount(sc model.ServiceContext, req model.GenerateInvitationAccountRequest) (*model.GenerateInvitationAccountResponse, error) {
 	data := map[string]string{
-		"workingSpaceId": req.WorkingSpaceID,
+		"SpaceId": req.SpaceID,
 	}
 	token := o.Token.GenerateToken("INVITATION", "APPS", "NEWUSER", data, 24)
 
 	response := model.GenerateInvitationAccountResponse{
-		WorkingSpaceInvitationToken: token,
+		SpaceInvitationToken: token,
 	}
 
 	return &response, nil
 }
 
 // UpdateAccountStatus is
-func (o *BackofficeAdminService) UpdateAccountStatus(sc model.ServiceContext, req model.UpdateStatusRequest) (*model.UpdateStatusResponse, error) {
+func (o *AdminService) UpdateAccountStatus(sc model.ServiceContext, req model.UpdateStatusRequest) (*model.UpdateStatusResponse, error) {
 
 	// userID, logInfo := o.getUserIDFromServiceContext(sc)
 
 	tx := o.Trx.GetDB(true)
 
-	wsa := o.workingSpaceAccount.GetOne(tx, req.WorkingSpaceID, req.UserID)
+	wsa := o.spaceAccount.GetOne(tx, req.SpaceID, req.UserID)
 	wsa.Status = req.Status
-	o.workingSpaceAccount.Update(tx, wsa.ID, wsa)
+	o.spaceAccount.Update(tx, wsa.ID, wsa)
 
 	response := model.UpdateStatusResponse{}
 
@@ -105,11 +105,11 @@ func (o *BackofficeAdminService) UpdateAccountStatus(sc model.ServiceContext, re
 }
 
 // RemoveAccount is
-func (o *BackofficeAdminService) RemoveAccount(sc model.ServiceContext, req model.RemoveAccountRequest) (*model.RemoveAccountResponse, error) {
+func (o *AdminService) RemoveAccount(sc model.ServiceContext, req model.RemoveAccountRequest) (*model.RemoveAccountResponse, error) {
 	tx := o.Trx.GetDB(true)
 
-	wsa := o.workingSpaceAccount.GetOne(tx, req.WorkingSpaceID, req.UserID)
-	o.workingSpaceAccount.Delete(tx, wsa.ID)
+	wsa := o.spaceAccount.GetOne(tx, req.SpaceID, req.UserID)
+	o.spaceAccount.Delete(tx, wsa.ID)
 
 	response := model.RemoveAccountResponse{}
 
@@ -117,47 +117,47 @@ func (o *BackofficeAdminService) RemoveAccount(sc model.ServiceContext, req mode
 }
 
 // GetAllAppliedPermission is
-func (o *BackofficeAdminService) GetAllAppliedPermission(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.GetAllAppliedPermissionResponse, uint64, error) {
+func (o *AdminService) GetAllAppliedPermission(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.GetAllAppliedPermissionResponse, uint64, error) {
 
 	return nil, 0, nil
 }
 
 // GrantAppliedPermission is
-func (o *BackofficeAdminService) GrantAppliedPermission(sc model.ServiceContext, req model.GrantAppliedPermissionRequest) (*model.GrantAppliedPermissionResponse, error) {
+func (o *AdminService) GrantAppliedPermission(sc model.ServiceContext, req model.GrantAppliedPermissionRequest) (*model.GrantAppliedPermissionResponse, error) {
 	return nil, nil
 }
 
 // RefuseAppliedPermission is
-func (o *BackofficeAdminService) RefuseAppliedPermission(sc model.ServiceContext, req model.RefuseAppliedPermissionRequest) (*model.RefuseAppliedPermissionResponse, error) {
+func (o *AdminService) RefuseAppliedPermission(sc model.ServiceContext, req model.RefuseAppliedPermissionRequest) (*model.RefuseAppliedPermissionResponse, error) {
 	return nil, nil
 }
 
 // GetAllUserRolePermission is
-func (o *BackofficeAdminService) GetAllUserRolePermission(sc model.ServiceContext, req model.GetAllUserRolePermissionRequest) (*model.GetAllUserRolePermissionResponse, uint64, error) {
+func (o *AdminService) GetAllUserRolePermission(sc model.ServiceContext, req model.GetAllUserRolePermissionRequest) (*model.GetAllUserRolePermissionResponse, uint64, error) {
 	return nil, 0, nil
 }
 
 // CreateUserRolePermission is
-func (o *BackofficeAdminService) CreateUserRolePermission(sc model.ServiceContext, req model.CreateUserRolePermissionRequest) (*model.CreateUserRolePermissionResponse, error) {
+func (o *AdminService) CreateUserRolePermission(sc model.ServiceContext, req model.CreateUserRolePermissionRequest) (*model.CreateUserRolePermissionResponse, error) {
 	return nil, nil
 }
 
 // UpdateUserRolePermission is
-func (o *BackofficeAdminService) UpdateUserRolePermission(sc model.ServiceContext, req model.UpdateUserRolePermissionRequest) (*model.UpdateUserRolePermissionResponse, error) {
+func (o *AdminService) UpdateUserRolePermission(sc model.ServiceContext, req model.UpdateUserRolePermissionRequest) (*model.UpdateUserRolePermissionResponse, error) {
 	return nil, nil
 }
 
 // DeleteUserRolePermission is
-func (o *BackofficeAdminService) DeleteUserRolePermission(sc model.ServiceContext, req model.DeleteUserRolePermissionRequest) (*model.DeleteUserRolePermissionResponse, error) {
+func (o *AdminService) DeleteUserRolePermission(sc model.ServiceContext, req model.DeleteUserRolePermissionRequest) (*model.DeleteUserRolePermissionResponse, error) {
 	return nil, nil
 }
 
 // GetAllAccountUserRole is
-func (o *BackofficeAdminService) GetAllAccountUserRole(sc model.ServiceContext, req model.GetAllAccountUserRoleRequest) (*model.GetAllAccountUserRoleResponse, uint64, error) {
+func (o *AdminService) GetAllAccountUserRole(sc model.ServiceContext, req model.GetAllAccountUserRoleRequest) (*model.GetAllAccountUserRoleResponse, uint64, error) {
 	return nil, 0, nil
 }
 
 // UpdateAccountUserRole is
-func (o *BackofficeAdminService) UpdateAccountUserRole(sc model.ServiceContext, req model.UpdateAccountUserRoleRequest) (*model.UpdateAccountUserRoleResponse, error) {
+func (o *AdminService) UpdateAccountUserRole(sc model.ServiceContext, req model.UpdateAccountUserRoleRequest) (*model.UpdateAccountUserRoleResponse, error) {
 	return nil, nil
 }

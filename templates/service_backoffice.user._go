@@ -7,25 +7,25 @@ import (
 	"{{PackageName}}/shared/utils"		
 )
 
-// IBackofficeUserService is
-type IBackofficeUserService interface {
-	IBackofficeGuestService
+// IUserService is
+type IUserService interface {
+	IGuestService
 	GetBasicUserInfo(sc model.ServiceContext, req model.GetBasicUserInfoRequest) *model.GetBasicUserInfoResponse
 	UpdateBasicUserInfo(sc model.ServiceContext, req model.UpdateBasicUserInfoRequest) (*model.UpdateBasicUserInfoResponse, error)
 	UpdatePassword(sc model.ServiceContext, req model.UpdatePasswordRequest) (*model.UpdatePasswordResponse, error)
-	GetAllWorkingSpaceAccount(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.WorkingSpaceAccount, uint64)
+	GetAllSpaceAccount(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.SpaceAccount, uint64)
 	GetAllPermission(sc model.ServiceContext, req model.GetAllBasicRequest) (*model.GetAllPermissionResponse, uint64)
 }
 
-// BackofficeUserService is
-type BackofficeUserService struct {
-	BackofficeGuestService
-	workingSpace        dao.IWorkingSpaceDao
-	workingSpaceAccount dao.IWorkingSpaceAccountDao
+// UserService is
+type UserService struct {
+	GuestService
+	space        dao.ISpaceDao
+	spaceAccount dao.ISpaceAccountDao
 }
 
 // GetBasicUserInfo is
-func (o *BackofficeUserService) GetBasicUserInfo(sc model.ServiceContext, req model.GetBasicUserInfoRequest) *model.GetBasicUserInfoResponse {
+func (o *UserService) GetBasicUserInfo(sc model.ServiceContext, req model.GetBasicUserInfoRequest) *model.GetBasicUserInfoResponse {
 
 	userID, _ := o.getUserIDFromServiceContext(sc)
 
@@ -39,7 +39,7 @@ func (o *BackofficeUserService) GetBasicUserInfo(sc model.ServiceContext, req mo
 }
 
 // UpdateBasicUserInfo is
-func (o *BackofficeUserService) UpdateBasicUserInfo(sc model.ServiceContext, req model.UpdateBasicUserInfoRequest) (*model.UpdateBasicUserInfoResponse, error) {
+func (o *UserService) UpdateBasicUserInfo(sc model.ServiceContext, req model.UpdateBasicUserInfoRequest) (*model.UpdateBasicUserInfoResponse, error) {
 	userID, _ := o.getUserIDFromServiceContext(sc)
 
 	tx := o.Trx.GetDB(true)
@@ -61,7 +61,7 @@ func (o *BackofficeUserService) UpdateBasicUserInfo(sc model.ServiceContext, req
 }
 
 // UpdatePassword is
-func (o *BackofficeUserService) UpdatePassword(sc model.ServiceContext, req model.UpdatePasswordRequest) (*model.UpdatePasswordResponse, error) {
+func (o *UserService) UpdatePassword(sc model.ServiceContext, req model.UpdatePasswordRequest) (*model.UpdatePasswordResponse, error) {
 
 	userID, logInfo := o.getUserIDFromServiceContext(sc)
 
@@ -84,20 +84,20 @@ func (o *BackofficeUserService) UpdatePassword(sc model.ServiceContext, req mode
 	return nil, nil
 }
 
-// GetAllWorkingSpaceAccount is
-func (o *BackofficeAdminService) GetAllWorkingSpaceAccount(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.WorkingSpaceAccount, uint64) {
-	return o.workingSpaceAccount.GetAll(o.Trx.GetDB(false), req)
+// GetAllSpaceAccount is
+func (o *AdminService) GetAllSpaceAccount(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.SpaceAccount, uint64) {
+	return o.spaceAccount.GetAll(o.Trx.GetDB(false), req)
 }
 
 // GetAllPermission is
-func (o *BackofficeUserService) GetAllPermission(sc model.ServiceContext, req model.GetAllBasicRequest) (*model.GetAllPermissionResponse, uint64) {
+func (o *UserService) GetAllPermission(sc model.ServiceContext, req model.GetAllBasicRequest) (*model.GetAllPermissionResponse, uint64) {
 
 	// userID, logInfo := o.getUserIDFromServiceContext(sc)
 
 	return nil, 0
 }
 
-func (o *BackofficeUserService) getUserIDFromServiceContext(sc model.ServiceContext) (string, interface{}) {
+func (o *UserService) getUserIDFromServiceContext(sc model.ServiceContext) (string, interface{}) {
 	logInfo := sc["logInfo"]
 	userIDInterface, ok := sc["user.id"]
 	if !ok {

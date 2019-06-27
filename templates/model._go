@@ -1,8 +1,8 @@
 package model
 
-import ({{if HasTime .Fields}}
+import (
+	"{{PackageName}}/shared/transaction" {{if HasTime .Fields}}
 	"time"{{end}}
-	"{{PackageName}}/shared/transaction"
 )
 
 // {{PascalCase .Name}} is
