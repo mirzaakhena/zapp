@@ -4,7 +4,7 @@ const api = {
 
   Create{{PascalCase .Name}}(payload) {
     return request({
-      url: `/{{CamelCase .Name}}`,
+      url: `/api/{{CamelCase .Name}}`,
       method: 'post',
       data: payload,
     })
@@ -12,14 +12,14 @@ const api = {
 
   GetOne{{PascalCase .Name}}({{CamelCase .Name}}ID) {
     return request({
-      url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
+      url: `/api/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
       method: 'get',
     })
   },  
 
   GetAll{{PascalCase .Name}}(paging, sorting, filtering) {    
     return request({
-      url: `/{{CamelCase .Name}}`,
+      url: `/api/{{CamelCase .Name}}`,
       method: 'get',
       params: {
         page: paging.page,
@@ -33,7 +33,7 @@ const api = {
 
   Update{{PascalCase .Name}}({{CamelCase .Name}}ID, payload) {
     return request({
-      url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
+      url: `/api/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
       method: 'put',
       data: payload,
     })
@@ -41,7 +41,7 @@ const api = {
 
   Delete{{PascalCase .Name}}({{CamelCase .Name}}ID) {
     return request({
-      url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
+      url: `/api/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
       method: 'delete',
     })
   },  

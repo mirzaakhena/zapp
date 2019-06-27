@@ -18,7 +18,7 @@ type {{PascalCase .Name}}Controller struct {
 }
 
 // New{{PascalCase .Name}}Controller is
-func New{{PascalCase .Name}}Controller(router *gin.Engine, {{CamelCase .Name}}Service service.I{{PascalCase .Name}}Service) *{{PascalCase .Name}}Controller {
+func New{{PascalCase .Name}}Controller(router *gin.RouterGroup, {{CamelCase .Name}}Service service.I{{PascalCase .Name}}Service) *{{PascalCase .Name}}Controller {
 
 	c := {{PascalCase .Name}}Controller{
 		{{CamelCase .Name}}Service: {{CamelCase .Name}}Service,
