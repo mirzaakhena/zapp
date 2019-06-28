@@ -79,13 +79,13 @@ func main() {
 		User:     &us,
 	}
 
-	api := controller.MyApi{
+	guestController := controller.MyApi{
 		GuestService: &guestService,
 	}
 
-	v1 := router.Group("/api")
+	apiController := router.Group("/api")
 
-	v1.Use(func(c *gin.Context) {
+	apiController.Use(func(c *gin.Context) {
 		token := c.Request.Header.Get("Authorization")
 		s := strings.Fields(token)
 		if len(s) != 2 {
@@ -110,7 +110,9 @@ func main() {
 		}
 
 		c.Set("user.id", data["userId"].(string))
-	}){{range .Classes}}
+	})
+
+	permissions := []model.Permission{}{{range .Classes}}
 
 	// {{PascalCase .Name}}
 	{
@@ -118,18 +120,63 @@ func main() {
 		service := service.New{{PascalCase .Name}}Service(trx, dao)
 		c := controller.New{{PascalCase .Name}}Controller(service)
 
-		v1.POST("/{{CamelCase .Name}}", c.Create)
-		v1.GET("/{{CamelCase .Name}}", c.GetAll)
-		v1.GET("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.GetOne)
-		v1.DELETE("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Delete)
-		v1.PUT("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Update)
+		permissions = append(permissions, model.Permission{
+			Method:      "POST",
+			EndPoint:    "/{{CamelCase .Name}}",
+			Function:    c.Create,
+			Description: "Create New {{PascalCase .Name}}",
+			Category:    "{{UpperCase .Name}}",
+		})
+
+		permissions = append(permissions, model.Permission{
+			Method:      "GET",
+			EndPoint:    "/{{CamelCase .Name}}",
+			Function:    c.GetAll,
+			Description: "Get All {{PascalCase .Name}}",
+			Category:    "{{UpperCase .Name}}",
+		})
+
+		permissions = append(permissions, model.Permission{
+			Method:      "GET",
+			EndPoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
+			Function:    c.GetOne,
+			Description: "Get One {{PascalCase .Name}}",
+			Category:    "{{UpperCase .Name}}",
+		})
+
+		permissions = append(permissions, model.Permission{
+			Method:      "DELETE",
+			EndPoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
+			Function:    c.Delete,
+			Description: "Delete a {{PascalCase .Name}}",
+			Category:    "{{UpperCase .Name}}",
+		})
+
+		permissions = append(permissions, model.Permission{
+			Method:      "PUT",
+			EndPoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
+			Function:    c.Update,
+			Description: "Update a {{PascalCase .Name}}",
+			Category:    "{{UpperCase .Name}}",
+		})
+
+		// apiController.POST("/{{CamelCase .Name}}", c.Create)
+		// apiController.GET("/{{CamelCase .Name}}", c.GetAll)
+		// apiController.GET("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.GetOne)
+		// apiController.DELETE("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Delete)
+		// apiController.PUT("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Update)
 	}{{end}}
 
-	router.POST("/register", api.Register)
-	router.POST("/login", api.Login)
-	router.GET("/activate", api.Activate)
-	router.POST("/password/forgot/init", api.ForgotPasswordInit)
-	router.POST("/password/forgot/reset", api.ForgotPasswordReset)
+	for _, permission := range permissions {
+		apiController.Handle(permission.Method, permission.EndPoint, permission.Function)
+	}
+
+	// everyone free to access it
+	router.POST("/register", guestController.Register)
+	router.POST("/login", guestController.Login)
+	router.GET("/activate", guestController.Activate)
+	router.POST("/password/forgot/init", guestController.ForgotPasswordInit)
+	router.POST("/password/forgot/reset", guestController.ForgotPasswordReset)
 
 	router.Run(fmt.Sprintf(":%d", cf.GetInt("server.port", "8081")))
 

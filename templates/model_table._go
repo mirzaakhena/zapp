@@ -2,6 +2,8 @@ package model
 
 import (
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // BaseModel is
@@ -43,4 +45,13 @@ type UserSpace struct {
 	UserID      string `json:"-"` //
 	AccountRole string `json:"-"` // ADMIN | USER
 	Status      string `json:"-"` // ACTIVE | REQUEST | SUSPEND
+}
+
+// Permission is
+type Permission struct {
+	Method      string          `json:"method"`      //
+	EndPoint    string          `json:"endPoint"`    //
+	Function    gin.HandlerFunc `json:"function"`    //
+	Description string          `json:"description"` //
+	Category    string          `json:"category"`    //
 }
