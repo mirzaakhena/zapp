@@ -36,8 +36,8 @@ type User struct {
 	Status             string `json:"-"`         //
 }
 
-// SpaceAccount is
-type SpaceAccount struct {
+// UserSpace is
+type UserSpace struct {
 	BaseModel
 	SpaceID     string `json:"-"` //
 	UserID      string `json:"-"` //

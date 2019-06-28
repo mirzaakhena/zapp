@@ -13,7 +13,7 @@ type IUserService interface {
 	GetBasicUserInfo(sc model.ServiceContext, req model.GetBasicUserInfoRequest) *model.GetBasicUserInfoResponse
 	UpdateBasicUserInfo(sc model.ServiceContext, req model.UpdateBasicUserInfoRequest) (*model.UpdateBasicUserInfoResponse, error)
 	UpdatePassword(sc model.ServiceContext, req model.UpdatePasswordRequest) (*model.UpdatePasswordResponse, error)
-	GetAllSpaceAccount(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.SpaceAccount, uint64)
+	GetAllUserSpace(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.UserSpace, uint64)
 	GetAllPermission(sc model.ServiceContext, req model.GetAllBasicRequest) (*model.GetAllPermissionResponse, uint64)
 }
 
@@ -21,7 +21,7 @@ type IUserService interface {
 type UserService struct {
 	GuestService
 	space        dao.ISpaceDao
-	spaceAccount dao.ISpaceAccountDao
+	userSpace dao.IUserSpaceDao
 }
 
 // GetBasicUserInfo is
@@ -84,9 +84,9 @@ func (o *UserService) UpdatePassword(sc model.ServiceContext, req model.UpdatePa
 	return nil, nil
 }
 
-// GetAllSpaceAccount is
-func (o *AdminService) GetAllSpaceAccount(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.SpaceAccount, uint64) {
-	return o.spaceAccount.GetAll(o.Trx.GetDB(false), req)
+// GetAllUserSpace is
+func (o *AdminService) GetAllUserSpace(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.UserSpace, uint64) {
+	return o.userSpace.GetAll(o.Trx.GetDB(false), req)
 }
 
 // GetAllPermission is

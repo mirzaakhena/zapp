@@ -57,14 +57,14 @@ func (o *UserService) CreateSpace(sc model.ServiceContext, req model.CreateSpace
 		o.space.Create(tx, ws)
 	}
 
-	var wsa model.SpaceAccount
+	var wsa model.UserSpace
 	{
 		wsa.ID = utils.GenID()
 		wsa.UserID = userID
 		wsa.SpaceID = ws.ID
 		wsa.AccountRole = "ADMIN"
 		wsa.Status = "ACTIVE"
-		o.spaceAccount.Create(tx, wsa)
+		o.userSpace.Create(tx, wsa)
 	}
 
 	o.Trx.CommitTransaction(tx)
@@ -95,9 +95,9 @@ func (o *AdminService) UpdateAccountStatus(sc model.ServiceContext, req model.Up
 
 	tx := o.Trx.GetDB(true)
 
-	wsa := o.spaceAccount.GetOne(tx, req.SpaceID, req.UserID)
+	wsa := o.userSpace.GetOne(tx, req.SpaceID, req.UserID)
 	wsa.Status = req.Status
-	o.spaceAccount.Update(tx, wsa.ID, wsa)
+	o.userSpace.Update(tx, wsa.ID, wsa)
 
 	response := model.UpdateStatusResponse{}
 
@@ -108,8 +108,8 @@ func (o *AdminService) UpdateAccountStatus(sc model.ServiceContext, req model.Up
 func (o *AdminService) RemoveAccount(sc model.ServiceContext, req model.RemoveAccountRequest) (*model.RemoveAccountResponse, error) {
 	tx := o.Trx.GetDB(true)
 
-	wsa := o.spaceAccount.GetOne(tx, req.SpaceID, req.UserID)
-	o.spaceAccount.Delete(tx, wsa.ID)
+	wsa := o.userSpace.GetOne(tx, req.SpaceID, req.UserID)
+	o.userSpace.Delete(tx, wsa.ID)
 
 	response := model.RemoveAccountResponse{}
 

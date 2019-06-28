@@ -40,7 +40,7 @@ func main() {
 	{
 		db.AutoMigrate(&model.User{})
 		db.AutoMigrate(&model.Space{})
-		db.AutoMigrate(&model.SpaceAccount{})
+		db.AutoMigrate(&model.UserSpace{})
 	}
 
 	router := gin.Default()
@@ -108,7 +108,7 @@ func main() {
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}
-		// fmt.Printf(">>>> %v |||| %v", jwt.ExtendData, data)
+
 		c.Set("user.id", data["userId"].(string))
 	}){{range .Classes}}
 
@@ -116,8 +116,14 @@ func main() {
 	{
 		dao := dao.New{{PascalCase .Name}}Dao(db)
 		service := service.New{{PascalCase .Name}}Service(trx, dao)
-		controller.New{{PascalCase .Name}}Controller(v1, service)
-	}{{end}}	
+		c := controller.New{{PascalCase .Name}}Controller(service)
+
+		v1.POST("/{{CamelCase .Name}}", c.Create)
+		v1.GET("/{{CamelCase .Name}}", c.GetAll)
+		v1.GET("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.GetOne)
+		v1.DELETE("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Delete)
+		v1.PUT("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Update)
+	}{{end}}
 
 	router.POST("/register", api.Register)
 	router.POST("/login", api.Login)

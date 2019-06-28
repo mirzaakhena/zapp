@@ -18,17 +18,11 @@ type {{PascalCase .Name}}Controller struct {
 }
 
 // New{{PascalCase .Name}}Controller is
-func New{{PascalCase .Name}}Controller(router *gin.RouterGroup, {{CamelCase .Name}}Service service.I{{PascalCase .Name}}Service) *{{PascalCase .Name}}Controller {
+func New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service service.I{{PascalCase .Name}}Service) *{{PascalCase .Name}}Controller {
 
 	c := {{PascalCase .Name}}Controller{
 		{{CamelCase .Name}}Service: {{CamelCase .Name}}Service,
 	}
-
-	router.POST("/{{CamelCase .Name}}", c.Create)
-	router.GET("/{{CamelCase .Name}}", c.GetAll)
-	router.GET("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.GetOne)
-	router.DELETE("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Delete)
-	router.PUT("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Update)
 
 	return &c
 }

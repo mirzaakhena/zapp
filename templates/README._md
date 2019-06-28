@@ -1,10 +1,27 @@
+# My Apps
 
-A bidirectional one-to-many relationship
+Space
+  Name
+  Description
+  Expired
+  MaxUser  
 
+User
+  nama
+  email
+  SpaceName
+  Detail
+  Status
+  Roles
 
-A unidirectional many-to-one relationship
-A unidirectional one-to-many relationship
-Two one-to-many relationships on the same two entities
-A many-to-many relationship
-A one-to-one relationship
-A unidirectional one-to-one relationship
+Role
+  SpaceName
+  RoleName
+  Permissions
+
+Permission
+  Method
+  EndPoint
+  Function
+  Description
+  Group

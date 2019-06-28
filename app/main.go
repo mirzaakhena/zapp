@@ -453,7 +453,7 @@ func (tp *ThePackage) Run() {
 
 	{
 		templateFile := fmt.Sprintf("../templates/config._toml")
-		outputFile := fmt.Sprintf("../../../../%s/shared/config/config.toml", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/config.toml", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 

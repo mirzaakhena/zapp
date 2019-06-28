@@ -192,9 +192,8 @@ func (o *GuestService) Login(sc model.ServiceContext, req model.LoginRequest) (*
 			"userId": bu.ID,
 		}
 		bu.LoginToken = o.Token.GenerateToken("LOGIN", "APPS", "GUEST", data, 24)
+		o.User.Update(tx, bu)
 	}
-
-	o.User.Update(tx, bu)
 
 	o.Trx.CommitTransaction(tx)
 
