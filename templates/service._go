@@ -37,7 +37,7 @@ func New{{PascalCase .Name}}Service(trx transaction.ITransaction, {{CamelCase .N
 
 // Create is {{if (eq DataTypeId "int")}}
 func (g *{{PascalCase .Name}}Service) Create(dto model.Create{{PascalCase .Name}}Request) (uint64, error) { {{else}}
-func (g *{{PascalCase .Name}}Service) Create(dto model.Create{{PascalCase .Name}}Request) (uint64, error) {	{{end}}
+func (g *{{PascalCase .Name}}Service) Create(dto model.Create{{PascalCase .Name}}Request) (string, error) {	{{end}}
 
 	var obj model.{{PascalCase .Name}}
 	{{if (eq DataTypeId "guid")}}

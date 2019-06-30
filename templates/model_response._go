@@ -90,6 +90,9 @@ type GrantAppliedPermissionResponse struct{}
 // RefuseAppliedPermissionResponse is
 type RefuseAppliedPermissionResponse struct{}
 
+// IsAccessableResponse is
+type IsAccessableResponse struct{}
+
 // ServiceContext is
 type ServiceContext map[string]interface{}
 

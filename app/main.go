@@ -386,8 +386,14 @@ func (tp *ThePackage) Run() {
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/dao_workingspaceaccount._go")
-		outputFile := fmt.Sprintf("../../../../%s/dao/backoffice.spaceaccount.go", tp.packageName)
+		templateFile := fmt.Sprintf("../templates/dao_userspace._go")
+		outputFile := fmt.Sprintf("../../../../%s/dao/backoffice.userspace.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/dao_userpermission._go")
+		outputFile := fmt.Sprintf("../../../../%s/dao/backoffice.userpermission.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 

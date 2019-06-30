@@ -1,6 +1,6 @@
 package, github.com/mirzaakhena/zappsample
 
-datatypeid, int
+datatypeid, string
 
 class, Person	
 field, Name, string 

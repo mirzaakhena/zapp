@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"regexp"	
 	"strings"
 	"time"
 
@@ -41,6 +42,7 @@ func main() {
 		db.AutoMigrate(&model.User{})
 		db.AutoMigrate(&model.Space{})
 		db.AutoMigrate(&model.UserSpace{})
+		db.AutoMigrate(&model.UserPermission{})		
 	}
 
 	router := gin.Default()
@@ -79,9 +81,72 @@ func main() {
 		User:     &us,
 	}
 
+	userPermissionDao := dao.UserPermissionDao{}
+
+	userService := service.UserService{
+		GuestService:   guestService,
+		UserPermission: &userPermissionDao,
+	}		
+
 	guestController := controller.MyApi{
 		GuestService: &guestService,
 	}
+	
+	permissions := []model.Permission{}{{range .Classes}}
+
+	// {{PascalCase .Name}}
+	{
+		dao := dao.New{{PascalCase .Name}}Dao(db)
+		service := service.New{{PascalCase .Name}}Service(trx, dao)
+		c := controller.New{{PascalCase .Name}}Controller(service)
+
+		permissions = append(permissions, model.Permission{			
+			Method:      "POST",
+			Endpoint:    "/{{CamelCase .Name}}",
+			Function:    c.Create,
+			Description: "Create New {{PascalCase .Name}}",
+			Category:    "{{UpperCase .Name}}",
+		})
+
+		permissions = append(permissions, model.Permission{			
+			Method:      "GET",
+			Endpoint:    "/{{CamelCase .Name}}",
+			Function:    c.GetAll,
+			Description: "Get All {{PascalCase .Name}}",
+			Category:    "{{UpperCase .Name}}",
+		})
+
+		permissions = append(permissions, model.Permission{			
+			Method:      "GET",
+			Endpoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
+			Function:    c.GetOne,
+			Description: "Get One {{PascalCase .Name}}",
+			Category:    "{{UpperCase .Name}}",
+		})
+
+		permissions = append(permissions, model.Permission{			
+			Method:      "DELETE",
+			Endpoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
+			Function:    c.Delete,
+			Description: "Delete a {{PascalCase .Name}}",
+			Category:    "{{UpperCase .Name}}",
+		})
+
+		permissions = append(permissions, model.Permission{			
+			Method:      "PUT",
+			Endpoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
+			Function:    c.Update,
+			Description: "Update a {{PascalCase .Name}}",
+			Category:    "{{UpperCase .Name}}",
+		})
+
+	}{{end}}
+
+	uuidv4Regex := regexp.MustCompile("[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")
+
+	regexColonID := regexp.MustCompile(":[a-zA-Z0-9]+")
+
+	permissionMaps := map[[2]string]string{}
 
 	apiController := router.Group("/api")
 
@@ -109,66 +174,35 @@ func main() {
 			return
 		}
 
-		c.Set("user.id", data["userId"].(string))
+		userID := data["userId"].(string)
+		c.Set("user.id", userID)
+
+		urlx := uuidv4Regex.ReplaceAllString(c.Request.URL.Path, "#")
+
+		permissionCode, ok := permissionMaps[[2]string{c.Request.Method, urlx}]
+		if !ok {
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+
+		spaceID := c.Param("spaceId")
+
+		isAccessable := userService.IsAccessable(model.ServiceContext{"userId": permissionCode}, model.IsAccessableRequest{
+			MethodEndpoint:    permissionCode,
+			SpaceID: spaceID,
+		})
+
+		if !isAccessable {
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+
 	})
 
-	permissions := []model.Permission{}{{range .Classes}}
-
-	// {{PascalCase .Name}}
-	{
-		dao := dao.New{{PascalCase .Name}}Dao(db)
-		service := service.New{{PascalCase .Name}}Service(trx, dao)
-		c := controller.New{{PascalCase .Name}}Controller(service)
-
-		permissions = append(permissions, model.Permission{
-			Method:      "POST",
-			EndPoint:    "/{{CamelCase .Name}}",
-			Function:    c.Create,
-			Description: "Create New {{PascalCase .Name}}",
-			Category:    "{{UpperCase .Name}}",
-		})
-
-		permissions = append(permissions, model.Permission{
-			Method:      "GET",
-			EndPoint:    "/{{CamelCase .Name}}",
-			Function:    c.GetAll,
-			Description: "Get All {{PascalCase .Name}}",
-			Category:    "{{UpperCase .Name}}",
-		})
-
-		permissions = append(permissions, model.Permission{
-			Method:      "GET",
-			EndPoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
-			Function:    c.GetOne,
-			Description: "Get One {{PascalCase .Name}}",
-			Category:    "{{UpperCase .Name}}",
-		})
-
-		permissions = append(permissions, model.Permission{
-			Method:      "DELETE",
-			EndPoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
-			Function:    c.Delete,
-			Description: "Delete a {{PascalCase .Name}}",
-			Category:    "{{UpperCase .Name}}",
-		})
-
-		permissions = append(permissions, model.Permission{
-			Method:      "PUT",
-			EndPoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
-			Function:    c.Update,
-			Description: "Update a {{PascalCase .Name}}",
-			Category:    "{{UpperCase .Name}}",
-		})
-
-		// apiController.POST("/{{CamelCase .Name}}", c.Create)
-		// apiController.GET("/{{CamelCase .Name}}", c.GetAll)
-		// apiController.GET("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.GetOne)
-		// apiController.DELETE("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Delete)
-		// apiController.PUT("/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Update)
-	}{{end}}
-
 	for _, permission := range permissions {
-		apiController.Handle(permission.Method, permission.EndPoint, permission.Function)
+		apiController.Handle(permission.Method, permission.Endpoint, permission.Function)
+		hashedIDURL := regexColonID.ReplaceAllString(apiController.BasePath()+permission.Endpoint, "#")
+		permissionMaps[[2]string{permission.Method, hashedIDURL}] = fmt.Sprintf("%s_%s", permission.Method, hashedIDURL)
 	}
 
 	// everyone free to access it

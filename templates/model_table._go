@@ -41,17 +41,25 @@ type User struct {
 // UserSpace is
 type UserSpace struct {
 	BaseModel
-	SpaceID     string `json:"-"` //
-	UserID      string `json:"-"` //
-	AccountRole string `json:"-"` // ADMIN | USER
-	Status      string `json:"-"` // ACTIVE | REQUEST | SUSPEND
+	SpaceID string `json:"-"` //
+	UserID  string `json:"-"` //
+	Type    string `json:"-"` // ADMIN | USER
+	Status  string `json:"-"` // ACTIVE | REQUEST | SUSPEND
 }
 
 // Permission is
 type Permission struct {
 	Method      string          `json:"method"`      //
-	EndPoint    string          `json:"endPoint"`    //
+	Endpoint    string          `json:"endpoint"`    //
 	Function    gin.HandlerFunc `json:"function"`    //
 	Description string          `json:"description"` //
 	Category    string          `json:"category"`    //
+}
+
+// UserPermission is
+type UserPermission struct {
+	BaseModel
+	MethodEndpoint string `json:"methodEndpoint"` //
+	UserID         string `json:"-"`    //
+	SpaceID        string `json:"-"`    //
 }

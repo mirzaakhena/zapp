@@ -5,7 +5,7 @@ import (
 
 	"{{PackageName}}/model"
 	log "{{PackageName}}/shared/logger"
-	"{{PackageName}}/shared/utils"	
+	"{{PackageName}}/shared/utils"
 )
 
 // IAdminService is
@@ -40,7 +40,7 @@ func (o *UserService) CreateSpace(sc model.ServiceContext, req model.CreateSpace
 
 	tx := o.Trx.GetDB(true)
 
-	if !o.space.IsUniqueNamePerUserID(tx, req.Name, userID) {
+	if !o.Space.IsUniqueNamePerUserID(tx, req.Name, userID) {
 		log.GetLog().Error(logInfo, "space with name %s is exist", req.Name)
 		o.Trx.RollbackTransaction(tx)
 		return nil, utils.PrintError(model.ConstErrorUnExistingEmailAddress, "space with name %s is exist. ", req.Name)
@@ -54,7 +54,7 @@ func (o *UserService) CreateSpace(sc model.ServiceContext, req model.CreateSpace
 		ws.MaxUser = 5
 		ws.TotalCurrentUser = 1
 		ws.Expired = time.Now().Add(time.Hour * 24 * 100000)
-		o.space.Create(tx, ws)
+		o.Space.Create(tx, ws)
 	}
 
 	var wsa model.UserSpace
@@ -62,9 +62,9 @@ func (o *UserService) CreateSpace(sc model.ServiceContext, req model.CreateSpace
 		wsa.ID = utils.GenID()
 		wsa.UserID = userID
 		wsa.SpaceID = ws.ID
-		wsa.AccountRole = "ADMIN"
+		wsa.Type = "ADMIN"
 		wsa.Status = "ACTIVE"
-		o.userSpace.Create(tx, wsa)
+		o.UserSpace.Create(tx, wsa)
 	}
 
 	o.Trx.CommitTransaction(tx)
@@ -95,9 +95,9 @@ func (o *AdminService) UpdateAccountStatus(sc model.ServiceContext, req model.Up
 
 	tx := o.Trx.GetDB(true)
 
-	wsa := o.userSpace.GetOne(tx, req.SpaceID, req.UserID)
+	wsa := o.UserSpace.GetOne(tx, req.SpaceID, req.UserID)
 	wsa.Status = req.Status
-	o.userSpace.Update(tx, wsa.ID, wsa)
+	o.UserSpace.Update(tx, wsa.ID, wsa)
 
 	response := model.UpdateStatusResponse{}
 
@@ -108,8 +108,8 @@ func (o *AdminService) UpdateAccountStatus(sc model.ServiceContext, req model.Up
 func (o *AdminService) RemoveAccount(sc model.ServiceContext, req model.RemoveAccountRequest) (*model.RemoveAccountResponse, error) {
 	tx := o.Trx.GetDB(true)
 
-	wsa := o.userSpace.GetOne(tx, req.SpaceID, req.UserID)
-	o.userSpace.Delete(tx, wsa.ID)
+	wsa := o.UserSpace.GetOne(tx, req.SpaceID, req.UserID)
+	o.UserSpace.Delete(tx, wsa.ID)
 
 	response := model.RemoveAccountResponse{}
 

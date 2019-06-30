@@ -4,12 +4,13 @@ import (
 	"{{PackageName}}/dao"
 	model "{{PackageName}}/model"
 	log "{{PackageName}}/shared/logger"
-	"{{PackageName}}/shared/utils"		
+	"{{PackageName}}/shared/utils"
 )
 
 // IUserService is
 type IUserService interface {
 	IGuestService
+	IsAccessable(sc model.ServiceContext, req model.IsAccessableRequest) bool
 	GetBasicUserInfo(sc model.ServiceContext, req model.GetBasicUserInfoRequest) *model.GetBasicUserInfoResponse
 	UpdateBasicUserInfo(sc model.ServiceContext, req model.UpdateBasicUserInfoRequest) (*model.UpdateBasicUserInfoResponse, error)
 	UpdatePassword(sc model.ServiceContext, req model.UpdatePasswordRequest) (*model.UpdatePasswordResponse, error)
@@ -20,8 +21,18 @@ type IUserService interface {
 // UserService is
 type UserService struct {
 	GuestService
-	space        dao.ISpaceDao
-	userSpace dao.IUserSpaceDao
+	Space          dao.ISpaceDao
+	UserSpace      dao.IUserSpaceDao
+	UserPermission dao.IUserPermissionDao
+}
+
+// IsAccessable is
+func (o *UserService) IsAccessable(sc model.ServiceContext, req model.IsAccessableRequest) bool {
+	userID, _ := o.getUserIDFromServiceContext(sc)
+
+	up := o.UserPermission.GetUserPermission(o.Trx.GetDB(false), userID, req.SpaceID, req.MethodEndpoint)
+
+	return up != nil
 }
 
 // GetBasicUserInfo is
@@ -85,8 +96,8 @@ func (o *UserService) UpdatePassword(sc model.ServiceContext, req model.UpdatePa
 }
 
 // GetAllUserSpace is
-func (o *AdminService) GetAllUserSpace(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.UserSpace, uint64) {
-	return o.userSpace.GetAll(o.Trx.GetDB(false), req)
+func (o *UserService) GetAllUserSpace(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.UserSpace, uint64) {
+	return o.UserSpace.GetAll(o.Trx.GetDB(false), req)
 }
 
 // GetAllPermission is
