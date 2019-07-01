@@ -14,10 +14,9 @@ type GetAllBasicRequest struct {
 
 // RegisterRequest is
 type RegisterRequest struct {
-	Firstname string `json:"firstname"` //
-	Lastname  string `json:"lastname"`  //
-	Email     string `json:"email"`     //
-	Password  string `json:"password"`  //
+	Name     string `json:"name"`     //
+	Email    string `json:"email"`    //
+	Password string `json:"password"` //
 }
 
 // LoginRequest is
@@ -72,10 +71,9 @@ type GetBasicUserInfoRequest struct{}
 
 // UpdateBasicUserInfoRequest is
 type UpdateBasicUserInfoRequest struct {
-	Firstname string `json:"firstName"` //
-	Lastname  string `json:"lastName"`  //
-	Phone     string `json:"phone"`     //
-	Address   string `json:"address"`   //
+	Name    string `json:"name"`    //
+	Phone   string `json:"phone"`   //
+	Address string `json:"address"` //
 }
 
 // RemoveAccountRequest is

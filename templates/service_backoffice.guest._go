@@ -69,8 +69,7 @@ func (o *GuestService) Register(sc model.ServiceContext, req model.RegisterReque
 
 	var us model.User
 	us.ID = userID
-	us.Firstname = req.Firstname
-	us.Lastname = req.Lastname
+	us.Name = req.Name
 	us.Email = req.Email
 	us.Password = hashedPassword
 	us.Status = "WAITING"

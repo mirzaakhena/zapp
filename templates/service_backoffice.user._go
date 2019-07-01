@@ -14,7 +14,6 @@ type IUserService interface {
 	GetBasicUserInfo(sc model.ServiceContext, req model.GetBasicUserInfoRequest) *model.GetBasicUserInfoResponse
 	UpdateBasicUserInfo(sc model.ServiceContext, req model.UpdateBasicUserInfoRequest) (*model.UpdateBasicUserInfoResponse, error)
 	UpdatePassword(sc model.ServiceContext, req model.UpdatePasswordRequest) (*model.UpdatePasswordResponse, error)
-	GetAllUserSpace(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.UserSpace, uint64)
 	GetAllPermission(sc model.ServiceContext, req model.GetAllBasicRequest) (*model.GetAllPermissionResponse, uint64)
 }
 
@@ -58,8 +57,7 @@ func (o *UserService) UpdateBasicUserInfo(sc model.ServiceContext, req model.Upd
 	bu := o.User.GetOneByID(tx, userID)
 
 	bu.Address = req.Address
-	bu.Firstname = req.Firstname
-	bu.Lastname = req.Lastname
+	bu.Name = req.Name
 	bu.Phone = req.Phone
 
 	o.User.Update(tx, bu)
@@ -93,11 +91,6 @@ func (o *UserService) UpdatePassword(sc model.ServiceContext, req model.UpdatePa
 	o.Trx.CommitTransaction(tx)
 
 	return nil, nil
-}
-
-// GetAllUserSpace is
-func (o *UserService) GetAllUserSpace(sc model.ServiceContext, req model.GetAllBasicRequest) ([]model.UserSpace, uint64) {
-	return o.UserSpace.GetAll(o.Trx.GetDB(false), req)
 }
 
 // GetAllPermission is

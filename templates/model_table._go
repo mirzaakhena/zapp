@@ -42,15 +42,14 @@ type RolePermission struct {
 // User is
 type User struct {
 	BaseModel
-	Firstname          string `json:"firstName"` //
-	Lastname           string `json:"lastName"`  //
-	Email              string `json:"email"`     //
-	Phone              string `json:"phone"`     //
-	Address            string `json:"address"`   //
-	Password           string `json:"-"`         //
-	LoginToken         string `json:"-"`         //
-	ResetPasswordToken string `json:"-"`         //
-	Status             string `json:"-"`         //
+	Name               string `json:"name"`    //
+	Email              string `json:"email"`   //
+	Phone              string `json:"phone"`   //
+	Address            string `json:"address"` //
+	Password           string `json:"-"`       //
+	LoginToken         string `json:"-"`       //
+	ResetPasswordToken string `json:"-"`       //
+	Status             string `json:"-"`       //
 }
 
 // UserSpace is
@@ -76,7 +75,7 @@ type UserPermission struct {
 	BaseModel
 	MethodEndpoint string `json:"methodEndpoint"` //
 	UserID         string `json:"userId"`         //
-	SpaceID        string `json:"spaceId"`              //
+	SpaceID        string `json:"spaceId"`        //
 }
 
 // UserRole is
