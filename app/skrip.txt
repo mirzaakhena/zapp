@@ -2,17 +2,29 @@ package, github.com/mirzaakhena/zappsample
 
 datatypeid, string
 
-class, Person	
+// masterdata space
+class, Space
 field, Name, string 
-field, Age, int 
-field, BirthDate, time.Time
-field, Point, float64
+field, Description, string 
+field, Expired, time.Time 
+field, MaxUser, int
+field, TotalCurrentUser, int
 endclass
 
-class, Location
-field, StreetAddress, string
-field, PostalCode, string
-field, City, string
-field, StateProvince, string
+// SpaceRole + RolePermission + Permission
+class, SpaceRole
+field, Space, string
+field, Category, string
+field, Permission, string
 endclass
+
+// Space + User + UserSpace + UserRole 
+class, User
+field, Space, string
+field, Name, string
+field, Type, string
+field, Status, string
+field, Role, string
+endclass
+
 

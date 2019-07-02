@@ -6,10 +6,10 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	log "github.com/mirzaakhena/admin/shared/logger"
+	"github.com/mirzaakhena/admin/shared/utils"	
 	"{{PackageName}}/model"
 	"{{PackageName}}/service"
-	log "{{PackageName}}/shared/logger"
-	"{{PackageName}}/shared/utils"	
 )
 
 // {{PascalCase .Name}}Controller is
@@ -119,8 +119,7 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 
 	id := c.Param("{{CamelCase .Name}}ID")
 
-	log.GetLog().Info("{{PascalCase .Name}}.Update", "Called with {{CamelCase .Name}}ID %v", id)
-	{{if (eq DataTypeId "int")}}
+	log.GetLog().Info("{{PascalCase .Name}}.Update", "Called with {{CamelCase .Name}}ID %v", id) {{if (eq DataTypeId "int")}}
 	idInt, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
 		log.GetLog().Error("{{PascalCase .Name}}.Update", "ID must integer")

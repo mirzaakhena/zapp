@@ -25,3 +25,27 @@ Permission
   Function
   Description
   Group
+
+//----------
+
+class, Space
+field, Name, string 
+field, Description, string 
+field, Expired, time.Time 
+field, MaxUser, int
+field, TotalCurrentUser, int
+endclass
+
+class, SpaceRole
+field, Name, string 
+field, Category, string
+field, Permission, string
+endclass
+
+class, User
+field, Space, string
+field, Name, string
+field, Type, string
+field, Status, string
+field, Role, string
+endclass

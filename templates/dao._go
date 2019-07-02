@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
+	"github.com/mirzaakhena/admin/shared/utils"
 	"{{PackageName}}/model"
-	"{{PackageName}}/shared/utils"	
 )
 
 // I{{PascalCase .Name}}Dao is
@@ -14,12 +14,12 @@ type I{{PascalCase .Name}}Dao interface { {{if (eq DataTypeId "int")}}
 	GetOne(db interface{}, ID uint64) *model.{{PascalCase .Name}}
 	GetAll(db interface{}, page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
 	Delete(db interface{}, ID uint64) error
-	Update(db interface{}, ID uint64, obj *model.{{PascalCase .Name}}) error {{else}}
+	Update(db interface{}, ID uint64, obj *model.{{PascalCase .Name}}) error{{else}}
 	Create(db interface{}, obj *model.{{PascalCase .Name}}) error
 	GetOne(db interface{}, ID string) *model.{{PascalCase .Name}}
 	GetAll(db interface{}, page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
 	Delete(db interface{}, ID string) error
-	Update(db interface{}, ID string, obj *model.{{PascalCase .Name}}) error {{end}}	
+	Update(db interface{}, ID string, obj *model.{{PascalCase .Name}}) error{{end}}
 }
 
 // {{PascalCase .Name}}Dao is

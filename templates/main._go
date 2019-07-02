@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"regexp"	
+	"regexp"
 	"strings"
 	"time"
 
@@ -12,16 +12,19 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"  //
 	_ "github.com/jinzhu/gorm/dialects/sqlite" //
+	bocontroller "github.com/mirzaakhena/admin/controller"
+	bodao "github.com/mirzaakhena/admin/dao"
+	bomodel "github.com/mirzaakhena/admin/model"
+	boservice "github.com/mirzaakhena/admin/service"
+	"github.com/mirzaakhena/admin/shared/config"
+	"github.com/mirzaakhena/admin/shared/email"
+	log "github.com/mirzaakhena/admin/shared/logger"
+	"github.com/mirzaakhena/admin/shared/password"
+	"github.com/mirzaakhena/admin/shared/token"
+	"github.com/mirzaakhena/admin/shared/transaction"
 	"{{PackageName}}/controller"
 	"{{PackageName}}/dao"
-	"{{PackageName}}/model"
 	"{{PackageName}}/service"
-	"{{PackageName}}/shared/config"
-	"{{PackageName}}/shared/email"
-	log "{{PackageName}}/shared/logger"
-	"{{PackageName}}/shared/password"
-	"{{PackageName}}/shared/token"
-	"{{PackageName}}/shared/transaction"
 )
 
 func main() {
@@ -39,10 +42,10 @@ func main() {
 	db.LogMode(true)
 
 	{
-		db.AutoMigrate(&model.User{})
-		db.AutoMigrate(&model.Space{})
-		db.AutoMigrate(&model.UserSpace{})
-		db.AutoMigrate(&model.UserPermission{})		
+		db.AutoMigrate(&bomodel.User{})
+		db.AutoMigrate(&bomodel.Space{})
+		db.AutoMigrate(&bomodel.UserSpace{})
+		db.AutoMigrate(&bomodel.UserPermission{})
 	}
 
 	router := gin.Default()
@@ -70,9 +73,9 @@ func main() {
 
 	tk := token.NewToken()
 
-	us := dao.UserDao{}
+	us := bodao.UserDao{}
 
-	guestService := service.GuestService{
+	guestService := boservice.GuestService{
 		Config:   cf,
 		Trx:      trx,
 		Email:    em,
@@ -81,26 +84,26 @@ func main() {
 		User:     &us,
 	}
 
-	userPermissionDao := dao.UserPermissionDao{}
+	userPermissionDao := bodao.UserPermissionDao{}
 
-	userService := service.UserService{
+	userService := boservice.UserService{
 		GuestService:   guestService,
 		UserPermission: &userPermissionDao,
-	}		
+	}
 
-	guestController := controller.MyApi{
+	guestController := bocontroller.MyApi{
 		GuestService: &guestService,
 	}
-	
-	permissions := []model.Permission{}{{range .Classes}}
+
+	permissions := []bomodel.Permission{}{{range .Classes}}
 
 	// {{PascalCase .Name}}
 	{
-		dao := dao.New{{PascalCase .Name}}Dao(db)
-		service := service.New{{PascalCase .Name}}Service(trx, dao)
+		myDao := dao.New{{PascalCase .Name}}Dao(db)
+		service := service.New{{PascalCase .Name}}Service(trx, myDao)
 		c := controller.New{{PascalCase .Name}}Controller(service)
 
-		permissions = append(permissions, model.Permission{			
+		permissions = append(permissions, bomodel.Permission{
 			Method:      "POST",
 			Endpoint:    "/{{CamelCase .Name}}",
 			Function:    c.Create,
@@ -108,7 +111,7 @@ func main() {
 			Category:    "{{UpperCase .Name}}",
 		})
 
-		permissions = append(permissions, model.Permission{			
+		permissions = append(permissions, bomodel.Permission{
 			Method:      "GET",
 			Endpoint:    "/{{CamelCase .Name}}",
 			Function:    c.GetAll,
@@ -116,7 +119,7 @@ func main() {
 			Category:    "{{UpperCase .Name}}",
 		})
 
-		permissions = append(permissions, model.Permission{			
+		permissions = append(permissions, bomodel.Permission{
 			Method:      "GET",
 			Endpoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
 			Function:    c.GetOne,
@@ -124,7 +127,7 @@ func main() {
 			Category:    "{{UpperCase .Name}}",
 		})
 
-		permissions = append(permissions, model.Permission{			
+		permissions = append(permissions, bomodel.Permission{
 			Method:      "DELETE",
 			Endpoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
 			Function:    c.Delete,
@@ -132,7 +135,7 @@ func main() {
 			Category:    "{{UpperCase .Name}}",
 		})
 
-		permissions = append(permissions, model.Permission{			
+		permissions = append(permissions, bomodel.Permission{
 			Method:      "PUT",
 			Endpoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
 			Function:    c.Update,
@@ -187,9 +190,9 @@ func main() {
 
 		spaceID := c.Param("spaceId")
 
-		isAccessable := userService.IsAccessable(model.ServiceContext{"userId": permissionCode}, model.IsAccessableRequest{
-			MethodEndpoint:    permissionCode,
-			SpaceID: spaceID,
+		isAccessable := userService.IsAccessable(bomodel.ServiceContext{"userId": permissionCode}, bomodel.IsAccessableRequest{
+			MethodEndpoint: permissionCode,
+			SpaceID:        spaceID,
 		})
 
 		if !isAccessable {

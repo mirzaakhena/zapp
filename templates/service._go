@@ -1,10 +1,10 @@
 package service
 
 import (
+	"github.com/mirzaakhena/admin/shared/transaction"
 	"{{PackageName}}/dao"
-	"{{PackageName}}/model" 
-	"{{PackageName}}/shared/transaction" {{if (eq DataTypeId "guid")}}
-	"{{PackageName}}/utils" {{end}}
+	"{{PackageName}}/model"{{if (eq DataTypeId "guid")}}
+	"{{PackageName}}/utils"{{end}}
 )
 
 // I{{PascalCase .Name}}Service is

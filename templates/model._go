@@ -1,13 +1,13 @@
 package model
 
 import (
-	"{{PackageName}}/shared/transaction" {{if HasTime .Fields}}
+	"github.com/mirzaakhena/admin/model"{{if HasTime .Fields}}
 	"time"{{end}}
 )
 
 // {{PascalCase .Name}} is
 type {{PascalCase .Name}} struct {
-	transaction.BaseModel
+	model.BaseModel
 	SpaceID string `json:"spaceId"` //{{range .Fields}}
 	{{.Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}
 }
