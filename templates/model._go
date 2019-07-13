@@ -1,14 +1,10 @@
 package model
-
-import (
-	"github.com/mirzaakhena/admin/model"{{if HasTime .Fields}}
-	"time"{{end}}
-)
+{{if HasTime .Fields}}
+import "time"{{end}}
 
 // {{PascalCase .Name}} is
-type {{PascalCase .Name}} struct {
-	model.BaseModel
-	SpaceID string `json:"spaceId"` //{{range .Fields}}
+type {{PascalCase .Name}} struct { 
+	BaseModel{{range .Fields}}
 	{{.Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}
 }
 

@@ -16,15 +16,15 @@ import (
 	bodao "github.com/mirzaakhena/admin/dao"
 	bomodel "github.com/mirzaakhena/admin/model"
 	boservice "github.com/mirzaakhena/admin/service"
-	"github.com/mirzaakhena/admin/shared/config"
-	"github.com/mirzaakhena/admin/shared/email"
-	log "github.com/mirzaakhena/admin/shared/logger"
-	"github.com/mirzaakhena/admin/shared/password"
-	"github.com/mirzaakhena/admin/shared/token"
-	"github.com/mirzaakhena/admin/shared/transaction"
 	"{{PackageName}}/controller"
 	"{{PackageName}}/dao"
 	"{{PackageName}}/service"
+	"github.com/mirzaakhena/common/config"
+	"github.com/mirzaakhena/common/email"
+	log "github.com/mirzaakhena/common/logger"
+	"github.com/mirzaakhena/common/password"
+	"github.com/mirzaakhena/common/token"
+	"github.com/mirzaakhena/common/transaction"
 )
 
 func main() {
@@ -190,7 +190,7 @@ func main() {
 
 		spaceID := c.Param("spaceId")
 
-		isAccessable := userService.IsAccessable(bomodel.ServiceContext{"user.id": userID}, bomodel.IsAccessableRequest{
+		isAccessable := userService.IsAccessable(map[string]interface{}{"user.id": userID}, bomodel.IsAccessableRequest{
 			MethodEndpoint: permissionCode,
 			SpaceID:        spaceID,
 		})

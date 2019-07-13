@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	"github.com/mirzaakhena/admin/shared/utils"
 	"{{PackageName}}/model"
+	"github.com/mirzaakhena/common/utils"
 )
 
 // I{{PascalCase .Name}}Dao is

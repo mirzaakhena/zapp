@@ -6,11 +6,10 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	bomodel "github.com/mirzaakhena/admin/model"
-	log "github.com/mirzaakhena/admin/shared/logger"
-	"github.com/mirzaakhena/admin/shared/utils"	
 	"{{PackageName}}/model"
 	"{{PackageName}}/service"
+	log "github.com/mirzaakhena/common/logger"
+	"github.com/mirzaakhena/common/utils"
 )
 
 // {{PascalCase .Name}}Controller is
@@ -35,7 +34,7 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 		ClientIP: c.ClientIP(),
 		Session:  utils.GenerateUniqueID(),
 		Type:     "API",
-	}	
+	}
 
 	var obj model.Create{{PascalCase .Name}}Request
 	if err := c.BindJSON(&obj); err != nil {
@@ -46,7 +45,7 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 
 	log.GetLog().Info(logInfo, "Requested with %v", utils.GetJSON(obj))
 
-	sc := bomodel.ServiceContext{
+	sc := map[string]interface{}{
 		"logInfo": logInfo,
 	}
 
@@ -70,15 +69,14 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 		ClientIP: c.ClientIP(),
 		Session:  utils.GenerateUniqueID(),
 		Type:     "API",
-	}	
+	}
 
 	log.GetLog().Info(logInfo, "Request {{CamelCase .Name}}ID %v", id)
 
-	sc := bomodel.ServiceContext{
+	sc := map[string]interface{}{
 		"logInfo": logInfo,
-	}
+	}{{if (eq DataTypeId "int")}}
 
-	{{if (eq DataTypeId "int")}}
 	idInt, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
 		log.GetLog().Error(logInfo, "ID must integer")
@@ -86,8 +84,8 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 		return
 	}
 
-	obj := g.{{CamelCase .Name}}Service.GetOne(sc, idInt) {{else}}
-	obj := g.{{CamelCase .Name}}Service.GetOne(sc, id) {{end}}
+	obj := g.{{CamelCase .Name}}Service.GetOne(sc, idInt){{else}}
+	obj := g.{{CamelCase .Name}}Service.GetOne(sc, id){{end}}
 	if obj == nil {
 		log.GetLog().Info(logInfo, "No record found with {{CamelCase .Name}}ID %v", id)
 		c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("No record found with ID %v", id), "data": nil})
@@ -116,7 +114,7 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 		ClientIP: c.ClientIP(),
 		Session:  utils.GenerateUniqueID(),
 		Type:     "API",
-	}		
+	}
 
 	log.GetLog().Info(logInfo, "Requested with page %v and size %v", page, size)
 
@@ -127,7 +125,7 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 	sortBy := c.DefaultQuery("sortBy", "")
 	sortDir := c.DefaultQuery("sortDir", "asc")
 
-	sc := bomodel.ServiceContext{
+	sc := map[string]interface{}{
 		"logInfo": logInfo,
 	}	
 
@@ -154,7 +152,7 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 		ClientIP: c.ClientIP(),
 		Session:  utils.GenerateUniqueID(),
 		Type:     "API",
-	}	
+	}
 
 	log.GetLog().Info(logInfo, "Requested {{CamelCase .Name}}ID %v", id) {{if (eq DataTypeId "int")}}
 	idInt, err := strconv.ParseUint(id, 10, 64)
@@ -173,9 +171,9 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 
 	log.GetLog().Info(logInfo, "Request %v", utils.GetJSON(obj))
 
-	sc := bomodel.ServiceContext{
+	sc := map[string]interface{}{
 		"logInfo": logInfo,
-	}	
+	}
 
 	{{if (eq DataTypeId "int")}}
 	if err := g.{{CamelCase .Name}}Service.Update(sc, idInt, obj); err != nil { {{else}}
@@ -199,11 +197,11 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 		ClientIP: c.ClientIP(),
 		Session:  utils.GenerateUniqueID(),
 		Type:     "API",
-	}	
+	}
 
 	log.GetLog().Info(logInfo, "Requested with {{CamelCase .Name}}ID %v", id)
 
-	sc := bomodel.ServiceContext{
+	sc := map[string]interface{}{
 		"logInfo": logInfo,
 	}
 

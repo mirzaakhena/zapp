@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Vue from 'vue'
+import swal from 'sweetalert'
 
 const service = axios.create({
   baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:8081' : '',
