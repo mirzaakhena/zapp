@@ -14,8 +14,10 @@ Vue.use(VueSwal)
 
 Vue.config.productionTip = false
 
-new Vue({
+let vm = new Vue({
   router,
   store,
   render: h => h(App),
 }).$mount('#app')
+
+export default vm

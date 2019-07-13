@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	bomodel "github.com/mirzaakhena/admin/model"
 	log "github.com/mirzaakhena/admin/shared/logger"
 	"github.com/mirzaakhena/admin/shared/utils"	
 	"{{PackageName}}/model"
@@ -30,50 +31,70 @@ func New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service service.I{{Pas
 // Create is
 func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 
-	log.GetLog().Info("{{PascalCase .Name}}.Create", "Called")
+	logInfo := log.Data{
+		ClientIP: c.ClientIP(),
+		Session:  utils.GenerateUniqueID(),
+		Type:     "API",
+	}	
 
 	var obj model.Create{{PascalCase .Name}}Request
 	if err := c.BindJSON(&obj); err != nil {
-		log.GetLog().Error("{{PascalCase .Name}}.Create", "%v", err.Error())
+		log.GetLog().Error(logInfo, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Invalid Params. Please check data structure and type"), "data": nil})
 		return
 	}
 
-	log.GetLog().Info("{{PascalCase .Name}}.Create", "Request %v", utils.GetJSON(obj))
+	log.GetLog().Info(logInfo, "Requested with %v", utils.GetJSON(obj))
 
-	id, err := g.{{CamelCase .Name}}Service.Create(obj)
+	sc := bomodel.ServiceContext{
+		"logInfo": logInfo,
+	}
+
+	id, err := g.{{CamelCase .Name}}Service.Create(sc, obj)
 	if err != nil {
-		log.GetLog().Error("{{PascalCase .Name}}.Create", "%v", err.Error())
+		log.GetLog().Error(logInfo, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": err.Error(), "data": nil})
 		return
 	}
 
-	log.GetLog().Info("{{PascalCase .Name}}.Create", "Success. %v", fmt.Sprintf("Record with {{CamelCase .Name}}ID %v created", id))
+	log.GetLog().Info(logInfo, "Success. %v", fmt.Sprintf("Record with {{CamelCase .Name}}ID %v created", id))
 	c.JSON(http.StatusCreated, map[string]interface{}{"message": fmt.Sprintf("Record with ID %v created", id), "data": nil})
 }
 
 // GetOne is
 func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
+
 	id := c.Param("{{CamelCase .Name}}ID")
 
-	log.GetLog().Info("{{PascalCase .Name}}.GetOne", "Called with {{CamelCase .Name}}ID %v", id)
+	logInfo := log.Data{
+		ClientIP: c.ClientIP(),
+		Session:  utils.GenerateUniqueID(),
+		Type:     "API",
+	}	
+
+	log.GetLog().Info(logInfo, "Request {{CamelCase .Name}}ID %v", id)
+
+	sc := bomodel.ServiceContext{
+		"logInfo": logInfo,
+	}
+
 	{{if (eq DataTypeId "int")}}
 	idInt, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
-		log.GetLog().Error("{{PascalCase .Name}}.GetOne", "ID must integer")
+		log.GetLog().Error(logInfo, "ID must integer")
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "ID must integer", "data": nil})
 		return
 	}
 
-	obj := g.{{CamelCase .Name}}Service.GetOne(idInt) {{else}}
-	obj := g.{{CamelCase .Name}}Service.GetOne(id) {{end}}
+	obj := g.{{CamelCase .Name}}Service.GetOne(sc, idInt) {{else}}
+	obj := g.{{CamelCase .Name}}Service.GetOne(sc, id) {{end}}
 	if obj == nil {
-		log.GetLog().Info("{{PascalCase .Name}}.GetOne", "No record found with {{CamelCase .Name}}ID %v", id)
+		log.GetLog().Info(logInfo, "No record found with {{CamelCase .Name}}ID %v", id)
 		c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("No record found with ID %v", id), "data": nil})
 		return
 	}
 
-	log.GetLog().Info("{{PascalCase .Name}}.GetOne", "Record with {{CamelCase .Name}}ID %v found", id)
+	log.GetLog().Info(logInfo, "Record with {{CamelCase .Name}}ID %v found", id)
 	c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Record with ID %v found", id), "data": obj})
 }
 
@@ -91,7 +112,13 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 		size = 1
 	}
 
-	log.GetLog().Info("{{PascalCase .Name}}.GetAll", "Called with page %v and size %v", page, size)
+	logInfo := log.Data{
+		ClientIP: c.ClientIP(),
+		Session:  utils.GenerateUniqueID(),
+		Type:     "API",
+	}		
+
+	log.GetLog().Info(logInfo, "Requested with page %v and size %v", page, size)
 
 	filter := map[string]string{ {{range .Fields}}
 		"{{CamelCase .Name}}": c.DefaultQuery("f_{{CamelCase .Name}}", ""), {{end}}
@@ -100,16 +127,20 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 	sortBy := c.DefaultQuery("sortBy", "")
 	sortDir := c.DefaultQuery("sortDir", "asc")
 
-	objs, count := g.{{CamelCase .Name}}Service.GetAll(page, size, sortBy, sortDir, filter)
+	sc := bomodel.ServiceContext{
+		"logInfo": logInfo,
+	}	
+
+	objs, count := g.{{CamelCase .Name}}Service.GetAll(sc, page, size, sortBy, sortDir, filter)
 	lenObj := len(objs)
 
 	if lenObj == 0 {
-		log.GetLog().Info("{{PascalCase .Name}}.GetAll", "No records found in page %v", page)
+		log.GetLog().Info(logInfo, "No records found in page %v", page)
 		c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("No records found in page %v", page), "data": []interface{}{}})
 		return
 	}
 
-	log.GetLog().Info("{{PascalCase .Name}}.GetAll", "%d records found from page %v", lenObj, page)
+	log.GetLog().Info(logInfo, "%d records found from page %v", lenObj, page)
 	c.Header("Data-Length", fmt.Sprintf("%d", count))
 	c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("%d records found from page %v", lenObj, page), "data": objs})
 }
@@ -119,31 +150,42 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 
 	id := c.Param("{{CamelCase .Name}}ID")
 
-	log.GetLog().Info("{{PascalCase .Name}}.Update", "Called with {{CamelCase .Name}}ID %v", id) {{if (eq DataTypeId "int")}}
+	logInfo := log.Data{
+		ClientIP: c.ClientIP(),
+		Session:  utils.GenerateUniqueID(),
+		Type:     "API",
+	}	
+
+	log.GetLog().Info(logInfo, "Requested {{CamelCase .Name}}ID %v", id) {{if (eq DataTypeId "int")}}
 	idInt, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
-		log.GetLog().Error("{{PascalCase .Name}}.Update", "ID must integer")
+		log.GetLog().Error(logInfo, "ID must integer")
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "ID must integer", "data": nil})
 		return
 	} {{end}}
 
 	var obj model.Update{{PascalCase .Name}}Request
 	if err := c.BindJSON(&obj); err != nil {
-		log.GetLog().Error("{{PascalCase .Name}}.Update", "%v", err.Error())
+		log.GetLog().Error(logInfo, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Invalid Params. Please check data structure and type"), "data": nil})
 		return
 	}
 
-	log.GetLog().Info("{{PascalCase .Name}}.Update", "Request %v", utils.GetJSON(obj))
+	log.GetLog().Info(logInfo, "Request %v", utils.GetJSON(obj))
+
+	sc := bomodel.ServiceContext{
+		"logInfo": logInfo,
+	}	
+
 	{{if (eq DataTypeId "int")}}
-	if err := g.{{CamelCase .Name}}Service.Update(idInt, obj); err != nil { {{else}}
-	if err := g.{{CamelCase .Name}}Service.Update(id, obj); err != nil { {{end}}
-		log.GetLog().Error("{{PascalCase .Name}}.Update", "%v", err.Error())
+	if err := g.{{CamelCase .Name}}Service.Update(sc, idInt, obj); err != nil { {{else}}
+	if err := g.{{CamelCase .Name}}Service.Update(sc, id, obj); err != nil { {{end}}
+		log.GetLog().Error(logInfo, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Error when update record with ID %v", id), "data": nil})
 		return
 	}
 
-	log.GetLog().Info("{{PascalCase .Name}}.Update", "Success. %v", fmt.Sprintf("Record with {{CamelCase .Name}}ID %v updated", id))
+	log.GetLog().Info(logInfo, "Success. %v", fmt.Sprintf("Record with {{CamelCase .Name}}ID %v updated", id))
 	c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Record with ID %v updated", id), "data": nil})
 
 }
@@ -153,23 +195,34 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 
 	id := c.Param("{{CamelCase .Name}}ID")
 
-	log.GetLog().Info("{{PascalCase .Name}}.Delete", "Called with {{CamelCase .Name}}ID %v", id)
+	logInfo := log.Data{
+		ClientIP: c.ClientIP(),
+		Session:  utils.GenerateUniqueID(),
+		Type:     "API",
+	}	
+
+	log.GetLog().Info(logInfo, "Requested with {{CamelCase .Name}}ID %v", id)
+
+	sc := bomodel.ServiceContext{
+		"logInfo": logInfo,
+	}
+
 	{{if (eq DataTypeId "int")}}
 	idInt, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
-		log.GetLog().Error("{{PascalCase .Name}}.Delete", "ID must integer")
+		log.GetLog().Error(logInfo, "ID must integer")
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "ID must integer", "data": nil})
 		return
 	}
 	
-	if err := g.{{CamelCase .Name}}Service.Delete(idInt); err != nil { {{else}}
-	if err := g.{{CamelCase .Name}}Service.Delete(id); err != nil { {{end}}
-		log.GetLog().Error("{{PascalCase .Name}}.Delete", "%v", err.Error())
+	if err := g.{{CamelCase .Name}}Service.Delete(sc, idInt); err != nil { {{else}}
+	if err := g.{{CamelCase .Name}}Service.Delete(sc, id); err != nil { {{end}}
+		log.GetLog().Error(logInfo, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Error when delete record with ID %v", id), "data": nil})
 		return
 	}
 
-	log.GetLog().Info("{{PascalCase .Name}}.Delete", "Success. %v", fmt.Sprintf("Record with {{CamelCase .Name}}ID %v deleted", id))
+	log.GetLog().Info(logInfo, "Success. %v", fmt.Sprintf("Record with {{CamelCase .Name}}ID %v deleted", id))
 	c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("Record with ID %v deleted", id), "data": nil})
 
 }

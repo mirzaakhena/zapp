@@ -190,7 +190,7 @@ func main() {
 
 		spaceID := c.Param("spaceId")
 
-		isAccessable := userService.IsAccessable(bomodel.ServiceContext{"userId": permissionCode}, bomodel.IsAccessableRequest{
+		isAccessable := userService.IsAccessable(bomodel.ServiceContext{"user.id": userID}, bomodel.IsAccessableRequest{
 			MethodEndpoint: permissionCode,
 			SpaceID:        spaceID,
 		})

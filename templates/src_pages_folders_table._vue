@@ -109,11 +109,7 @@ export default {
         dangerMode: true,
       }).then(willDelete => {
         if (willDelete) {
-          this.$store.dispatch('Delete{{PascalCase .Name}}', item.id).then((response) => {
-            this.$swal('Record is deleted', response.message, 'success')
-          }).catch((error) => {
-            this.$swal('Something wrong', error.response.data.message, 'error')
-          })  
+          this.$store.dispatch('Delete{{PascalCase .Name}}', item.id)              
         }
       })     
     }

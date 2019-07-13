@@ -33,24 +33,19 @@ export default {
       evt.preventDefault()
       if (this.input === null) {
 
-        this.$store.dispatch('Create{{PascalCase .Name}}', this.obj).then((response) => {
+        this.$store.dispatch('Create{{PascalCase .Name}}', this.obj).then(() => {
           this.reset()
-          this.$refs.dialogInput.hide()          
+          this.$refs.dialogInput.hide()
           this.$emit('closed', 'created')
-          this.$swal('Record is created', response.message, 'success')
-        }).catch((error) => {
-          this.$swal('Something wrong', error.response.data.message, 'error')
-        })        
+        })
 
       } else {
-        this.$store.dispatch('Update{{PascalCase .Name}}', this.obj).then((response) => {        
+
+        this.$store.dispatch('Update{{PascalCase .Name}}', this.obj).then(() => {
           this.reset()
-          this.$refs.dialogInput.hide()          
-          this.$emit('closed', 'updated')          
-          this.$swal('Record is updated', response.message, 'success')
-        }).catch((error) => {
-          this.$swal('Something wrong', error.response.data.message, 'error')
-        })     
+          this.$refs.dialogInput.hide()
+          this.$emit('closed', 'updated')
+        })
 
       }
     },
