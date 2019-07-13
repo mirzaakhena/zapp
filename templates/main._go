@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"regexp"
-	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -12,18 +10,11 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"  //
 	_ "github.com/jinzhu/gorm/dialects/sqlite" //
-	bocontroller "github.com/mirzaakhena/admin/controller"
-	bodao "github.com/mirzaakhena/admin/dao"
-	bomodel "github.com/mirzaakhena/admin/model"
-	boservice "github.com/mirzaakhena/admin/service"
 	"{{PackageName}}/controller"
 	"{{PackageName}}/dao"
 	"{{PackageName}}/service"
 	"github.com/mirzaakhena/common/config"
-	"github.com/mirzaakhena/common/email"
 	log "github.com/mirzaakhena/common/logger"
-	"github.com/mirzaakhena/common/password"
-	"github.com/mirzaakhena/common/token"
 	"github.com/mirzaakhena/common/transaction"
 )
 
@@ -40,13 +31,6 @@ func main() {
 		panic(err)
 	}
 	db.LogMode(true)
-
-	{
-		db.AutoMigrate(&bomodel.User{})
-		db.AutoMigrate(&bomodel.Space{})
-		db.AutoMigrate(&bomodel.UserSpace{})
-		db.AutoMigrate(&bomodel.UserPermission{})
-	}
 
 	router := gin.Default()
 
@@ -66,7 +50,6 @@ func main() {
 
 	router.Static("/static", "../static")
 	router.LoadHTMLGlob("../templates/*")
-	
 	{{range .Classes}}
 	// {{PascalCase .Name}}
 	{
