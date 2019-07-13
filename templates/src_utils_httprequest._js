@@ -13,4 +13,22 @@ service.interceptors.request.use((config) => {
   return Promise.reject(error)
 })
 
+service.interceptors.response.use((response) => {
+  
+  return response
+}, (error) => {
+
+  if (error.response.status === 403) {
+    swal("Oops!", "You have no access to this function", "error")
+    return Promise.reject(error.response)
+  }
+
+  if (error.response.status === 400) {
+    swal("Oops!", error.response.data.message, "error")
+    return Promise.reject(error.response)
+  }
+
+  return Promise.reject(error)
+})
+
 export default service

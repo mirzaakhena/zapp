@@ -4,21 +4,49 @@ datatypeid, guid
 
 class, Account
 field, Code, string 
-field, Name, string 
-field, Side, string 
-field, Level, int 
-field, ChildType, int
-endclass
-
-class, Subaccount
-field, Code, string
 field, Name, string
 endclass
 
-class, Inventory
-field, Code, string
+class, Space
 field, Name, string
-field, Unit, string
+field, Description, string
+field, Expired, time.Time
+field, MaxUser, int
+field, TotalCurrentUser, int
 endclass
 
+class, SpaceRole
+field, Name, string
+endclass
 
+class, RolePermission
+field, SpaceRoleID, string
+field, MethodEndpoint, string
+endclass
+
+class, User
+field, Name ,string
+field, Email ,string
+field, Phone ,string
+field, Address ,string
+field, Password ,string
+field, LoginToken ,string
+field, ResetPasswordToken ,string
+field, Status ,string
+endclass
+
+class, UserSpace
+field, UserID, string 
+field, Type, string 
+field, Status, string 
+endclass
+
+class, UserPermission
+field, MethodEndpoint ,string
+field, UserID ,string
+endclass
+
+class, UserRole
+field, UserID ,string
+field, SpaceRoleID ,string
+endclass
