@@ -66,154 +66,21 @@ func main() {
 
 	router.Static("/static", "../static")
 	router.LoadHTMLGlob("../templates/*")
-
-	em := email.NewEmailImpl()
-
-	ps := password.NewPassword()
-
-	tk := token.NewToken()
-
-	us := bodao.UserDao{}
-
-	guestService := boservice.GuestService{
-		Config:   cf,
-		Trx:      trx,
-		Email:    em,
-		Password: ps,
-		Token:    tk,
-		User:     &us,
-	}
-
-	userPermissionDao := bodao.UserPermissionDao{}
-
-	userService := boservice.UserService{
-		GuestService:   guestService,
-		UserPermission: &userPermissionDao,
-	}
-
-	guestController := bocontroller.MyApi{
-		GuestService: &guestService,
-	}
-
-	permissions := []bomodel.Permission{}{{range .Classes}}
-
+	
+	{{range .Classes}}
 	// {{PascalCase .Name}}
 	{
 		myDao := dao.New{{PascalCase .Name}}Dao(db)
 		service := service.New{{PascalCase .Name}}Service(trx, myDao)
 		c := controller.New{{PascalCase .Name}}Controller(service)
 
-		permissions = append(permissions, bomodel.Permission{
-			Method:      "POST",
-			Endpoint:    "/{{CamelCase .Name}}",
-			Function:    c.Create,
-			Description: "Create New {{PascalCase .Name}}",
-			Category:    "{{UpperCase .Name}}",
-		})
-
-		permissions = append(permissions, bomodel.Permission{
-			Method:      "GET",
-			Endpoint:    "/{{CamelCase .Name}}",
-			Function:    c.GetAll,
-			Description: "Get All {{PascalCase .Name}}",
-			Category:    "{{UpperCase .Name}}",
-		})
-
-		permissions = append(permissions, bomodel.Permission{
-			Method:      "GET",
-			Endpoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
-			Function:    c.GetOne,
-			Description: "Get One {{PascalCase .Name}}",
-			Category:    "{{UpperCase .Name}}",
-		})
-
-		permissions = append(permissions, bomodel.Permission{
-			Method:      "DELETE",
-			Endpoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
-			Function:    c.Delete,
-			Description: "Delete a {{PascalCase .Name}}",
-			Category:    "{{UpperCase .Name}}",
-		})
-
-		permissions = append(permissions, bomodel.Permission{
-			Method:      "PUT",
-			Endpoint:    "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID",
-			Function:    c.Update,
-			Description: "Update a {{PascalCase .Name}}",
-			Category:    "{{UpperCase .Name}}",
-		})
-
-	}{{end}}
-
-	uuidv4Regex := regexp.MustCompile("[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")
-
-	regexColonID := regexp.MustCompile(":[a-zA-Z0-9]+")
-
-	permissionMaps := map[[2]string]string{}
-
-	apiController := router.Group("/api")
-
-	apiController.Use(func(c *gin.Context) {
-		token := c.Request.Header.Get("Authorization")
-		s := strings.Fields(token)
-		if len(s) != 2 {
-			c.AbortWithStatus(http.StatusForbidden)
-			return
-		}
-		if s[0] != "Bearer" {
-			c.AbortWithStatus(http.StatusForbidden)
-			return
-		}
-		jwt := tk.ValidateToken("LOGIN", s[1])
-		if jwt == nil {
-			c.AbortWithStatus(http.StatusForbidden)
-			return
-		}
-		c.Set("jwt", jwt)
-
-		data, ok := jwt.ExtendData.(map[string]interface{})
-		if !ok {
-			c.AbortWithStatus(http.StatusForbidden)
-			return
-		}
-
-		userID := data["userId"].(string)
-		c.Set("user.id", userID)
-
-		urlx := uuidv4Regex.ReplaceAllString(c.Request.URL.Path, "#")
-
-		permissionCode, ok := permissionMaps[[2]string{c.Request.Method, urlx}]
-		if !ok {
-			c.AbortWithStatus(http.StatusForbidden)
-			return
-		}
-
-		spaceID := c.Param("spaceId")
-
-		isAccessable := userService.IsAccessable(map[string]interface{}{"user.id": userID}, bomodel.IsAccessableRequest{
-			MethodEndpoint: permissionCode,
-			SpaceID:        spaceID,
-		})
-
-		if !isAccessable {
-			c.AbortWithStatus(http.StatusForbidden)
-			return
-		}
-
-	})
-
-	for _, permission := range permissions {
-		apiController.Handle(permission.Method, permission.Endpoint, permission.Function)
-		hashedIDURL := regexColonID.ReplaceAllString(apiController.BasePath()+permission.Endpoint, "#")
-		permissionMaps[[2]string{permission.Method, hashedIDURL}] = fmt.Sprintf("%s_%s", permission.Method, hashedIDURL)
+		router.Handle("POST", "/{{CamelCase .Name}}", c.Create)
+		router.Handle("GET", "/{{CamelCase .Name}}", c.GetAll)
+		router.Handle("GET", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.GetOne)
+		router.Handle("DELETE", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Delete)
+		router.Handle("PUT", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Update)
 	}
-
-	// everyone free to access it
-	router.POST("/register", guestController.Register)
-	router.POST("/login", guestController.Login)
-	router.GET("/activate", guestController.Activate)
-	router.POST("/password/forgot/init", guestController.ForgotPasswordInit)
-	router.POST("/password/forgot/reset", guestController.ForgotPasswordReset)
+	{{end}}
 
 	router.Run(fmt.Sprintf(":%d", cf.GetInt("server.port", "8081")))
 
