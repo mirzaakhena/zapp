@@ -69,16 +69,16 @@ export default {
   },
   computed: {
     items () {
-      return this.$store.getters.GetAll{{PascalCase .Name}}
+      return this.$store.getters['{{CamelCase .Name}}/GetAll']
     },
     paging () {
-      return this.$store.getters.Paging{{PascalCase .Name}}
+      return this.$store.getters['{{CamelCase .Name}}/Paging']
     },
     sorting () {
-      return this.$store.getters.Sorting{{PascalCase .Name}}
+      return this.$store.getters['{{CamelCase .Name}}/Sorting']
     },
     filtering () {
-      return this.$store.getters.Filtering{{PascalCase .Name}}
+      return this.$store.getters['{{CamelCase .Name}}/Filtering']
     }
   },   
   methods: {
@@ -86,16 +86,13 @@ export default {
       this.sortingChanged({sortBy: '', sortDesc: ''})    
     },
     resetFilter () {
-      this.filterChanged(true)
+      this.$store.dispatch('{{CamelCase .Name}}/UpdateFiltering')
     },
     sortingChanged (ctx) {
-      this.$store.dispatch('UpdateSorting{{PascalCase .Name}}', {byField: ctx.sortBy, isDesc: ctx.sortDesc})
+      this.$store.dispatch('{{CamelCase .Name}}/UpdateSorting', {byField: ctx.sortBy, isDesc: ctx.sortDesc})
     },
-    filterChanged (isResetFilter) {
-      this.$store.dispatch('UpdateFiltering{{PascalCase .Name}}', {isResetFilter: isResetFilter})
-    },   
     reload () {      
-      this.$store.dispatch('GetAll{{PascalCase .Name}}')
+      this.$store.dispatch('{{CamelCase .Name}}/GetAll')
     },    
     dialogClosed () {
       this.selectedItem = null
@@ -109,7 +106,7 @@ export default {
         dangerMode: true,
       }).then(willDelete => {
         if (willDelete) {
-          this.$store.dispatch('Delete{{PascalCase .Name}}', item.id)              
+          this.$store.dispatch('{{CamelCase .Name}}/Delete', item.id)              
         }
       })     
     }

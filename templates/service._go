@@ -3,17 +3,18 @@ package service
 import (
 	"{{PackageName}}/dao"
 	"{{PackageName}}/model"
+	"{{PackageName}}/model/basic"
 	"github.com/mirzaakhena/common/transaction"{{if (eq DataTypeId "guid")}}
 	"github.com/mirzaakhena/common/utils"{{end}}
 )
 
 // I{{PascalCase .Name}}Service is
 type I{{PascalCase .Name}}Service interface { {{if (eq DataTypeId "int")}}
-	Create(sc map[string]interface{}, obj model.Create{{PascalCase .Name}}Request) (uint64, error) 	
-	GetOne(sc map[string]interface{}, ID uint64) *model.{{PascalCase .Name}}
-	GetAll(sc map[string]interface{}, page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
-	Delete(sc map[string]interface{}, ID uint64) error
-	Update(sc map[string]interface{}, ID uint64, obj model.Update{{PascalCase .Name}}Request) error {{else}}
+	Create(sc map[string]interface{}, obj model.Create{{PascalCase .Name}}Request) (uint, error) 	
+	GetOne(sc map[string]interface{}, ID uint) *model.{{PascalCase .Name}}
+	GetAll(sc map[string]interface{}, req basic.GetAllCommonRequest) *basic.GetAllCommonResponse
+	Delete(sc map[string]interface{}, ID uint) error
+	Update(sc map[string]interface{}, ID uint, obj model.Update{{PascalCase .Name}}Request) error {{else}}
 	Create(sc map[string]interface{}, obj model.Create{{PascalCase .Name}}Request) (string, error) 
 	GetOne(sc map[string]interface{}, ID string) *model.{{PascalCase .Name}}
 	GetAll(sc map[string]interface{}, page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
@@ -36,7 +37,7 @@ func New{{PascalCase .Name}}Service(trx transaction.ITransaction, {{CamelCase .N
 }
 
 // Create is {{if (eq DataTypeId "int")}}
-func (g *{{PascalCase .Name}}Service) Create(sc map[string]interface{}, dto model.Create{{PascalCase .Name}}Request) (uint64, error) { {{else}}
+func (g *{{PascalCase .Name}}Service) Create(sc map[string]interface{}, dto model.Create{{PascalCase .Name}}Request) (uint, error) { {{else}}
 func (g *{{PascalCase .Name}}Service) Create(sc map[string]interface{}, dto model.Create{{PascalCase .Name}}Request) (string, error) {	{{end}}
 
 	var obj model.{{PascalCase .Name}}
@@ -51,18 +52,32 @@ func (g *{{PascalCase .Name}}Service) Create(sc map[string]interface{}, dto mode
 }
 
 // GetOne is {{if (eq DataTypeId "int")}}
-func (g *{{PascalCase .Name}}Service) GetOne(sc map[string]interface{}, ID uint64) *model.{{PascalCase .Name}} { {{else}}
+func (g *{{PascalCase .Name}}Service) GetOne(sc map[string]interface{}, ID uint) *model.{{PascalCase .Name}} { {{else}}
 func (g *{{PascalCase .Name}}Service) GetOne(sc map[string]interface{}, ID string) *model.{{PascalCase .Name}} { {{end}}
 	return g.{{CamelCase .Name}}Dao.GetOne(g.trx.GetDB(false), ID)
 }
 
 // GetAll is
-func (g *{{PascalCase .Name}}Service) GetAll(sc map[string]interface{}, page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint) {
-	return g.{{CamelCase .Name}}Dao.GetAll(g.trx.GetDB(false), page, size, sortBy, sortDir, filter)
+func (g *{{PascalCase .Name}}Service) GetAll(sc map[string]interface{}, req basic.GetAllCommonRequest) *basic.GetAllCommonResponse {
+
+	r, c := g.{{CamelCase .Name}}Dao.GetAll(g.trx.GetDB(false), req.Page, req.Size, req.SortBy, req.SortDir, req.Filter)
+
+	items := []interface{}{}
+
+	for _, item := range r {
+		items = append(items, item)
+	}
+
+	result := basic.GetAllCommonResponse{
+		TotalCount: c,
+		Items:      items,
+	}
+
+	return &result	
 }
 
 // Delete is {{if (eq DataTypeId "int")}}
-func (g *{{PascalCase .Name}}Service) Delete(sc map[string]interface{}, ID uint64) error { {{else}}
+func (g *{{PascalCase .Name}}Service) Delete(sc map[string]interface{}, ID uint) error { {{else}}
 func (g *{{PascalCase .Name}}Service) Delete(sc map[string]interface{}, ID string) error {	{{end}}
 	tx := g.trx.GetDB(true)
 	a := g.{{CamelCase .Name}}Dao.Delete(tx, ID)
@@ -71,7 +86,7 @@ func (g *{{PascalCase .Name}}Service) Delete(sc map[string]interface{}, ID strin
 }
 
 // Update is {{if (eq DataTypeId "int")}}
-func (g *{{PascalCase .Name}}Service) Update(sc map[string]interface{}, ID uint64, dto model.Update{{PascalCase .Name}}Request) error { {{else}}
+func (g *{{PascalCase .Name}}Service) Update(sc map[string]interface{}, ID uint, dto model.Update{{PascalCase .Name}}Request) error { {{else}}
 func (g *{{PascalCase .Name}}Service) Update(sc map[string]interface{}, ID string, dto model.Update{{PascalCase .Name}}Request) error { {{end}}
 
 	var obj model.{{PascalCase .Name}} 

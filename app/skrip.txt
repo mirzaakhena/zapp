@@ -1,52 +1,11 @@
-package, github.com/mirzaakhena/anctemplate
+package, github.com/mirzaakhena/itemmanagement
 
-datatypeid, guid
+datatypeid, int
 
-class, Account
-field, Code, string 
+class, Item
 field, Name, string
-endclass
-
-class, Space
-field, Name, string
-field, Description, string
+field, Price, float64
+field, Quantity, int
 field, Expired, time.Time
-field, MaxUser, int
-field, TotalCurrentUser, int
-endclass
-
-class, SpaceRole
-field, Name, string
-endclass
-
-class, RolePermission
-field, SpaceRoleID, string
-field, MethodEndpoint, string
-endclass
-
-class, User
-field, Name ,string
-field, Email ,string
-field, Phone ,string
-field, Address ,string
-field, Password ,string
-field, LoginToken ,string
-field, ResetPasswordToken ,string
-field, Status ,string
-endclass
-
-class, UserSpace
-field, UserID, string 
-field, Type, string 
-field, Status, string 
-endclass
-
-class, UserPermission
-field, MethodEndpoint ,string
-field, UserID ,string
-endclass
-
-class, UserRole
-field, UserID ,string
-field, SpaceRoleID ,string
+field, IsFood, bool
 endclass

@@ -33,7 +33,7 @@ export default {
       evt.preventDefault()
       if (this.input === null) {
 
-        this.$store.dispatch('Create{{PascalCase .Name}}', this.obj).then(() => {
+        this.$store.dispatch('{{CamelCase .Name}}/Create', this.obj).then(() => {
           this.reset()
           this.$refs.dialogInput.hide()
           this.$emit('closed', 'created')
@@ -41,7 +41,7 @@ export default {
 
       } else {
 
-        this.$store.dispatch('Update{{PascalCase .Name}}', this.obj).then(() => {
+        this.$store.dispatch('{{CamelCase .Name}}/Update', this.obj).then(() => {
           this.reset()
           this.$refs.dialogInput.hide()
           this.$emit('closed', 'updated')

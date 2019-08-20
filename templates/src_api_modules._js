@@ -25,8 +25,8 @@ const api = {
         page: paging.page,
         size: paging.size,
         sortBy: sorting.byField,
-        sortDir: sorting.isDesc? 'desc': 'asc', {{range .Fields}}
-        f_{{CamelCase .Name}}: filtering.{{CamelCase .Name}}, {{end}}
+        sortDir: sorting.isDesc? 'desc': 'asc', 
+        ...filtering,
       }
     })
   },    

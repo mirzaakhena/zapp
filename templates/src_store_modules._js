@@ -2,93 +2,98 @@ import api from '@/api';
 
 const store = {
 
+  namespaced: true,
+
   state: {
-    data{{PascalCase .Name}}: [],
-    paging{{PascalCase .Name}}: {
+    items: [],
+    paging: {
       page: 1,
       size: 20,
       total: 0,
     },
-    sorting{{PascalCase .Name}}: {
+    sorting: {
       byField: '',
       isDesc: false,
     },
-    filtering{{PascalCase .Name}}: { {{range .Fields}}
-      {{CamelCase .Name}}: null, {{end}}
-    }     
+    filtering: emptyFilter(),
   },
 
   mutations: {
-    SET_{{UpperCase .Name}}: (state, payload) => {
-      state.data{{PascalCase .Name}} = payload
+    SET_ITEMS: (state, payload) => {
+      state.items = payload
     },
-    SET_PAGING_PAGE_{{UpperCase .Name}}: (state, payload) => {
-      state.paging{{PascalCase .Name}}.page = payload
+    SET_PAGING_PAGE: (state, payload) => {
+      state.paging.page = payload
     }, 
-    SET_PAGING_TOTAL_{{UpperCase .Name}}: (state, payload) => {
-      state.paging{{PascalCase .Name}}.total = payload
+    SET_PAGING_TOTAL: (state, payload) => {
+      state.paging.total = payload
     },  
-    SET_SORTING_{{UpperCase .Name}}: (state, payload) => {
-      state.sorting{{PascalCase .Name}} = payload
+    SET_SORTING: (state, payload) => {
+      state.sorting = payload
     }, 
-    SET_FILTERING_{{UpperCase .Name}}: (state, payload) => {
-      state.filtering{{PascalCase .Name}} = payload
+    SET_FILTERING: (state, payload) => {
+      state.filtering = payload
     },     
   },
 
   getters: {
-    Sorting{{PascalCase .Name}}: state => state.sorting{{PascalCase .Name}},  
-    Filtering{{PascalCase .Name}}: state => state.filtering{{PascalCase .Name}},  
-    Paging{{PascalCase .Name}}: state => state.paging{{PascalCase .Name}},  
-    GetAll{{PascalCase .Name}}: state => state.data{{PascalCase .Name}},
-    GetOne{{PascalCase .Name}}: state => (id) => state.data{{PascalCase .Name}}.find(data{{PascalCase .Name}} => data{{PascalCase .Name}}.id === id)
+    Sorting: state => state.sorting,  
+    Filtering: state => state.filtering,  
+    Paging: state => state.paging,  
+    GetAll: state => state.items,
+    GetOne: state => (id) => state.items.find(item => item.id === id)
   },
 
   actions: {
 
-    async UpdateSorting{{PascalCase .Name}} ({commit, dispatch}, payload) {
-      commit('SET_SORTING_{{UpperCase .Name}}', {byField:payload.byField, isDesc:payload.isDesc})
-      dispatch('GetAll{{PascalCase .Name}}')
+    async UpdateSorting ({commit, dispatch}, payload) {
+      commit('SET_SORTING', {byField:payload.byField, isDesc:payload.isDesc})
+      dispatch('GetAll')
     }, 
 
-    async UpdateFiltering{{PascalCase .Name}} ({commit, dispatch}, isResetField) {
-      if (isResetField) {
-        var emptyFilter = { 
-          cond: null, 
-          code: null, 
-          description: null, 
-        }  
-        commit('SET_FILTERING_{{UpperCase .Name}}', emptyFilter)
-      }
-      commit('SET_PAGING_PAGE_{{UpperCase .Name}}', 1)
-      dispatch('GetAll{{PascalCase .Name}}')
+    async UpdateFiltering ({commit, dispatch}) { 
+      commit('SET_FILTERING', emptyFilter())      
+      commit('SET_PAGING_PAGE', 1)
+      dispatch('GetAll')
     },      
     
-    async GetAll{{PascalCase .Name}} ({commit, state}) {
-      const result = await api.GetAll{{PascalCase .Name}}(state.paging{{PascalCase .Name}}, state.sorting{{PascalCase .Name}}, state.filtering{{PascalCase .Name}})
-      commit('SET_PAGING_TOTAL_{{UpperCase .Name}}', result.headers["data-length"])
-      commit('SET_{{UpperCase .Name}}', result.data.data)
+    async GetAll ({commit, state}) {
+
+      let filterWithPrefix = {}
+      Object.keys(state.filtering).forEach(key => {
+        filterWithPrefix['f_' +key] = state.filtering[key]
+      })
+
+      const result = await api.GetAll{{PascalCase .Name}}(state.paging, state.sorting, filterWithPrefix)
+      commit('SET_PAGING_TOTAL', result.data.data.totalCount)
+      commit('SET_ITEMS', result.data.data.items)
       return result.data
     },    
 
-    async Create{{PascalCase .Name}} ({dispatch}, payload) {
+    async Create ({dispatch}, payload) {
       const {data} = await api.Create{{PascalCase .Name}}(payload)
-      dispatch('GetAll{{PascalCase .Name}}')
+      dispatch('GetAll')
       return data
     },
 
-    async Update{{PascalCase .Name}} ({dispatch}, payload) {
+    async Update ({dispatch}, payload) {
       const {data} = await api.Update{{PascalCase .Name}}(payload.id, payload)
-      dispatch('GetAll{{PascalCase .Name}}')
+      dispatch('GetAll')
       return data
     },
 
-    async Delete{{PascalCase .Name}} ({dispatch}, id) {
+    async Delete ({dispatch}, id) {
       const {data} = await api.Delete{{PascalCase .Name}}(id)
-      dispatch('GetAll{{PascalCase .Name}}')
+      dispatch('GetAll')
       return data
     },        
   },
+}
+
+function emptyFilter() {
+  return { {{range .Fields}}
+    {{CamelCase .Name}}: null, {{end}}
+  }
 }
 
 export default store
