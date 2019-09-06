@@ -127,7 +127,7 @@ func main() {
 			continue
 		}
 
-		if strings.HasPrefix(row, "class") {
+		if strings.HasPrefix(row, "table") {
 			clName := strings.Split(row, " ")
 			theClass = &TheClass{
 				Name:   strings.TrimSpace(clName[1]),
@@ -136,7 +136,7 @@ func main() {
 			continue
 		}
 
-		if strings.HasPrefix(row, "endclass") {
+		if strings.HasPrefix(row, "endtable") {
 			tp.Classes = append(tp.Classes, *theClass)
 			theClass = nil
 			continue
@@ -236,56 +236,56 @@ func (tp *ThePackage) Run() {
 
 		// create dao
 		{
-			templateFile := fmt.Sprintf("../templates/dao._go")
+			templateFile := fmt.Sprintf("../templates/backend/dao._go")
 			outputFile := fmt.Sprintf("../../../../%s/dao/%s.go", tp.packageName, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create controller
 		{
-			templateFile := fmt.Sprintf("../templates/controller._go")
+			templateFile := fmt.Sprintf("../templates/backend/controller._go")
 			outputFile := fmt.Sprintf("../../../../%s/controller/%s.go", tp.packageName, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create model
 		{
-			templateFile := fmt.Sprintf("../templates/model._go")
+			templateFile := fmt.Sprintf("../templates/backend/model._go")
 			outputFile := fmt.Sprintf("../../../../%s/model/%s.go", tp.packageName, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create model
 		{
-			templateFile := fmt.Sprintf("../templates/model_basic._go")
+			templateFile := fmt.Sprintf("../templates/backend/model_basic._go")
 			outputFile := fmt.Sprintf("../../../../%s/model/basic/model.go", tp.packageName)
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create service
 		{
-			templateFile := fmt.Sprintf("../templates/service._go")
+			templateFile := fmt.Sprintf("../templates/backend/service._go")
 			outputFile := fmt.Sprintf("../../../../%s/service/%s.go", tp.packageName, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create api modules
 		{
-			templateFile := fmt.Sprintf("../templates/src_api_modules._js")
+			templateFile := fmt.Sprintf("../templates/frontend/src/api/modules/file._js")
 			outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/modules/%s.js", tp.packageName, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create store modules
 		{
-			templateFile := fmt.Sprintf("../templates/src_store_modules._js")
+			templateFile := fmt.Sprintf("../templates/frontend/src/store/modules/file._js")
 			outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/modules/%s.js", tp.packageName, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create router modules
 		{
-			templateFile := fmt.Sprintf("../templates/src_router_modules._js")
+			templateFile := fmt.Sprintf("../templates/frontend/src/router/modules/file._js")
 			outputFile := fmt.Sprintf("../../../../%s/webapp/src/router/modules/%s.js", tp.packageName, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
@@ -297,14 +297,14 @@ func (tp *ThePackage) Run() {
 
 			// create file table under folder
 			{
-				templateFile := fmt.Sprintf("../templates/src_pages_folders_table._vue")
+				templateFile := fmt.Sprintf("../templates/frontend/src/pages/table._vue")
 				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/table.vue", tp.packageName, LowerCase(et.Name))
 				basic(tp, templateFile, outputFile, et)
 			}
 
 			// create file input under folder
 			{
-				templateFile := fmt.Sprintf("../templates/src_pages_folders_input._vue")
+				templateFile := fmt.Sprintf("../templates/frontend/src/pages/input._vue")
 				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/input.vue", tp.packageName, LowerCase(et.Name))
 				basic(tp, templateFile, outputFile, et)
 			}
@@ -314,19 +314,19 @@ func (tp *ThePackage) Run() {
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/main._go")
+		templateFile := fmt.Sprintf("../templates/backend/main._go")
 		outputFile := fmt.Sprintf("../../../../%s/app/main.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/._gitignore")
+		templateFile := fmt.Sprintf("../templates/backend/._gitignore")
 		outputFile := fmt.Sprintf("../../../../%s/.gitignore", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/config._toml")
+		templateFile := fmt.Sprintf("../templates/frontend/config._toml")
 		outputFile := fmt.Sprintf("../../../../%s/config.toml", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
@@ -338,109 +338,109 @@ func (tp *ThePackage) Run() {
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/public_favicon._ico")
+		templateFile := fmt.Sprintf("../templates/frontend/public/favicon._ico")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/public/favicon.ico", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/public_index._html")
+		templateFile := fmt.Sprintf("../templates/frontend/public/index._html")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/public/index.html", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/babel.config._js")
+		templateFile := fmt.Sprintf("../templates/frontend/babel.config._js")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/babel.config.js", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/vue.config._js")
+		templateFile := fmt.Sprintf("../templates/frontend/vue.config._js")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/vue.config.js", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/package._json")
+		templateFile := fmt.Sprintf("../templates/frontend/package._json")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/package.json", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_App._vue")
+		templateFile := fmt.Sprintf("../templates/frontend/src/App._vue")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/App.vue", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_pages_forgotpassword._vue")
+		templateFile := fmt.Sprintf("../templates/frontend/src/pages/forgotpassword._vue")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/forgotpassword.vue", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_pages_home._vue")
+		templateFile := fmt.Sprintf("../templates/frontend/src/pages/home._vue")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/home.vue", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_pages_login._vue")
+		templateFile := fmt.Sprintf("../templates/frontend/src/pages/login._vue")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/login.vue", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_pages_notfound._vue")
+		templateFile := fmt.Sprintf("../templates/frontend/src/pages/notfound._vue")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/notfound.vue", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_pages_register._vue")
+		templateFile := fmt.Sprintf("../templates/frontend/src/pages/register._vue")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/register.vue", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_pages_successregister._vue")
+		templateFile := fmt.Sprintf("../templates/frontend/src/pages/successregister._vue")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/successregister.vue", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_main._js")
+		templateFile := fmt.Sprintf("../templates/frontend/src/main._js")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/main.js", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_api_index._js")
+		templateFile := fmt.Sprintf("../templates/frontend/src/api/index._js")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/index.js", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_store_index._js")
+		templateFile := fmt.Sprintf("../templates/frontend/src/store/index._js")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/index.js", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_router_index._js")
+		templateFile := fmt.Sprintf("../templates/frontend/src/router/index._js")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/router/index.js", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_utils_httprequest._js")
+		templateFile := fmt.Sprintf("../templates/frontend/src/utils/httprequest._js")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/utils/httprequest.js", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/src_utils_auth._js")
+		templateFile := fmt.Sprintf("../templates/frontend/src/utils/auth._js")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/utils/auth.js", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}

@@ -1,11 +1,11 @@
-package, github.com/mirzaakhena/itemmanagement
+package, github.com/mirzaakhena/sample
 
 datatypeid, int
 
-class, Item
+table, Item
 field, Name, string
 field, Price, float64
 field, Quantity, int
 field, Expired, time.Time
 field, IsFood, bool
-endclass
+endtable
