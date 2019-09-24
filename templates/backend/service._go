@@ -37,9 +37,8 @@ func (g *{{PascalCase .Name}}Service) Create(sc map[string]interface{}, dto mode
 	{{range .Fields}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}}
 
-	tx := g.trx.GetDB(true)
+	tx := g.trx.GetDB(false)
 	g.{{CamelCase .Name}}Dao.Create(tx, &obj)
-	g.trx.CommitTransaction(tx)
 	return obj.ID, nil
 }
 
@@ -69,10 +68,8 @@ func (g *{{PascalCase .Name}}Service) GetAll(sc map[string]interface{}, req basi
 
 // Delete is
 func (g *{{PascalCase .Name}}Service) Delete(sc map[string]interface{}, ID uint) error {
-	tx := g.trx.GetDB(true)
-	a := g.{{CamelCase .Name}}Dao.Delete(tx, ID)
-	g.trx.CommitTransaction(tx)
-	return a
+	tx := g.trx.GetDB(false)
+	return g.{{CamelCase .Name}}Dao.Delete(tx, ID)
 }
 
 // Update is

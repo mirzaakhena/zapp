@@ -15,7 +15,7 @@ const store = {
       byField: '',
       isDesc: false,
     },
-    filtering: emptyFilter(),
+    filtering: initializeObject(),
   },
 
   mutations: {
@@ -52,7 +52,7 @@ const store = {
     }, 
 
     async UpdateFiltering ({commit, dispatch}) { 
-      commit('SET_FILTERING', emptyFilter())      
+      commit('SET_FILTERING', initializeObject())      
       commit('SET_PAGING_PAGE', 1)
       dispatch('GetAll')
     },      
@@ -90,7 +90,7 @@ const store = {
   },
 }
 
-function emptyFilter() {
+function initializeObject() {
   return { {{range .Fields}}
     {{CamelCase .Name}}: null, {{end}}
   }
