@@ -76,7 +76,7 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 
 	sc := map[string]interface{}{
 		"logInfo": logInfo,
-	}{{if (eq DataTypeId "int")}}
+	}
 
 	idInt, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
@@ -85,8 +85,7 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 		return
 	}
 
-	obj := g.{{CamelCase .Name}}Service.GetOne(sc, uint(idInt)){{else}}
-	obj := g.{{CamelCase .Name}}Service.GetOne(sc, id){{end}}
+	obj := g.{{CamelCase .Name}}Service.GetOne(sc, uint(idInt))
 	if obj == nil {
 		log.GetLog().Info(logInfo, "No record found with {{CamelCase .Name}}ID %v", id)
 		c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("No record found with ID %v", id), "data": nil})
@@ -155,13 +154,13 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 		Type:     "API",
 	}
 
-	log.GetLog().Info(logInfo, "Requested {{CamelCase .Name}}ID %v", id) {{if (eq DataTypeId "int")}}
+	log.GetLog().Info(logInfo, "Requested {{CamelCase .Name}}ID %v", id) 
 	idInt, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
 		log.GetLog().Error(logInfo, "ID must integer")
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "ID must integer", "data": nil})
 		return
-	} {{end}}
+	}
 
 	var obj model.Update{{PascalCase .Name}}Request
 	if err := c.BindJSON(&obj); err != nil {
@@ -175,9 +174,8 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 	sc := map[string]interface{}{
 		"logInfo": logInfo,
 	}
-	{{if (eq DataTypeId "int")}}
-	if err := g.{{CamelCase .Name}}Service.Update(sc, uint(idInt), obj); err != nil { {{else}}
-	if err := g.{{CamelCase .Name}}Service.Update(sc, id, obj); err != nil { {{end}}
+
+	if err := g.{{CamelCase .Name}}Service.Update(sc, uint(idInt), obj); err != nil {
 		log.GetLog().Error(logInfo, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Error when update record with ID %v", id), "data": nil})
 		return
@@ -204,7 +202,7 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 	sc := map[string]interface{}{
 		"logInfo": logInfo,
 	}
-	{{if (eq DataTypeId "int")}}
+
 	idInt, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
 		log.GetLog().Error(logInfo, "ID must integer")
@@ -212,8 +210,7 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 		return
 	}
 	
-	if err := g.{{CamelCase .Name}}Service.Delete(sc, uint(idInt)); err != nil { {{else}}
-	if err := g.{{CamelCase .Name}}Service.Delete(sc, id); err != nil { {{end}}
+	if err := g.{{CamelCase .Name}}Service.Delete(sc, uint(idInt)); err != nil {
 		log.GetLog().Error(logInfo, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Error when delete record with ID %v", id), "data": nil})
 		return

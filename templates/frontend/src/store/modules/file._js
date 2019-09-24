@@ -64,26 +64,26 @@ const store = {
         filterWithPrefix['f_' +key] = state.filtering[key]
       })
 
-      const result = await api.GetAll{{PascalCase .Name}}(state.paging, state.sorting, filterWithPrefix)
+      const result = await api.{{LowerCase .Name}}.GetAll(state.paging, state.sorting, filterWithPrefix)
       commit('SET_PAGING_TOTAL', result.data.data.totalCount)
       commit('SET_ITEMS', result.data.data.items)
       return result.data
     },    
 
     async Create ({dispatch}, payload) {
-      const {data} = await api.Create{{PascalCase .Name}}(payload)
+      const {data} = await api.{{LowerCase .Name}}.Create(payload)
       dispatch('GetAll')
       return data
     },
 
     async Update ({dispatch}, payload) {
-      const {data} = await api.Update{{PascalCase .Name}}(payload.id, payload)
+      const {data} = await api.{{LowerCase .Name}}.Update(payload.id, payload)
       dispatch('GetAll')
       return data
     },
 
     async Delete ({dispatch}, id) {
-      const {data} = await api.Delete{{PascalCase .Name}}(id)
+      const {data} = await api.{{LowerCase .Name}}.Delete(id)
       dispatch('GetAll')
       return data
     },        

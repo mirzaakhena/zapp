@@ -31,8 +31,8 @@ type TheClass struct {
 type ThePackage struct {
 	appName     string
 	packageName string
-	datatypeid  string
-	Classes     []TheClass
+	// datatypeid  string
+	Classes []TheClass
 }
 
 // CamelCase is
@@ -121,11 +121,11 @@ func main() {
 			continue
 		}
 
-		if strings.HasPrefix(row, "datatypeid") {
-			dtt := strings.Split(row, ",")
-			tp.datatypeid = strings.TrimSpace(dtt[1])
-			continue
-		}
+		// if strings.HasPrefix(row, "datatypeid") {
+		// 	dtt := strings.Split(row, ",")
+		// 	tp.datatypeid = strings.TrimSpace(dtt[1])
+		// 	continue
+		// }
 
 		if strings.HasPrefix(row, "table") {
 			clName := strings.Split(row, " ")
@@ -297,14 +297,14 @@ func (tp *ThePackage) Run() {
 
 			// create file table under folder
 			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/pages/table._vue")
+				templateFile := fmt.Sprintf("../templates/frontend/src/pages/folder/table._vue")
 				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/table.vue", tp.packageName, LowerCase(et.Name))
 				basic(tp, templateFile, outputFile, et)
 			}
 
 			// create file input under folder
 			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/pages/input._vue")
+				templateFile := fmt.Sprintf("../templates/frontend/src/pages/folder/input._vue")
 				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/input.vue", tp.packageName, LowerCase(et.Name))
 				basic(tp, templateFile, outputFile, et)
 			}
@@ -475,7 +475,7 @@ func basic(pkg *ThePackage, templateFile, outputFile string, object interface{})
 		"LowerCase":   LowerCase,
 		"AppName":     func() string { return pkg.appName },
 		"PackageName": func() string { return pkg.packageName },
-		"DataTypeId":  func() string { return pkg.datatypeid },
+		// "DataTypeId":  func() string { return pkg.datatypeid },
 	}
 
 	t, err := template.

@@ -17,11 +17,11 @@
       <dialog-input :input="selectedItem" @closed="dialogClosed"></dialog-input>
 
       <!-- Tabel -->
-      <b-table small striped hover :items="items" :fields="fields" :sort-by.sync="sorting.byField" :sort-desc.sync="sorting.isDesc" :no-local-sorting="true" @sort-changed="sortingChanged">
-        <template slot="HEAD_action">
+      <b-table sticky-header small striped hover :items="items" :fields="fields" :sort-by.sync="sorting.byField" :sort-desc.sync="sorting.isDesc" :no-local-sorting="true" @sort-changed="sortingChanged">
+        <template v-slot:head(action)="data">
           <b-button variant="warning" @click="resetSorting" size="sm">Reset Sorting</b-button>
         </template> 
-        <template slot="HEAD_index">
+        <template v-slot:head(index)="data">
           #
         </template> 
         <template slot="index" slot-scope="data">
@@ -33,7 +33,7 @@
             <b-form-input v-if="field.key !== 'action' && field.key !== 'index'" size="sm" v-model="filtering[field.key]" :placeholder="field.label" @input="reload" trim> </b-form-input>
           </td>
         </template> 
-        <template slot="action" slot-scope="data">
+        <template v-slot:cell(action)="data">
           <b-button-group>
             <b-button v-b-modal.dialogInput @click="selectedItem=data.item" size="sm" variant="primary">Edit</b-button>
             <b-button @click="deleteItem(data.item)" size="sm" variant="danger">Delete</b-button>

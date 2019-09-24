@@ -9,17 +9,12 @@ import (
 )
 
 // I{{PascalCase .Name}}Dao is
-type I{{PascalCase .Name}}Dao interface { {{if (eq DataTypeId "int")}}
+type I{{PascalCase .Name}}Dao interface {
 	Create(db interface{}, obj *model.{{PascalCase .Name}}) error
 	GetOne(db interface{}, ID uint) *model.{{PascalCase .Name}}
 	GetAll(db interface{}, page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
 	Delete(db interface{}, ID uint) error
-	Update(db interface{}, ID uint, obj *model.{{PascalCase .Name}}) error{{else}}
-	Create(db interface{}, obj *model.{{PascalCase .Name}}) error
-	GetOne(db interface{}, ID string) *model.{{PascalCase .Name}}
-	GetAll(db interface{}, page, size int, sortBy, sortDir string, filter map[string]string) ([]model.{{PascalCase .Name}}, uint)
-	Delete(db interface{}, ID string) error
-	Update(db interface{}, ID string, obj *model.{{PascalCase .Name}}) error{{end}}
+	Update(db interface{}, ID uint, obj *model.{{PascalCase .Name}}) error
 }
 
 // {{PascalCase .Name}}Dao is
@@ -36,13 +31,11 @@ func (g *{{PascalCase .Name}}Dao) Create(db interface{}, obj *model.{{PascalCase
 	return db.(*gorm.DB).Create(obj).Error
 }
 
-// GetOne is {{if (eq DataTypeId "int")}}
-func (g *{{PascalCase .Name}}Dao) GetOne(db interface{}, ID uint) *model.{{PascalCase .Name}} { {{else}}
-func (g *{{PascalCase .Name}}Dao) GetOne(db interface{}, ID string) *model.{{PascalCase .Name}} {	{{end}}
+// GetOne is 
+func (g *{{PascalCase .Name}}Dao) GetOne(db interface{}, ID uint) *model.{{PascalCase .Name}} {
 	var obj model.{{PascalCase .Name}}
-	db.(*gorm.DB).First(&obj, "id = ?", ID) {{if (eq DataTypeId "int")}}
-	if obj.ID == 0 { {{else}}
-	if obj.ID == "" { {{end}}
+	db.(*gorm.DB).First(&obj, "id = ?", ID)
+	if obj.ID == 0 {
 		return nil
 	}
 	return &obj
@@ -75,15 +68,13 @@ func (g *{{PascalCase .Name}}Dao) GetAll(db interface{}, page, size int, sortBy,
 	return objs, count
 }
 
-// Delete is {{if (eq DataTypeId "int")}}
-func (g *{{PascalCase .Name}}Dao) Delete(db interface{}, ID uint) error { {{else}}
-func (g *{{PascalCase .Name}}Dao) Delete(db interface{}, ID string) error {	{{end}}
+// Delete is
+func (g *{{PascalCase .Name}}Dao) Delete(db interface{}, ID uint) error {
 	return db.(*gorm.DB).Delete(model.{{PascalCase .Name}}{}, "id = ?", ID).Error
 }
 
-// Update is {{if (eq DataTypeId "int")}}
-func (g *{{PascalCase .Name}}Dao) Update(db interface{}, ID uint, obj *model.{{PascalCase .Name}}) error { {{else}}
-func (g *{{PascalCase .Name}}Dao) Update(db interface{}, ID string, obj *model.{{PascalCase .Name}}) error { {{end}}
+// Update is
+func (g *{{PascalCase .Name}}Dao) Update(db interface{}, ID uint, obj *model.{{PascalCase .Name}}) error {
 	oldObj := g.GetOne(db, ID) 
 	if oldObj == nil {
 		return fmt.Errorf("ID %v not found", ID)

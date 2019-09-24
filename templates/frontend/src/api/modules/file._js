@@ -2,49 +2,53 @@ import request from "@/utils/httprequest";
 
 const api = {
 
-  Create{{PascalCase .Name}}(payload) {
-    return request({
-      url: `/{{CamelCase .Name}}`,
-      method: 'post',
-      data: payload,
-    })
-  },
+  {{LowerCase .Name}}: {
 
-  GetOne{{PascalCase .Name}}({{CamelCase .Name}}ID) {
-    return request({
-      url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
-      method: 'get',
-    })
-  },  
+    Create(payload) {
+      return request({
+        url: `/{{CamelCase .Name}}`,
+        method: 'post',
+        data: payload,
+      })
+    },
 
-  GetAll{{PascalCase .Name}}(paging, sorting, filtering) {    
-    return request({
-      url: `/{{CamelCase .Name}}`,
-      method: 'get',
-      params: {
-        page: paging.page,
-        size: paging.size,
-        sortBy: sorting.byField,
-        sortDir: sorting.isDesc? 'desc': 'asc', 
-        ...filtering,
-      }
-    })
-  },    
+    GetOne({{CamelCase .Name}}ID) {
+      return request({
+        url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
+        method: 'get',
+      })
+    },  
 
-  Update{{PascalCase .Name}}({{CamelCase .Name}}ID, payload) {
-    return request({
-      url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
-      method: 'put',
-      data: payload,
-    })
-  },
+    GetAll(paging, sorting, filtering) {    
+      return request({
+        url: `/{{CamelCase .Name}}`,
+        method: 'get',
+        params: {
+          page: paging.page,
+          size: paging.size,
+          sortBy: sorting.byField,
+          sortDir: sorting.isDesc? 'desc': 'asc', 
+          ...filtering,
+        }
+      })
+    },    
 
-  Delete{{PascalCase .Name}}({{CamelCase .Name}}ID) {
-    return request({
-      url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
-      method: 'delete',
-    })
-  },  
+    Update({{CamelCase .Name}}ID, payload) {
+      return request({
+        url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
+        method: 'put',
+        data: payload,
+      })
+    },
+
+    Delete({{CamelCase .Name}}ID) {
+      return request({
+        url: `/{{CamelCase .Name}}/${{"{"}}{{CamelCase .Name}}ID}`,
+        method: 'delete',
+      })
+    }, 
+
+  } 
 
 }
 
