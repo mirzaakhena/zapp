@@ -1,6 +1,6 @@
 module.exports = {
   productionSourceMap: false,
-  assetsDir: '../static',
-  outputDir: '../static',
-  indexPath: '../templates/index.html'
+  outputDir: '../webcontent',
+  assetsDir: 'static',
+  indexPath: 'templates/index.html'
 };

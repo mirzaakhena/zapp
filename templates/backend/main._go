@@ -44,12 +44,14 @@ func main() {
 
 	trx := transaction.NewGormTransactionDB(db)
 
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{"title": "MainMenu"})
-	})
-
-	router.Static("/static", "../static")
-	router.LoadHTMLGlob("../templates/*")
+	{
+		router.StaticFile("./favicon.ico", "../webcontent/favicon.ico")
+		router.Static("/static", "../webcontent/static")
+		router.LoadHTMLGlob("../webcontent/templates/*")
+		router.GET("/", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "index.html", gin.H{"title": "MainMenu"})
+		})
+	}
 	{{range .Classes}}
 	// {{PascalCase .Name}}
 	{
