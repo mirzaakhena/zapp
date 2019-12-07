@@ -12,11 +12,11 @@ type BaseModel struct {
 
 // GetAllCommonRequest is
 type GetAllCommonRequest struct {
-	Page    int               `json:"page"`
-	Size    int               `json:"size"`
-	SortBy  string            `json:"sortBy"`
-	SortDir string            `json:"sortDir"`
-	Filter  map[string]string `json:"filter"`
+	Page     int               `json:"page"`
+	Size     int               `json:"size"`
+	SortBy   string            `json:"sortBy"`
+	SortDesc bool              `json:"sortDesc"`
+	Filters  map[string]string `json:"filter"`
 }
 
 // GetAllCommonResponse is

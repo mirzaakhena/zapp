@@ -110,6 +110,17 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 		size = 1
 	}
 
+
+	sortBy := c.DefaultQuery("sortBy", "")
+	sortDescString := c.DefaultQuery("sortDesc", "false")
+
+	sortDesc, err := strconv.ParseBool(sortDescString)
+	if err != nil {
+		message := "sortDesc must bool"
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message, "data": []interface{}{}})
+		return
+	}	
+
 	logInfo := log.Data{
 		ClientIP: c.ClientIP(),
 		Session:  utils.GenerateUniqueID(),
@@ -118,23 +129,20 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 
 	log.GetLog().Info(logInfo, "Requested with page %v and size %v", page, size)
 
-	filter := map[string]string{ {{range .Fields}}
+	filters := map[string]string{ {{range .Fields}}
 		"{{CamelCase .Name}}": c.DefaultQuery("f_{{CamelCase .Name}}", ""), {{end}}
 	}
-
-	sortBy := c.DefaultQuery("sortBy", "")
-	sortDir := c.DefaultQuery("sortDir", "asc")
 
 	sc := map[string]interface{}{
 		"logInfo": logInfo,
 	}	
 
 	req := basic.GetAllCommonRequest{
-		Filter:  filter,
-		Page:    page,
-		Size:    size,
-		SortBy:  sortBy,
-		SortDir: sortDir,
+		Filters:  filters,
+		Page:     page,
+		Size:     size,
+		SortBy:   sortBy,
+		SortDesc: sortDesc,
 	}	
 
 	objs := g.{{CamelCase .Name}}Service.GetAll(sc, req)

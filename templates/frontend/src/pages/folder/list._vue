@@ -1,0 +1,184 @@
+<template>
+  <div class="container-fluid">      
+    
+    <div style="margin-bottom:20px; margin-top:20px">
+      <!-- Button New -->
+      <b-button variant="success" size="sm" @click="openInput()" >Input {{PascalCase .Name}}</b-button>
+      
+      <b-button variant="info" style="margin-left:10px" size="sm" @click="queryItems">Refresh</b-button>
+
+      <!-- paging -->
+      <div class="float-right">
+        <b-pagination size="sm" @input="onPaging" v-model="paging.page" :total-rows="totalItems" :per-page="paging.size"></b-pagination>
+      </div>
+    </div>    
+
+    <b-table 
+      small 
+      striped 
+      hover 
+      :fields="fields" 
+      :items="items"
+      :sort-by.sync="sorting.sortBy" 
+      :sort-desc.sync="sorting.sortDesc" 
+      :no-local-sorting="true" 
+      @sort-changed="onSorting" >
+      
+      <template v-slot:head(action)="data">
+        <b-button variant="warning" @click="resetSorting" size="sm">Reset Sorting</b-button>
+      </template>
+
+      <template v-slot:head(index)="data">
+        #
+      </template>
+
+      <template v-slot:cell(index)="data">
+        {{"{{"}} data.index + 1 {{"}}"}}
+      </template>     
+
+      <template slot="top-row" slot-scope="{ fields }">
+        <td v-for="field in fields" :key="field.key">
+          <b-button variant="warning" @click="resetFiltering" v-if="field.key === 'action'" size="sm">Reset Filtering</b-button>
+          <b-form-input 
+            autocomplete="off" 
+            v-if="field.key !== 'index' && field.key !== 'action'" 
+            size="sm" 
+            v-model="filtering['f_' + field.key]" 
+            :placeholder="field.label" 
+            @input="onFiltering" trim> </b-form-input>            
+        </td>
+      </template> 
+
+      <template v-slot:cell(action)="data">
+        <b-button-group>
+          <b-button @click="openInput(data.item)" size="sm" variant="primary">Edit</b-button>
+          <b-button @click="deleteItem(data.item)" size="sm" variant="danger">Delete</b-button>
+        </b-button-group>
+      </template>        
+
+    </b-table>
+    <modal-input></modal-input>
+  </div>
+</template>
+
+<script>
+
+import { computed } from '@vue/composition-api';
+import ModalInput from "./input";
+import Swal from 'sweetalert2'
+
+export default {
+  components: {
+    ModalInput,
+  },
+  setup (_, {root}) {
+
+    const fields = [
+      'index',
+      'action', {{range .Fields}}
+      {key: '{{CamelCase .Name}}', sortable: true}, {{end}}
+    ]
+
+    const entity = '{{CamelCase .Name}}'
+
+    root.$store.commit(`${entity}/SET_URL`, `/${entity}`)
+
+    const paging = computed(() => root.$store.getters[`${entity}/getPaging`])
+
+    const sorting = computed(() => root.$store.getters[`${entity}/getSorting`])
+
+    const filtering = computed(() => root.$store.getters[`${entity}/getFiltering`])
+
+    const items = computed(() => root.$store.getters[`${entity}/getItems`])
+
+    const totalItems = computed(() => root.$store.getters[`${entity}/getTotalItems`])
+
+    const resetFiltering = () => root.$store.dispatch(`${entity}/resetFiltering`)
+
+    const resetSorting = () => root.$store.dispatch(`${entity}/resetSorting`)
+
+    const onFiltering = () => root.$store.dispatch(`${entity}/onFiltering`)
+
+    const onSorting = () => root.$store.dispatch(`${entity}/onSorting`)
+
+    const onPaging = () => root.$store.dispatch(`${entity}/onPaging`)
+
+    const queryItems = () => root.$store.dispatch(`${entity}/queryItems`)
+
+    const openInput = (item) => {
+      if (item === undefined) {
+        root.$store.commit(`${entity}/SET_MODE`, 'CREATE')
+        root.$store.commit(`${entity}/SET_INPUTTED_ITEM`, { {{range .Fields}} {{if (eq .DataType "string")}}
+          {{CamelCase .Name}}: '',{{else if (eq .DataType "int")}}
+          {{CamelCase .Name}}: 0,{{else if (eq .DataType "float64")}}
+          {{CamelCase .Name}}: 0.0,{{else if (eq .DataType "bool")}}
+          {{CamelCase .Name}}: false,{{else if (eq .DataType "time.Time")}}
+          {{CamelCase .Name}}: '2019-06-07T05:43:21Z', {{end}} {{end}}
+        })
+        root.$bvModal.show('modalInput')
+        return
+      }
+
+      root.$store.commit(`${entity}/SET_MODE`, 'UPDATE')
+      root.$store.dispatch(`${entity}/getOneItem`, {        
+        itemId: item.id, 
+        afterCalled: (success) => {
+          if (success) {
+            root.$bvModal.show('modalInput')
+          }
+        },
+      })
+      
+    }  
+
+    const deleteConfirmObject = {
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }
+
+    const deleteItem = (item) => {
+      Swal.fire(deleteConfirmObject).then((result) => {
+        if (result.value) {
+          root.$store.dispatch('${entity}/deleteItem', {            
+            item,
+            afterCalled: (success, data) => {
+              if (success) {
+                Swal.fire('Deleted!', `${data}`, 'success')                
+              }  
+            }
+          })
+        }
+      })      
+    }
+
+    queryItems()
+
+    return {
+      items,
+      totalItems,
+      filtering,
+      sorting,
+      paging,
+      fields,
+      openInput, 
+      queryItems, 
+      deleteItem, 
+      resetFiltering, 
+      resetSorting,       
+      onFiltering, 
+      onSorting, 
+      onPaging,
+    }
+  }
+}
+
+</script>
+
+<style>
+
+</style>

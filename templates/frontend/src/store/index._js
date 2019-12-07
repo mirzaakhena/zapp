@@ -1,11 +1,14 @@
 import Vue from 'vue'
-import Vuex from 'vuex' {{range .Classes}}  
-import {{CamelCase .Name}} from './modules/{{LowerCase .Name}}' {{end}}
+import Vuex from 'vuex'   
+import basiccrud from './basiccrud' 
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  modules: { {{range .Classes}}  
-    {{CamelCase .Name}}, {{end}}
-  }
+const store = new Vuex.Store({
+  modules: {
+  }  
 })
+{{range .Classes}}
+store.registerModule('{{CamelCase .Name}}', basiccrud) {{end}}
+
+export default store

@@ -297,8 +297,8 @@ func (tp *ThePackage) Run() {
 
 			// create file table under folder
 			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/pages/folder/table._vue")
-				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/table.vue", tp.packageName, LowerCase(et.Name))
+				templateFile := fmt.Sprintf("../templates/frontend/src/pages/folder/list._vue")
+				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/list.vue", tp.packageName, LowerCase(et.Name))
 				basic(tp, templateFile, outputFile, et)
 			}
 
@@ -424,6 +424,12 @@ func (tp *ThePackage) Run() {
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/store/index._js")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/index.js", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/frontend/src/store/basiccrud._js")
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/basiccrud.js", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 

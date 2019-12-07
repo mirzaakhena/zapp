@@ -50,7 +50,7 @@ func (g *{{PascalCase .Name}}Service) GetOne(sc map[string]interface{}, ID uint)
 // GetAll is
 func (g *{{PascalCase .Name}}Service) GetAll(sc map[string]interface{}, req basic.GetAllCommonRequest) *basic.GetAllCommonResponse {
 
-	r, c := g.{{CamelCase .Name}}Dao.GetAll(g.trx.GetDB(false), req.Page, req.Size, req.SortBy, req.SortDir, req.Filter)
+	r, c := g.{{CamelCase .Name}}Dao.GetAll(g.trx.GetDB(false), req.Page, req.Size, req.SortBy, req.SortDesc, req.Filters)
 
 	items := []interface{}{}
 

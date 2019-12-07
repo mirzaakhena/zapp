@@ -1,70 +1,74 @@
 <template>
+  <b-modal ref="modalInput" id="modalInput" title="Input {{PascalCase .Name}}" @ok="onSubmit">{{range .Fields}}{{if (eq .DataType "string")}}
 
-  <b-modal id="dialogInput" ref="dialogInput" title="Input {{PascalCase .Name}}" @shown="reset" @ok="handleOk">{{range .Fields}}{{if (eq .DataType "string")}}
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-input type="text" v-model="obj.{{CamelCase .Name}}" required></b-form-input>
+      <b-form-input type="text" v-model="inputedItem.{{CamelCase .Name}}" required autocomplete="off"></b-form-input>
     </b-form-group>{{else if (eq .DataType "int")}}
+
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-input type="text" v-model.number="obj.{{CamelCase .Name}}" required></b-form-input>
+      <b-form-input type="text" v-model.number="inputedItem.{{CamelCase .Name}}" required autocomplete="off"></b-form-input>
     </b-form-group>{{else if (eq .DataType "float64")}}
+
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-input type="text" v-model.number="obj.{{CamelCase .Name}}" required></b-form-input>
+      <b-form-input type="text" v-model.number="inputedItem.{{CamelCase .Name}}" required autocomplete="off"></b-form-input>
     </b-form-group>{{else if (eq .DataType "bool")}}
+
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-checkbox v-model="obj.{{CamelCase .Name}}"></b-form-checkbox>
+      <b-form-checkbox v-model="inputedItem.{{CamelCase .Name}}"></b-form-checkbox>
     </b-form-group>{{else if (eq .DataType "time.Time")}}
+
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-input type="text" v-model="obj.{{CamelCase .Name}}" required></b-form-input>
-    </b-form-group>{{end}}{{end}}      
+      <b-form-input type="text" v-model="inputedItem.{{CamelCase .Name}}" required autocomplete="off"></b-form-input>
+    </b-form-group>{{end}}{{end}}
+
   </b-modal>
 
 </template>
 
 <script>
+
+import { computed } from '@vue/composition-api';
+import Swal from 'sweetalert2';
+
 export default {
-  props: ['input'],
-  data () {
-    return {
-      obj: {},
-    }
-  },
-  methods: {
-    handleOk (evt) {
-      evt.preventDefault()
-      if (this.input === null) {
+  setup(_, {refs, root}) {
 
-        this.$store.dispatch('{{CamelCase .Name}}/Create', this.obj).then(() => {
-          this.reset()
-          this.$refs.dialogInput.hide()
-          this.$emit('closed', 'created')
+    const entity = '{{CamelCase .Name}}'
+
+    const inputedItem = computed(() => root.$store.getters[`${entity}/getInputtedItem`])
+
+    const onSubmit = async (bvModalEvt) => {      
+      
+      bvModalEvt.preventDefault()
+
+      if (root.$store.getters[`${entity}/getInputMode`] === 'CREATE') {        
+        root.$store.dispatch(`${entity}/createItem`, {
+          afterCalled: (success, data) => {
+            if (success) {
+              Swal.fire('Created!', `${data}`, 'success')
+              refs.modalInput.hide()
+            }
+          }          
         })
+        return
+      } 
 
-      } else {
-
-        this.$store.dispatch('{{CamelCase .Name}}/Update', this.obj).then(() => {
-          this.reset()
-          this.$refs.dialogInput.hide()
-          this.$emit('closed', 'updated')
+      if (root.$store.getters[`${entity}/getInputMode`] === 'UPDATE') {
+        root.$store.dispatch(`${entity}/updateItem`, {
+          afterCalled: (success, data) => {
+            if (success) {
+              Swal.fire('Updated!', `${data}`, 'success')
+              refs.modalInput.hide()
+            }
+          }           
         })
-
+        return
       }
-    },
-    reset () {
-      if (this.input == null) {
-        this.obj = {
-          id: '', {{range .Fields}} {{if (eq .DataType "string")}}
-          {{CamelCase .Name}}: '',{{else if (eq .DataType "int")}}
-          {{CamelCase .Name}}: 0,{{else if (eq .DataType "float64")}}
-          {{CamelCase .Name}}: 0.0,{{else if (eq .DataType "bool")}}
-          {{CamelCase .Name}}: false,{{else if (eq .DataType "time.Time")}}
-          {{CamelCase .Name}}: '2019-06-07T05:43:21Z', {{end}}{{end}}
-        }
-      } else {
-        this.obj = this.input
-      }
+            
     }
-  }      
 
+    return {onSubmit, inputedItem}
+  }
 }
 </script>
 

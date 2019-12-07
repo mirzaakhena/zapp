@@ -4,14 +4,17 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --port 4000",
-    "build": "vue-cli-service build --dest $GOPATH/src/{{PackageName}}/static",
+    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vue/composition-api": "^0.3.2",
     "await-to-js": "^2.1.1",
     "axios": "^0.18.0",
-    "bootstrap": "^4.3.1",
-    "bootstrap-vue": "^2.0.0-rc.13",
+    "bootstrap-vue": "^2.0.0-rc.25",
+    "core-js": "^3.3.2",
+    "jquery": "^3.4.1",
+    "sweetalert2": "^9.3.16",    
     "vue": "^2.6.6",
     "vue-router": "^3.0.2",
     "vue-sidebar-menu": "^3.7.0",
@@ -19,13 +22,13 @@
     "vuex": "^3.1.0" 
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.5.0",
-    "@vue/cli-plugin-eslint": "^3.5.0",
-    "@vue/cli-service": "^3.5.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.8.0",
+    "@vue/cli-plugin-babel": "^4.0.0",
+    "@vue/cli-plugin-eslint": "^4.0.0",
+    "@vue/cli-service": "^4.0.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.5.21"
+    "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {
     "root": true,

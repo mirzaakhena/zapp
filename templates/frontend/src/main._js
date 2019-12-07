@@ -14,6 +14,10 @@ Vue.use(VueSwal)
 
 Vue.config.productionTip = false
 
+import VueCompositionApi from '@vue/composition-api';
+
+Vue.use(VueCompositionApi);
+
 let vm = new Vue({
   router,
   store,
