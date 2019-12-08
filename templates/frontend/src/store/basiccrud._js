@@ -152,7 +152,7 @@ const store = {
       
     },
 
-    async getOneItem ({state}, {itemId, afterCalled}) {
+    async getOneItem ({state, commit}, {itemId, afterCalled}) {
       const [error, response] = await to(request({
         method: 'get',
         url: `${state.url}/${itemId}`,
@@ -161,7 +161,7 @@ const store = {
         afterCalled(false, '')
         return
       }
-      state.inputtedItem = response.data.data
+      commit('SET_INPUTTED_ITEM', response.data.data)
       afterCalled(true, response.data.message)
     },
 

@@ -144,7 +144,7 @@ export default {
     const deleteItem = (item) => {
       Swal.fire(deleteConfirmObject).then((result) => {
         if (result.value) {
-          root.$store.dispatch('${entity}/deleteItem', {            
+          root.$store.dispatch(`${entity}/deleteItem`, {
             item,
             afterCalled: (success, data) => {
               if (success) {

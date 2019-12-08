@@ -202,10 +202,10 @@ func (tp *ThePackage) Run() {
 		os.MkdirAll(dir, 0777)
 	}
 
-	{
-		dir := fmt.Sprintf("../../../../%s/webapp/src/api/modules", tp.packageName)
-		os.MkdirAll(dir, 0777)
-	}
+	// {
+	// 	dir := fmt.Sprintf("../../../../%s/webapp/src/api/modules", tp.packageName)
+	// 	os.MkdirAll(dir, 0777)
+	// }
 
 	{
 		dir := fmt.Sprintf("../../../../%s/webapp/src/store/modules", tp.packageName)
@@ -222,10 +222,10 @@ func (tp *ThePackage) Run() {
 		os.Mkdir(f, 0777)
 	}
 
-	{
-		f := fmt.Sprintf("../../../../%s/webapp/src/components", tp.packageName)
-		os.Mkdir(f, 0777)
-	}
+	// {
+	// 	f := fmt.Sprintf("../../../../%s/webapp/src/components", tp.packageName)
+	// 	os.Mkdir(f, 0777)
+	// }
 
 	{
 		f := fmt.Sprintf("../../../../%s/webapp/src/utils", tp.packageName)
@@ -270,18 +270,18 @@ func (tp *ThePackage) Run() {
 		}
 
 		// create api modules
-		{
-			templateFile := fmt.Sprintf("../templates/frontend/src/api/modules/file._js")
-			outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/modules/%s.js", tp.packageName, LowerCase(et.Name))
-			basic(tp, templateFile, outputFile, et)
-		}
+		// {
+		// 	templateFile := fmt.Sprintf("../templates/frontend/src/api/modules/file._js")
+		// 	outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/modules/%s.js", tp.packageName, LowerCase(et.Name))
+		// 	basic(tp, templateFile, outputFile, et)
+		// }
 
 		// create store modules
-		{
-			templateFile := fmt.Sprintf("../templates/frontend/src/store/modules/file._js")
-			outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/modules/%s.js", tp.packageName, LowerCase(et.Name))
-			basic(tp, templateFile, outputFile, et)
-		}
+		// {
+		// 	templateFile := fmt.Sprintf("../templates/frontend/src/store/modules/file._js")
+		// 	outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/modules/%s.js", tp.packageName, LowerCase(et.Name))
+		// 	basic(tp, templateFile, outputFile, et)
+		// }
 
 		// create router modules
 		{
@@ -415,11 +415,11 @@ func (tp *ThePackage) Run() {
 		basic(tp, templateFile, outputFile, tp)
 	}
 
-	{
-		templateFile := fmt.Sprintf("../templates/frontend/src/api/index._js")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/index.js", tp.packageName)
-		basic(tp, templateFile, outputFile, tp)
-	}
+	// {
+	// 	templateFile := fmt.Sprintf("../templates/frontend/src/api/index._js")
+	// 	outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/index.js", tp.packageName)
+	// 	basic(tp, templateFile, outputFile, tp)
+	// }
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/store/index._js")
