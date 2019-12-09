@@ -1,51 +1,20 @@
 # My Apps
 
-Space
-  Name
-  Description
-  Expired
-  MaxUser  
+This Apps is include
 
-User
-  nama
-  email
-  SpaceName
-  Detail
-  Status
-  Roles
+FrontEnd
+  - vue
+  - vue composition api
+  - vuex
+  - vue-router
+  - vue-sidebar
+  - bootstrap
+  - sweetalert
+  - axios
 
-Role
-  SpaceName
-  RoleName
-  Permissions
+Backend
+  - gin-gonic  
+  - gorm
+  - config 
+  - log
 
-Permission
-  Method
-  EndPoint
-  Function
-  Description
-  Group
-
-//----------
-
-class, Space
-field, Name, string 
-field, Description, string 
-field, Expired, time.Time 
-field, MaxUser, int
-field, TotalCurrentUser, int
-endclass
-
-class, SpaceRole
-field, Name, string 
-field, Category, string
-field, Permission, string
-endclass
-
-class, User
-field, Space, string
-field, Name, string
-field, Type, string
-field, Status, string
-field, Role, string
-endclass

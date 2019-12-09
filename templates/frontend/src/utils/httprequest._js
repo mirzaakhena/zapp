@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Vue from 'vue'
-import swal from 'sweetalert'
+import Swal from 'sweetalert2'
 
 const service = axios.create({
   baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:8081' : '',
@@ -20,12 +20,12 @@ service.interceptors.response.use((response) => {
 }, (error) => {
 
   if (error.response.status === 403) {
-    swal("Oops!", "You have no access to this function", "error")
+    Swal.fire("Oops!", "You have no access to this function", "error")
     return Promise.reject(error.response)
   }
 
   if (error.response.status === 400) {
-    swal("Oops!", error.response.data.message, "error")
+    Swal.fire("Oops!", error.response.data.message, "error")
     return Promise.reject(error.response)
   }
 

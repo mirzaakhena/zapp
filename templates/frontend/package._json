@@ -18,7 +18,6 @@
     "vue": "^2.6.6",
     "vue-router": "^3.0.2",
     "vue-sidebar-menu": "^3.7.0",
-    "vue-swal": "^1.0.0",  
     "vuex": "^3.1.0" 
   },
   "devDependencies": {
