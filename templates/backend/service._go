@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"{{PackageName}}/dao"
 	"{{PackageName}}/model"
 	"{{PackageName}}/model/basic"
@@ -9,11 +11,11 @@ import (
 
 // I{{PascalCase .Name}}Service is
 type I{{PascalCase .Name}}Service interface {
-	Create(sc map[string]interface{}, obj model.Create{{PascalCase .Name}}Request) (uint, error) 	
+	Create(sc map[string]interface{}, obj model.Create{{PascalCase .Name}}Request) (*model.{{PascalCase .Name}}, error) 	
 	GetOne(sc map[string]interface{}, ID uint) *model.{{PascalCase .Name}}
 	GetAll(sc map[string]interface{}, req basic.GetAllCommonRequest) *basic.GetAllCommonResponse
-	Delete(sc map[string]interface{}, ID uint) error
-	Update(sc map[string]interface{}, ID uint, obj model.Update{{PascalCase .Name}}Request) error
+	Delete(sc map[string]interface{}, ID uint) (*model.{{PascalCase .Name}}, error)
+	Update(sc map[string]interface{}, ID uint, obj model.Update{{PascalCase .Name}}Request) (*model.{{PascalCase .Name}}, error)
 }
 
 // {{PascalCase .Name}}Service is
@@ -31,7 +33,7 @@ func New{{PascalCase .Name}}Service(trx transaction.ITransaction, {{CamelCase .N
 }
 
 // Create is
-func (g *{{PascalCase .Name}}Service) Create(sc map[string]interface{}, dto model.Create{{PascalCase .Name}}Request) (uint, error) { 
+func (g *{{PascalCase .Name}}Service) Create(sc map[string]interface{}, dto model.Create{{PascalCase .Name}}Request) (*model.{{PascalCase .Name}}, error) { 
 
 	var obj model.{{PascalCase .Name}}
 	{{range .Fields}}
@@ -39,7 +41,7 @@ func (g *{{PascalCase .Name}}Service) Create(sc map[string]interface{}, dto mode
 
 	tx := g.trx.GetDB(false)
 	g.{{CamelCase .Name}}Dao.Create(tx, &obj)
-	return obj.ID, nil
+	return &obj, nil
 }
 
 // GetOne is
@@ -67,20 +69,44 @@ func (g *{{PascalCase .Name}}Service) GetAll(sc map[string]interface{}, req basi
 }
 
 // Delete is
-func (g *{{PascalCase .Name}}Service) Delete(sc map[string]interface{}, ID uint) error {
-	tx := g.trx.GetDB(false)
-	return g.{{CamelCase .Name}}Dao.Delete(tx, ID)
+func (g *{{PascalCase .Name}}Service) Delete(sc map[string]interface{}, ID uint) (*model.{{PascalCase .Name}}, error) {
+
+	tx := g.trx.GetDB(true)
+	obj := g.{{CamelCase .Name}}Dao.GetOne(tx, ID)
+	if obj == nil {
+		g.trx.RollbackTransaction(tx)
+		return nil, fmt.Errorf("obj with id %v not found", ID)
+	}
+
+	if err := g.{{CamelCase .Name}}Dao.Delete(tx, ID); err != nil {
+		g.trx.RollbackTransaction(tx)
+		return nil, err
+	}
+
+	g.trx.CommitTransaction(tx)
+
+	return obj, nil
+
 }
 
 // Update is
-func (g *{{PascalCase .Name}}Service) Update(sc map[string]interface{}, ID uint, dto model.Update{{PascalCase .Name}}Request) error {
+func (g *{{PascalCase .Name}}Service) Update(sc map[string]interface{}, ID uint, dto model.Update{{PascalCase .Name}}Request) (*model.{{PascalCase .Name}}, error) {
 
-	var obj model.{{PascalCase .Name}} 
+	tx := g.trx.GetDB(true)
+	obj := g.{{CamelCase .Name}}Dao.GetOne(tx, ID)
+	if obj == nil {
+		g.trx.RollbackTransaction(tx)
+		return nil, fmt.Errorf("obj with id %v not found", ID)
+	}
 	{{range .Fields}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}}
 
-	tx := g.trx.GetDB(true)
-	a := g.{{CamelCase .Name}}Dao.Update(tx, ID, &obj)
+	if err := g.{{CamelCase .Name}}Dao.Update(tx, obj); err != nil {
+		g.trx.RollbackTransaction(tx)
+		return nil, err
+	}
+
 	g.trx.CommitTransaction(tx)
-	return a
+
+	return obj, nil
 }

@@ -183,7 +183,8 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 		"logInfo": logInfo,
 	}
 
-	if err := g.{{CamelCase .Name}}Service.Update(sc, uint(idInt), obj); err != nil {
+	_, err = g.{{CamelCase .Name}}Service.Update(sc, uint(idInt), obj)
+	if err != nil {
 		log.GetLog().Error(logInfo, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Error when update record with ID %v", id), "data": nil})
 		return
@@ -218,7 +219,8 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 		return
 	}
 	
-	if err := g.{{CamelCase .Name}}Service.Delete(sc, uint(idInt)); err != nil {
+	_, err = g.{{CamelCase .Name}}Service.Delete(sc, uint(idInt))
+	if err != nil {
 		log.GetLog().Error(logInfo, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Error when delete record with ID %v", id), "data": nil})
 		return
