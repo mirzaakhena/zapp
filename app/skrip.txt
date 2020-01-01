@@ -1,81 +1,9 @@
-package, bitbucket.org/mirzaakhena/anc-template
+package, bitbucket.org/mirzaakhena/xxxx
 
-table, Account
-field, SpaceID, string
-field, Code, string
-field, Name, string
-field, Level, int
-field, Side, string
-field, ChildType, string
-field, ParentAccountID, string
-endtable
-
-table, Subaccount
-field, SpaceID, string
-field, AccountID, string
-field, Account, Account
-field, ChildID, string
-field, Code, string
-field, Name, string
-endtable
-
-table, Inventory
-field, SpaceID, string
-field, SubaccountID, string
-field, Subaccount, Subaccount
-field, Unit, string
-field, Method, string
-field, MinimalQuantity, int
-endtable
-
-table, AccountBalance
-field, SpaceID, string
-field, JournalID, string
-field, Journal, Journal
-field, Date, time.Time
-field, Sequence, int
-field, Direction, string
-field, AccountID, string
-field, Account, Account
-field, Amount, float64
-field, Balance, float64
-endtable
-
-table, SubaccountBalance
-field, SpaceID, string
-field, JournalID, string
-field, Journal, Journal
-field, Date, time.Time
-field, Sequence, int
-field, Direction, string
-field, SubaccountID, string
-field, Subaccount, Subaccount
-field, Amount, float64
-field, Balance, float64
-endtable
-
-table, InventoryBalance
-field, SpaceID, string
-field, JournalID, string
-field, Journal, Journal
-field, Date, time.Time
-field, Sequence, int
-field, Direction, string
-field, InventoryID, string
-field, Inventory, Inventory
-field, AmountQuantity, int
-field, AmountPrice, float64
-field, AmountTotalPrice, float64
-field, BalanceQuantity, int
-field, BalancePrice, float64
-field, BalanceTotalPrice, float64
-endtable
-
-table, Journal
-field, Date, time.Time
-field, SpaceID, string
-field, UserID, string
-field, Code, string
-field, TemplateCode, string
-field, Description, string
+table, ProductionTemplate
+field, SpaceID, uint
+field ,ProductCode, uint
+field, Type, string
+field, SubaccountCode, string
+field, Value, float64
 endtable

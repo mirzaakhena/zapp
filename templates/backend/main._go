@@ -2,10 +2,7 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-	"time"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"  //
@@ -13,18 +10,18 @@ import (
 	"{{PackageName}}/controller"
 	"{{PackageName}}/dao"
 	"{{PackageName}}/service"
-	"github.com/mirzaakhena/common/config"
-	log "github.com/mirzaakhena/common/logger"
-	"github.com/mirzaakhena/common/transaction"
+	"{{PackageName}}/utils/config"
+	"{{PackageName}}/utils/log"
+	"{{PackageName}}/utils/transaction"
 )
 
 func main() {
 
-	log.GetLog().WithFile("{{AppName}}", "apps", 14)
+	log.GetLog().WithFile("{{AppName}}", 14)
 
 	log.GetLog().Info("main", "Apps run")
 
-	cf := config.NewRealtimeConfig("config", "$GOPATH/src/{{PackageName}}")
+	cf := config.NewSimpleConfig("config", "$GOPATH/src/{{PackageName}}")
 
 	db, err := gorm.Open(cf.GetString("database.dialect", "sqlite3"), cf.GetString("database.connection_string", "database.db"))
 	if err != nil {
@@ -34,38 +31,23 @@ func main() {
 
 	router := gin.Default()
 
-	router.Use(cors.New(cors.Config{
-		ExposeHeaders:   []string{"Data-Length"},
-		AllowMethods:    []string{"GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"},
-		AllowAllOrigins: true,
-		AllowHeaders:    []string{"Content-Type", "Authorization"},
-		MaxAge:          12 * time.Hour,
-	}))
-
 	trx := transaction.NewGormTransactionDB(db)
 
-	{
-		router.StaticFile("./favicon.ico", "../webcontent/favicon.ico")
-		router.Static("/static", "../webcontent/static")
-		router.LoadHTMLGlob("../webcontent/templates/*")
-		router.GET("/", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "index.html", gin.H{"title": "MainMenu"})
-		})
-	}
-	{{range .Classes}}
-	// {{PascalCase .Name}}
-	{
-		myDao := dao.New{{PascalCase .Name}}Dao(db)
-		service := service.New{{PascalCase .Name}}Service(trx, myDao)
-		c := controller.New{{PascalCase .Name}}Controller(service)
-
-		router.Handle("POST", "/{{CamelCase .Name}}", c.Create)
-		router.Handle("GET", "/{{CamelCase .Name}}", c.GetAll)
-		router.Handle("GET", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.GetOne)
-		router.Handle("DELETE", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Delete)
-		router.Handle("PUT", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", c.Update)
-	}
+	{{range .Classes}}	
+	{{CamelCase .Name}}Dao := dao.New{{PascalCase .Name}}Dao(db)	
 	{{end}}
+
+	{{range .Classes}}
+	{{CamelCase .Name}}Service := service.New{{PascalCase .Name}}Service(trx, {{CamelCase .Name}}Dao)
+	{{end}}
+
+	rc := RouterConfig{
+		router:                       router, {{range .Classes}}
+		productionTemplateController: controller.New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service), {{end}}
+	}
+
+	rc.UseCors()
+	rc.Setup()	
 
 	router.Run(fmt.Sprintf(":%d", cf.GetInt("server.port", "8081")))
 

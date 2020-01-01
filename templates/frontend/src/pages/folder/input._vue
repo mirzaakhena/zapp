@@ -6,11 +6,15 @@
     </b-form-group>{{else if (eq .DataType "int")}}
 
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-input type="text" v-model.number="inputedItem.{{CamelCase .Name}}" required autocomplete="off"></b-form-input>
+      <b-form-input v-model.number="inputedItem.{{CamelCase .Name}}" type="number" required autocomplete="off"></b-form-input>
+    </b-form-group>{{else if (eq .DataType "uint")}}    
+
+    <b-form-group label="{{PascalCase .Name}}">
+      <b-form-input v-model.number="inputedItem.{{CamelCase .Name}}" type="number" required autocomplete="off"></b-form-input>
     </b-form-group>{{else if (eq .DataType "float64")}}
 
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-input type="text" v-model.number="inputedItem.{{CamelCase .Name}}" required autocomplete="off"></b-form-input>
+      <b-form-input v-model.number="inputedItem.{{CamelCase .Name}}" type="number" required autocomplete="off"></b-form-input>
     </b-form-group>{{else if (eq .DataType "bool")}}
 
     <b-form-group label="{{PascalCase .Name}}">

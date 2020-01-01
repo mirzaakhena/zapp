@@ -1,0 +1,21 @@
+package common
+
+import (
+	gonanoid "github.com/matoous/go-nanoid"
+	uuid "github.com/satori/go.uuid"
+)
+
+const nanoidstr = "A2BC3DE4FG5HJ6KL7MN8PQ9RSTUVWXYZ"
+
+// GetShortUniqueID is
+func GetShortUniqueID() string {
+	// return ksuid.New().String()
+	a, _ := gonanoid.Generate(nanoidstr, 12)
+	return a
+}
+
+// GetUUID is
+func GetUUID() string {
+	x, _ := uuid.NewV4()
+	return x.String()
+}

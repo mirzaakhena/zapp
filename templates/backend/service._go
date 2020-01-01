@@ -6,7 +6,7 @@ import (
 	"{{PackageName}}/dao"
 	"{{PackageName}}/model"
 	"{{PackageName}}/model/basic"
-	"github.com/mirzaakhena/common/transaction"
+	"{{PackageName}}/utils/transaction"
 )
 
 // I{{PascalCase .Name}}Service is
@@ -20,15 +20,15 @@ type I{{PascalCase .Name}}Service interface {
 
 // {{PascalCase .Name}}Service is
 type {{PascalCase .Name}}Service struct {
+	trx transaction.ITransaction	
 	{{CamelCase .Name}}Dao dao.I{{PascalCase .Name}}Dao
-	trx transaction.ITransaction
 }
 
 // New{{PascalCase .Name}}Service is
 func New{{PascalCase .Name}}Service(trx transaction.ITransaction, {{CamelCase .Name}}Dao dao.I{{PascalCase .Name}}Dao) *{{PascalCase .Name}}Service {
-	return &{{PascalCase .Name}}Service{ 
+	return &{{PascalCase .Name}}Service{
+		trx: trx,		
 		{{CamelCase .Name}}Dao: {{CamelCase .Name}}Dao,
-		trx: trx,
 	}
 }
 
@@ -72,18 +72,21 @@ func (g *{{PascalCase .Name}}Service) GetAll(sc map[string]interface{}, req basi
 func (g *{{PascalCase .Name}}Service) Delete(sc map[string]interface{}, ID uint) (*model.{{PascalCase .Name}}, error) {
 
 	tx := g.trx.GetDB(true)
+
+	defer g.trx.RollbackOnException(tx)
+
 	obj := g.{{CamelCase .Name}}Dao.GetOne(tx, ID)
 	if obj == nil {
-		g.trx.RollbackTransaction(tx)
+		g.trx.Rollback(tx)
 		return nil, fmt.Errorf("obj with id %v not found", ID)
 	}
 
 	if err := g.{{CamelCase .Name}}Dao.Delete(tx, ID); err != nil {
-		g.trx.RollbackTransaction(tx)
+		g.trx.Rollback(tx)
 		return nil, err
 	}
 
-	g.trx.CommitTransaction(tx)
+	g.trx.Commit(tx)
 
 	return obj, nil
 
@@ -93,20 +96,23 @@ func (g *{{PascalCase .Name}}Service) Delete(sc map[string]interface{}, ID uint)
 func (g *{{PascalCase .Name}}Service) Update(sc map[string]interface{}, ID uint, dto model.Update{{PascalCase .Name}}Request) (*model.{{PascalCase .Name}}, error) {
 
 	tx := g.trx.GetDB(true)
+
+	defer g.trx.RollbackOnException(tx)
+	
 	obj := g.{{CamelCase .Name}}Dao.GetOne(tx, ID)
 	if obj == nil {
-		g.trx.RollbackTransaction(tx)
+		g.trx.Rollback(tx)
 		return nil, fmt.Errorf("obj with id %v not found", ID)
 	}
 	{{range .Fields}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}}
 
 	if err := g.{{CamelCase .Name}}Dao.Update(tx, obj); err != nil {
-		g.trx.RollbackTransaction(tx)
+		g.trx.Rollback(tx)
 		return nil, err
 	}
 
-	g.trx.CommitTransaction(tx)
+	g.trx.Commit(tx)
 
 	return obj, nil
 }

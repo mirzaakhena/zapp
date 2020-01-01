@@ -197,6 +197,23 @@ func (tp *ThePackage) Run() {
 		os.MkdirAll(dir, 0777)
 	}
 
+	// create utils folder
+	{
+		dir := ""
+
+		dir = fmt.Sprintf("../../../../%s/utils/common", tp.packageName)
+		os.MkdirAll(dir, 0777)
+
+		dir = fmt.Sprintf("../../../../%s/utils/config", tp.packageName)
+		os.MkdirAll(dir, 0777)
+
+		dir = fmt.Sprintf("../../../../%s/utils/log", tp.packageName)
+		os.MkdirAll(dir, 0777)
+
+		dir = fmt.Sprintf("../../../../%s/utils/transaction", tp.packageName)
+		os.MkdirAll(dir, 0777)
+	}
+
 	{
 		dir := fmt.Sprintf("../../../../%s/webapp/public", tp.packageName)
 		os.MkdirAll(dir, 0777)
@@ -316,6 +333,48 @@ func (tp *ThePackage) Run() {
 	{
 		templateFile := fmt.Sprintf("../templates/backend/main._go")
 		outputFile := fmt.Sprintf("../../../../%s/app/main.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/router._go")
+		outputFile := fmt.Sprintf("../../../../%s/app/router.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/utils/common/identifier._go")
+		outputFile := fmt.Sprintf("../../../../%s/utils/common/identifier.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/utils/common/json._go")
+		outputFile := fmt.Sprintf("../../../../%s/utils/common/json.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/utils/common/strings._go")
+		outputFile := fmt.Sprintf("../../../../%s/utils/common/strings.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/utils/config/config._go")
+		outputFile := fmt.Sprintf("../../../../%s/utils/config/config.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/utils/log/log._go")
+		outputFile := fmt.Sprintf("../../../../%s/utils/log/log.go", tp.packageName)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/utils/transaction/transaction._go")
+		outputFile := fmt.Sprintf("../../../../%s/utils/transaction/transaction.go", tp.packageName)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
