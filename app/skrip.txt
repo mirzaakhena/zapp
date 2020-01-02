@@ -1,9 +1,0 @@
-package, bitbucket.org/mirzaakhena/xxxx
-
-table, ProductionTemplate
-field, SpaceID, uint
-field ,ProductCode, uint
-field, Type, string
-field, SubaccountCode, string
-field, Value, float64
-endtable

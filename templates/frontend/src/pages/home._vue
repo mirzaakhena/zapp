@@ -59,7 +59,7 @@ export default {
         {
           header: true,
           title: 'Main Navigation',
-        }, {{range .Classes}}{ 
+        }, {{range .Entities}}{ 
           href: '/{{LowerCase .Name}}',
           title: '{{PascalCase .Name}}'
         }, {{end}}                     

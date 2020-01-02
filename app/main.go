@@ -13,26 +13,26 @@ import (
 	"unicode"
 
 	"github.com/alecthomas/template"
+	"gopkg.in/yaml.v2"
 )
 
 // TheField is
 type TheField struct {
-	Name     string
-	DataType string
+	Name     string `yaml:"name"`
+	DataType string `yaml:"dataType"`
 }
 
 // TheClass is
 type TheClass struct {
-	Name   string
-	Fields []TheField
+	Name   string     `yaml:"name"`
+	Fields []TheField `yaml:"fields"`
 }
 
 // ThePackage is
 type ThePackage struct {
-	appName     string
-	packageName string
-	// datatypeid  string
-	Classes []TheClass
+	ApplicationName string     ``
+	PackagePath     string     `yaml:"packagePath"`
+	Entities        []TheClass `yaml:"entities"`
 }
 
 // CamelCase is
@@ -85,77 +85,20 @@ func HasTime(dataTypes []TheField) bool {
 
 func main() {
 
-	filename := "skrip.txt"
-
-	file, err := os.Open(filename)
+	content, err := ioutil.ReadFile("skrip.yaml")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
 
 	tp := ThePackage{}
-
-	var theClass *TheClass
-
-	for scanner.Scan() {
-		row := scanner.Text()
-
-		trimmedStr := strings.TrimSpace(row)
-		if trimmedStr == "" {
-			continue
-		}
-
-		if strings.HasPrefix(trimmedStr, "//") {
-			continue
-		}
-
-		if strings.HasPrefix(row, "package") {
-			pkgs := strings.Split(row, ",")
-			packageName := pkgs[1]
-			tp.packageName = strings.TrimSpace(packageName)
-			tp.Classes = []TheClass{}
-			s := strings.Split(packageName, "/")
-			tp.appName = s[len(s)-1]
-			continue
-		}
-
-		// if strings.HasPrefix(row, "datatypeid") {
-		// 	dtt := strings.Split(row, ",")
-		// 	tp.datatypeid = strings.TrimSpace(dtt[1])
-		// 	continue
-		// }
-
-		if strings.HasPrefix(row, "table") {
-			clName := strings.Split(row, " ")
-			theClass = &TheClass{
-				Name:   strings.TrimSpace(clName[1]),
-				Fields: []TheField{},
-			}
-			continue
-		}
-
-		if strings.HasPrefix(row, "endtable") {
-			tp.Classes = append(tp.Classes, *theClass)
-			theClass = nil
-			continue
-		}
-
-		if strings.HasPrefix(row, "field") {
-			flField := strings.Split(row, ",")
-			theClass.Fields = append(theClass.Fields, TheField{
-				Name:     strings.TrimSpace(flField[1]),
-				DataType: strings.TrimSpace(flField[2]),
-			})
-			continue
-		}
-
+	err = yaml.Unmarshal(content, &tp)
+	if err != nil {
+		log.Fatalf("error: %+v", err)
 	}
 
 	tp.Run()
 
-	cmd := exec.Command("/usr/local/bin/go", "fmt", fmt.Sprintf("%s/...", tp.packageName))
+	cmd := exec.Command("go", "fmt", fmt.Sprintf("%s/...", tp.PackagePath))
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
@@ -167,33 +110,36 @@ func main() {
 // Run is
 func (tp *ThePackage) Run() {
 
+	s := strings.Split(tp.PackagePath, "/")
+	tp.ApplicationName = s[len(s)-1]
+
 	// create app folder
 	{
-		dir := fmt.Sprintf("../../../../%s/app", tp.packageName)
+		dir := fmt.Sprintf("../../../../%s/app", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
 	// create controller folder
 	{
-		dir := fmt.Sprintf("../../../../%s/controller", tp.packageName)
+		dir := fmt.Sprintf("../../../../%s/controller", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
 	// create model folder
 	{
-		dir := fmt.Sprintf("../../../../%s/model/basic", tp.packageName)
+		dir := fmt.Sprintf("../../../../%s/model/basic", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
 	// create service folder
 	{
-		dir := fmt.Sprintf("../../../../%s/service", tp.packageName)
+		dir := fmt.Sprintf("../../../../%s/service", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
 	// create dao folder
 	{
-		dir := fmt.Sprintf("../../../../%s/dao", tp.packageName)
+		dir := fmt.Sprintf("../../../../%s/dao", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
@@ -201,128 +147,128 @@ func (tp *ThePackage) Run() {
 	{
 		dir := ""
 
-		dir = fmt.Sprintf("../../../../%s/utils/common", tp.packageName)
+		dir = fmt.Sprintf("../../../../%s/utils/common", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 
-		dir = fmt.Sprintf("../../../../%s/utils/config", tp.packageName)
+		dir = fmt.Sprintf("../../../../%s/utils/config", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 
-		dir = fmt.Sprintf("../../../../%s/utils/log", tp.packageName)
+		dir = fmt.Sprintf("../../../../%s/utils/log", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 
-		dir = fmt.Sprintf("../../../../%s/utils/transaction", tp.packageName)
+		dir = fmt.Sprintf("../../../../%s/utils/transaction", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
 	{
-		dir := fmt.Sprintf("../../../../%s/webapp/public", tp.packageName)
+		dir := fmt.Sprintf("../../../../%s/webapp/public", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
 	// {
-	// 	dir := fmt.Sprintf("../../../../%s/webapp/src/api/modules", tp.packageName)
+	// 	dir := fmt.Sprintf("../../../../%s/webapp/src/api/modules", tp.PackagePath)
 	// 	os.MkdirAll(dir, 0777)
 	// }
 
 	{
-		dir := fmt.Sprintf("../../../../%s/webapp/src/store/modules", tp.packageName)
+		dir := fmt.Sprintf("../../../../%s/webapp/src/store/modules", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
 	{
-		dir := fmt.Sprintf("../../../../%s/webapp/src/router/modules", tp.packageName)
+		dir := fmt.Sprintf("../../../../%s/webapp/src/router/modules", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
 	{
-		f := fmt.Sprintf("../../../../%s/webapp/src/pages", tp.packageName)
+		f := fmt.Sprintf("../../../../%s/webapp/src/pages", tp.PackagePath)
 		os.Mkdir(f, 0777)
 	}
 
 	// {
-	// 	f := fmt.Sprintf("../../../../%s/webapp/src/components", tp.packageName)
+	// 	f := fmt.Sprintf("../../../../%s/webapp/src/components", tp.PackagePath)
 	// 	os.Mkdir(f, 0777)
 	// }
 
 	{
-		f := fmt.Sprintf("../../../../%s/webapp/src/utils", tp.packageName)
+		f := fmt.Sprintf("../../../../%s/webapp/src/utils", tp.PackagePath)
 		os.Mkdir(f, 0777)
 	}
 
-	for _, et := range tp.Classes {
+	for _, et := range tp.Entities {
 
 		// create dao
 		{
 			templateFile := fmt.Sprintf("../templates/backend/dao._go")
-			outputFile := fmt.Sprintf("../../../../%s/dao/%s.go", tp.packageName, LowerCase(et.Name))
+			outputFile := fmt.Sprintf("../../../../%s/dao/%s.go", tp.PackagePath, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create controller
 		{
 			templateFile := fmt.Sprintf("../templates/backend/controller._go")
-			outputFile := fmt.Sprintf("../../../../%s/controller/%s.go", tp.packageName, LowerCase(et.Name))
+			outputFile := fmt.Sprintf("../../../../%s/controller/%s.go", tp.PackagePath, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create model
 		{
 			templateFile := fmt.Sprintf("../templates/backend/model._go")
-			outputFile := fmt.Sprintf("../../../../%s/model/%s.go", tp.packageName, LowerCase(et.Name))
+			outputFile := fmt.Sprintf("../../../../%s/model/%s.go", tp.PackagePath, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create model
 		{
 			templateFile := fmt.Sprintf("../templates/backend/model_basic._go")
-			outputFile := fmt.Sprintf("../../../../%s/model/basic/model.go", tp.packageName)
+			outputFile := fmt.Sprintf("../../../../%s/model/basic/model.go", tp.PackagePath)
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create service
 		{
 			templateFile := fmt.Sprintf("../templates/backend/service._go")
-			outputFile := fmt.Sprintf("../../../../%s/service/%s.go", tp.packageName, LowerCase(et.Name))
+			outputFile := fmt.Sprintf("../../../../%s/service/%s.go", tp.PackagePath, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create api modules
 		// {
 		// 	templateFile := fmt.Sprintf("../templates/frontend/src/api/modules/file._js")
-		// 	outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/modules/%s.js", tp.packageName, LowerCase(et.Name))
+		// 	outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/modules/%s.js", tp.PackagePath, LowerCase(et.Name))
 		// 	basic(tp, templateFile, outputFile, et)
 		// }
 
 		// create store modules
 		// {
 		// 	templateFile := fmt.Sprintf("../templates/frontend/src/store/modules/file._js")
-		// 	outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/modules/%s.js", tp.packageName, LowerCase(et.Name))
+		// 	outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/modules/%s.js", tp.PackagePath, LowerCase(et.Name))
 		// 	basic(tp, templateFile, outputFile, et)
 		// }
 
 		// create router modules
 		{
 			templateFile := fmt.Sprintf("../templates/frontend/src/router/modules/file._js")
-			outputFile := fmt.Sprintf("../../../../%s/webapp/src/router/modules/%s.js", tp.packageName, LowerCase(et.Name))
+			outputFile := fmt.Sprintf("../../../../%s/webapp/src/router/modules/%s.js", tp.PackagePath, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		{
 			// create folder pages
-			f := fmt.Sprintf("../../../../%s/webapp/src/pages/%s", tp.packageName, LowerCase(et.Name))
+			f := fmt.Sprintf("../../../../%s/webapp/src/pages/%s", tp.PackagePath, LowerCase(et.Name))
 			os.Mkdir(f, 0777)
 
 			// create file table under folder
 			{
 				templateFile := fmt.Sprintf("../templates/frontend/src/pages/folder/list._vue")
-				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/list.vue", tp.packageName, LowerCase(et.Name))
+				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/list.vue", tp.PackagePath, LowerCase(et.Name))
 				basic(tp, templateFile, outputFile, et)
 			}
 
 			// create file input under folder
 			{
 				templateFile := fmt.Sprintf("../templates/frontend/src/pages/folder/input._vue")
-				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/input.vue", tp.packageName, LowerCase(et.Name))
+				outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/%s/input.vue", tp.PackagePath, LowerCase(et.Name))
 				basic(tp, templateFile, outputFile, et)
 			}
 
@@ -332,184 +278,185 @@ func (tp *ThePackage) Run() {
 
 	{
 		templateFile := fmt.Sprintf("../templates/backend/main._go")
-		outputFile := fmt.Sprintf("../../../../%s/app/main.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/app/main.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/backend/router._go")
-		outputFile := fmt.Sprintf("../../../../%s/app/router.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/app/router.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/backend/utils/common/identifier._go")
-		outputFile := fmt.Sprintf("../../../../%s/utils/common/identifier.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/utils/common/identifier.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/backend/utils/common/json._go")
-		outputFile := fmt.Sprintf("../../../../%s/utils/common/json.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/utils/common/json.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/backend/utils/common/strings._go")
-		outputFile := fmt.Sprintf("../../../../%s/utils/common/strings.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/utils/common/strings.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/backend/utils/config/config._go")
-		outputFile := fmt.Sprintf("../../../../%s/utils/config/config.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/utils/config/config.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/backend/utils/log/log._go")
-		outputFile := fmt.Sprintf("../../../../%s/utils/log/log.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/utils/log/log.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/backend/utils/transaction/transaction._go")
-		outputFile := fmt.Sprintf("../../../../%s/utils/transaction/transaction.go", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/utils/transaction/transaction.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/backend/._gitignore")
-		outputFile := fmt.Sprintf("../../../../%s/.gitignore", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/.gitignore", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/config._toml")
-		outputFile := fmt.Sprintf("../../../../%s/config.toml", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/config.toml", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/README._md")
-		outputFile := fmt.Sprintf("../../../../%s/README.md", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/README.md", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/public/favicon._ico")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/public/favicon.ico", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/public/favicon.ico", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/public/index._html")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/public/index.html", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/public/index.html", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/babel.config._js")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/babel.config.js", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/babel.config.js", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/vue.config._js")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/vue.config.js", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/vue.config.js", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/package._json")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/package.json", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/package.json", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/App._vue")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/App.vue", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/App.vue", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/pages/forgotpassword._vue")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/forgotpassword.vue", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/forgotpassword.vue", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/pages/home._vue")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/home.vue", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/home.vue", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/pages/login._vue")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/login.vue", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/login.vue", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/pages/notfound._vue")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/notfound.vue", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/notfound.vue", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/pages/register._vue")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/register.vue", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/register.vue", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/pages/successregister._vue")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/successregister.vue", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/pages/successregister.vue", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/main._js")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/main.js", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/main.js", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	// {
 	// 	templateFile := fmt.Sprintf("../templates/frontend/src/api/index._js")
-	// 	outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/index.js", tp.packageName)
+	// 	outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/index.js", tp.PackagePath)
 	// 	basic(tp, templateFile, outputFile, tp)
 	// }
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/store/index._js")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/index.js", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/index.js", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/store/basiccrud._js")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/basiccrud.js", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/basiccrud.js", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/router/index._js")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/router/index.js", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/router/index.js", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/utils/httprequest._js")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/utils/httprequest.js", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/utils/httprequest.js", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/utils/auth._js")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/utils/auth.js", tp.packageName)
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/utils/auth.js", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
+	fmt.Printf(">>>>> done Run\n")
 }
 
 func basic(pkg *ThePackage, templateFile, outputFile string, object interface{}) {
@@ -538,9 +485,8 @@ func basic(pkg *ThePackage, templateFile, outputFile string, object interface{})
 		"SnakeCase":   SnakeCase,
 		"UpperCase":   UpperCase,
 		"LowerCase":   LowerCase,
-		"AppName":     func() string { return pkg.appName },
-		"PackageName": func() string { return pkg.packageName },
-		// "DataTypeId":  func() string { return pkg.datatypeid },
+		"AppName":     func() string { return pkg.ApplicationName },
+		"PackagePath": func() string { return pkg.PackagePath },
 	}
 
 	t, err := template.

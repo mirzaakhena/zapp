@@ -7,12 +7,12 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"  //
 	_ "github.com/jinzhu/gorm/dialects/sqlite" //
-	"{{PackageName}}/controller"
-	"{{PackageName}}/dao"
-	"{{PackageName}}/service"
-	"{{PackageName}}/utils/config"
-	"{{PackageName}}/utils/log"
-	"{{PackageName}}/utils/transaction"
+	"{{PackagePath}}/controller"
+	"{{PackagePath}}/dao"
+	"{{PackagePath}}/service"
+	"{{PackagePath}}/utils/config"
+	"{{PackagePath}}/utils/log"
+	"{{PackagePath}}/utils/transaction"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 
 	log.GetLog().Info("main", "Apps run")
 
-	cf := config.NewSimpleConfig("config", "$GOPATH/src/{{PackageName}}")
+	cf := config.NewSimpleConfig("config", "$GOPATH/src/{{PackagePath}}")
 
 	db, err := gorm.Open(cf.GetString("database.dialect", "sqlite3"), cf.GetString("database.connection_string", "database.db"))
 	if err != nil {
@@ -33,16 +33,16 @@ func main() {
 
 	trx := transaction.NewGormTransactionDB(db)
 
-	{{range .Classes}}	
+	{{range .Entities}}	
 	{{CamelCase .Name}}Dao := dao.New{{PascalCase .Name}}Dao(db)	
 	{{end}}
 
-	{{range .Classes}}
+	{{range .Entities}}
 	{{CamelCase .Name}}Service := service.New{{PascalCase .Name}}Service(trx, {{CamelCase .Name}}Dao)
 	{{end}}
 
 	rc := RouterConfig{
-		router:                       router, {{range .Classes}}
+		router:                       router, {{range .Entities}}
 		productionTemplateController: controller.New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service), {{end}}
 	}
 

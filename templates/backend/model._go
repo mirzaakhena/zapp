@@ -3,7 +3,7 @@ package model
 import ( {{if HasTime .Fields}}
 	"time"{{end}}
 
-	"{{PackageName}}/model/basic"
+	"{{PackagePath}}/model/basic"
 )
 
 // {{PascalCase .Name}} is

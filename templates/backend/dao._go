@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	"{{PackageName}}/model"
-	"{{PackageName}}/utils/common"
+	"{{PackagePath}}/model"
+	"{{PackagePath}}/utils/common"
 )
 
 // I{{PascalCase .Name}}Dao is

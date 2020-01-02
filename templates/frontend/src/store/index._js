@@ -8,7 +8,7 @@ const store = new Vuex.Store({
   modules: {
   }  
 })
-{{range .Classes}}
+{{range .Entities}}
 store.registerModule('{{CamelCase .Name}}', basiccrud) {{end}}
 
 export default store

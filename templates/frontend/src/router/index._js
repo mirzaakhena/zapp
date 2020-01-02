@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router' 
-import Auth from '@/utils/auth' {{range .Classes}}
+import Auth from '@/utils/auth' {{range .Entities}}
 import {{CamelCase .Name}} from './modules/{{LowerCase .Name}}' {{end}}
 
 Vue.use(Router)
@@ -51,7 +51,7 @@ const router = new Router({
       meta: {
         authorities: 'USER'
       },
-      children: [ {{range .Classes}}
+      children: [ {{range .Entities}}
         ...{{CamelCase .Name}}, {{end}}
       ],
     },        
