@@ -1,0 +1,18 @@
+packagePath: bitbucket.org/mirzaakhena/contohsaja
+entities:
+  
+- name: Account
+  fields:
+  - name: code
+    dataType: string
+  - name: level
+    dataType: int
+
+- name: Inventory
+  fields:
+  - name: code
+    dataType: string
+  - name: quantity
+    dataType: int
+  - name: price
+    dataType: float64
