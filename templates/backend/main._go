@@ -34,16 +34,14 @@ func main() {
 	trx := transaction.NewGormTransactionDB(db)
 
 	{{range .Entities}}	
-	{{CamelCase .Name}}Dao := dao.New{{PascalCase .Name}}Dao(db)	
-	{{end}}
+	{{CamelCase .Name}}Dao := dao.New{{PascalCase .Name}}Dao(db) {{end}}
 
 	{{range .Entities}}
-	{{CamelCase .Name}}Service := service.New{{PascalCase .Name}}Service(trx, {{CamelCase .Name}}Dao)
-	{{end}}
+	{{CamelCase .Name}}Service := service.New{{PascalCase .Name}}Service(trx, {{CamelCase .Name}}Dao) {{end}}
 
 	rc := RouterConfig{
 		router:                       router, {{range .Entities}}
-		productionTemplateController: controller.New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service), {{end}}
+		{{PascalCase .Name}}Controller: controller.New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service), {{end}}
 	}
 
 	rc.UseCors()

@@ -1,18 +1,21 @@
-packagePath: bitbucket.org/mirzaakhena/contohsaja
+packagePath: bitbucket.org/mirzaakhena/anc-template
+
 entities:
   
-- name: Account
+- name: WipTemplate
   fields:
-  - name: code
+  - name: wipInventoryCode
     dataType: string
-  - name: level
-    dataType: int
-
-- name: Inventory
-  fields:
-  - name: code
+  - name: templateType
+    dataType: string    
+  - name: subaccountCode
     dataType: string
-  - name: quantity
-    dataType: int
-  - name: price
+  - name: value
     dataType: float64
+
+- name: ProductMapping
+  fields:
+  - name: wipInventoryCode
+    dataType: string
+  - name: productInventoryCode
+    dataType: string
