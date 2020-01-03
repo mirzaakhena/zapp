@@ -456,6 +456,12 @@ func (tp *ThePackage) Run() {
 		basic(tp, templateFile, outputFile, tp)
 	}
 
+	{
+		templateFile := fmt.Sprintf("../templates/frontend/src/utils/filter._js")
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/utils/filter.js", tp.PackagePath)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
 	fmt.Printf(">>>>> done Run\n")
 }
 

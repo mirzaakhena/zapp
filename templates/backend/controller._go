@@ -128,9 +128,17 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 		return
 	}
 
-	filters := map[string]string{ {{range .Fields}}
-		"{{CamelCase .Name}}": c.DefaultQuery("f_{{CamelCase .Name}}", ""), {{end}}
+	filters := map[string]string{}
+
+	listField := []string{ {{range .Fields}}
+		"{{CamelCase .Name}}", {{end}}
 	}
+
+	for _, field := range listField {
+		if query := c.DefaultQuery("f_"+field, ""); query != "" {
+			filters[field] = query
+		}
+	}	
 
 	log.GetLog().Info(logInfo, "Request. Page %v, size %v, filter %v", page, size, common.GetJSON(filters))	
 

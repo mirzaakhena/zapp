@@ -41,7 +41,7 @@ func main() {
 
 	rc := RouterConfig{
 		router:                       router, {{range .Entities}}
-		{{PascalCase .Name}}Controller: controller.New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service), {{end}}
+		{{CamelCase .Name}}Controller: controller.New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service), {{end}}
 	}
 
 	rc.UseCors()
