@@ -1,4 +1,4 @@
-package dao
+package repository
 
 import (
 	"fmt"
@@ -8,41 +8,41 @@ import (
 	"{{PackagePath}}/utils/common"
 )
 
-// I{{PascalCase .Name}}Dao is
-type I{{PascalCase .Name}}Dao interface {
+// I{{PascalCase .Name}}Repository is
+type I{{PascalCase .Name}}Repository interface {
 	Create(db interface{}, obj *model.{{PascalCase .Name}}) error
-	GetOne(db interface{}, ID uint) *model.{{PascalCase .Name}}
+	GetOne(db interface{}, ID string) *model.{{PascalCase .Name}}
 	GetAll(db interface{}, page, size int, sortBy string, sortDesc bool, filters map[string]string) ([]model.{{PascalCase .Name}}, uint)
-	Delete(db interface{}, ID uint) error
+	Delete(db interface{}, ID string) error
 	Update(db interface{}, obj *model.{{PascalCase .Name}}) error
 }
 
-// {{PascalCase .Name}}Dao is
-type {{PascalCase .Name}}Dao struct{}
+// {{PascalCase .Name}}Repository is
+type {{PascalCase .Name}}Repository struct{}
 
-// New{{PascalCase .Name}}Dao is
-func New{{PascalCase .Name}}Dao(db *gorm.DB) *{{PascalCase .Name}}Dao {
+// New{{PascalCase .Name}}Repository is
+func New{{PascalCase .Name}}Repository(db *gorm.DB) *{{PascalCase .Name}}Repository {
 	db.AutoMigrate(&model.{{PascalCase .Name}}{})
-	return &{{PascalCase .Name}}Dao{}
+	return &{{PascalCase .Name}}Repository{}
 }
 
 // Create is
-func (g *{{PascalCase .Name}}Dao) Create(db interface{}, obj *model.{{PascalCase .Name}}) error {
+func (g *{{PascalCase .Name}}Repository) Create(db interface{}, obj *model.{{PascalCase .Name}}) error {
 	return db.(*gorm.DB).Create(obj).Error
 }
 
 // GetOne is 
-func (g *{{PascalCase .Name}}Dao) GetOne(db interface{}, ID uint) *model.{{PascalCase .Name}} {
+func (g *{{PascalCase .Name}}Repository) GetOne(db interface{}, ID string) *model.{{PascalCase .Name}} {
 	var obj model.{{PascalCase .Name}}
 	db.(*gorm.DB).First(&obj, "id = ?", ID)
-	if obj.ID == 0 {
+	if obj.ID == "" {
 		return nil
 	}
 	return &obj
 }
 
 // GetAll is
-func (g *{{PascalCase .Name}}Dao) GetAll(db interface{}, page, size int, sortBy string, sortDesc bool, filters map[string]string) ([]model.{{PascalCase .Name}}, uint) {
+func (g *{{PascalCase .Name}}Repository) GetAll(db interface{}, page, size int, sortBy string, sortDesc bool, filters map[string]string) ([]model.{{PascalCase .Name}}, uint) {
 	var objs []model.{{PascalCase .Name}}
 	var count uint
 	
@@ -73,11 +73,11 @@ func (g *{{PascalCase .Name}}Dao) GetAll(db interface{}, page, size int, sortBy 
 }
 
 // Delete is
-func (g *{{PascalCase .Name}}Dao) Delete(db interface{}, ID uint) error {
+func (g *{{PascalCase .Name}}Repository) Delete(db interface{}, ID string) error {
 	return db.(*gorm.DB).Delete(model.{{PascalCase .Name}}{}, "id = ?", ID).Error
 }
 
 // Update is
-func (g *{{PascalCase .Name}}Dao) Update(db interface{}, obj *model.{{PascalCase .Name}}) error {
+func (g *{{PascalCase .Name}}Repository) Update(db interface{}, obj *model.{{PascalCase .Name}}) error {
 	return db.(*gorm.DB).Save(obj).Error
 }

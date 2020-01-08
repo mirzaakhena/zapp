@@ -111,7 +111,7 @@ function NewStore() {
         dispatch('queryItems')
       },
   
-      async queryItems ({state, commit}) {
+      queryItems ({state, commit}) {
   
         Object.keys(state.filtering).find(key => {
           if (state.filtering[key] === '') {
@@ -128,83 +128,97 @@ function NewStore() {
           delete state.sorting['sortDesc']
         }
   
-        const [error, response] = await to(request({
-          method: 'get',
-          url: state.url,
-          params: {
-            ...state.paging,
-            ...state.sorting,
-            ...state.filtering,
+        return new Promise(async (resolve, reject) => {
+          const [error, response] = await to(request({
+            method: 'get',
+            url: `api${state.url}`,
+            params: {
+              ...state.paging,
+              ...state.sorting,
+              ...state.filtering,
+            }
+          }))
+    
+          if (error) {  
+            commit('SET_ITEMS', {
+              items: [], 
+              totalItems: 0
+            })
+            reject(error)
+            return
           }
-        }))
-  
-        if (error) {  
+    
           commit('SET_ITEMS', {
-            items: [], 
-            totalItems: 0
+            items: response.data.data.items, 
+            totalItems: response.data.data.totalCount
           })
-          return
-        }
-  
-        commit('SET_ITEMS', {
-          items: response.data.data.items, 
-          totalItems: response.data.data.totalCount
+          resolve(response.data.data.items)
         })
         
       },
   
-      async getOneItem ({state, commit}, {itemId, afterCalled}) {
-        const [error, response] = await to(request({
-          method: 'get',
-          url: `${state.url}/${itemId}`,
-        }))
-        if (error) {
-          afterCalled(false, '')
-          return
-        }
-        commit('SET_INPUTTED_ITEM', response.data.data)
-        afterCalled(true, response.data.message)
+      getOneItem ({state, commit}, {itemId}) {
+
+        return new Promise(async (resolve, reject) => {
+          const [error, response] = await to(request({
+            method: 'get',
+            url: `api/${state.url}/${itemId}`,
+          }))
+          if (error) {
+            reject(error)
+            return
+          }
+          commit('SET_INPUTTED_ITEM', response.data.data)
+          resolve(response.data.message)
+        })
       },
   
-      async createItem ({state, dispatch}, {afterCalled}) {
-        const [error, response] = await to(request({
-          data: state.inputtedItem,
-          method: 'post',
-          url: state.url,
-        }))
-        if (error) {
-          afterCalled(false, '')
-          return
-        }
-        dispatch('queryItems')
-        afterCalled(true, response.data.message)
+      createItem ({state, dispatch}) {
+        return new Promise(async (resolve, reject) => {
+          const [error, response] = await to(request({
+            data: state.inputtedItem,
+            method: 'post',
+            url: `api/${state.url}`,
+          }))
+          if (error) {
+            reject(error)
+            return
+          }
+          dispatch('queryItems')
+          resolve(response.data.message)
+        })
+
       },
   
-      async updateItem ({state, dispatch}, {afterCalled}) {
-        const [error, response] = await to(request({
-          data: state.inputtedItem,
-          method: 'put',
-          url: `${state.url}/${state.inputtedItem.id}`,
-        }))
-        if (error) {
-          afterCalled(false, '')
-          return
-        }
-        dispatch('queryItems')
-        afterCalled(true, response.data.message)
+      updateItem ({state, dispatch}) {
+        return new Promise(async (resolve, reject) => {
+          const [error, response] = await to(request({
+            data: state.inputtedItem,
+            method: 'put',
+            url: `api/${state.url}/${state.inputtedItem.id}`,
+          }))
+          if (error) {
+            reject(error)
+            return
+          }
+          dispatch('queryItems')
+          resolve(response.data.message)
+        })
       },
   
-      async deleteItem({state, dispatch}, {item, afterCalled}) {
-        const [error, response] = await to(request({
-          method: 'delete',
-          url: `${state.url}/${item.id}`,
-        }))
-        if (error) {
-          afterCalled(false, '')
-          return
-        }
-        dispatch('queryItems')
-        afterCalled(true, response.data.message)
+      async deleteItem({state, dispatch}, {itemId}) {
+        return new Promise(async (resolve, reject) => {
+          const [error, response] = await to(request({
+            method: 'delete',
+            url: `api/${state.url}/${itemId}`,
+          }))
+          if (error) {
+            reject(error)
+            return
+          }
+          dispatch('queryItems')
+          resolve(response.data.message)
+        })
       },
          
     },

@@ -1,0 +1,22 @@
+package model
+
+// User is
+type User struct {
+	BaseModel
+	Name     string `json:"name"`  //
+	Email    string `json:"email"` //
+	Password string `json:"-"`     //
+}
+
+// RegisterUserRequest is
+type RegisterUserRequest struct {
+	Name     string `json:"name"`     //
+	Email    string `json:"email"`    //
+	Password string `json:"password"` //
+}
+
+// LoginUserRequest is
+type LoginUserRequest struct {
+	Email    string `json:"email"`    //
+	Password string `json:"password"` //
+}

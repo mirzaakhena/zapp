@@ -7,7 +7,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"{{PackagePath}}/model"
-	"{{PackagePath}}/model/basic"
 	"{{PackagePath}}/service"
 	"{{PackagePath}}/utils/common"
 	"{{PackagePath}}/utils/log"
@@ -40,7 +39,7 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 	var dto model.Create{{PascalCase .Name}}Request
 	if err := c.BindJSON(&dto); err != nil {
 		log.GetLog().Error(logInfo, "%v", err.Error())
-		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "Invalid Params. Please check data structure and type"})		
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "Invalid Params. Please check data structure and type"})
 		return
 	}
 
@@ -78,14 +77,7 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 		"logInfo": logInfo,
 	}
 
-	idInt, err := strconv.ParseUint(id, 10, 32)
-	if err != nil {
-		message := log.GetLog().Error(logInfo, "id must integer")
-		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
-		return
-	}
-
-	obj := g.{{CamelCase .Name}}Service.GetOne(sc, uint(idInt))
+	obj := g.{{CamelCase .Name}}Service.GetOne(sc, id)
 	if obj == nil {
 		message := log.GetLog().Info(logInfo, "No record found with id %v", id)
 		c.JSON(http.StatusOK, map[string]interface{}{"message": message})
@@ -117,7 +109,6 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 		size = 1
 	}
 
-
 	sortBy := c.DefaultQuery("sortBy", "")
 	sortDescString := c.DefaultQuery("sortDesc", "false")
 
@@ -131,28 +122,28 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 	filters := map[string]string{}
 
 	listField := []string{ {{range .Fields}}
-		"{{CamelCase .Name}}", {{end}}
+		"{{CamelCase .Name}}",{{end}}
 	}
 
 	for _, field := range listField {
 		if query := c.DefaultQuery("f_"+field, ""); query != "" {
 			filters[field] = query
 		}
-	}	
+	}
 
-	log.GetLog().Info(logInfo, "Request. Page %v, size %v, filter %v", page, size, common.GetJSON(filters))	
+	log.GetLog().Info(logInfo, "Request. Page %v, size %v, filter %v", page, size, common.GetJSON(filters))
 
 	sc := map[string]interface{}{
 		"logInfo": logInfo,
-	}	
+	}
 
-	req := basic.GetAllCommonRequest{
+	req := model.GetAllCommonRequest{
 		Filters:  filters,
 		Page:     page,
 		Size:     size,
 		SortBy:   sortBy,
 		SortDesc: sortDesc,
-	}	
+	}
 
 	objs := g.{{CamelCase .Name}}Service.GetAll(sc, req)
 
@@ -171,13 +162,6 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 
 	id := c.Param("{{CamelCase .Name}}ID")
 
-	idInt, err := strconv.ParseUint(id, 10, 32)
-	if err != nil {
-		message := log.GetLog().Error(logInfo, "id must integer")
-		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
-		return
-	}
-
 	var dto model.Update{{PascalCase .Name}}Request
 	if err := c.BindJSON(&dto); err != nil {
 		log.GetLog().Error(logInfo, "%v", err.Error())
@@ -191,7 +175,7 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 		"logInfo": logInfo,
 	}
 
-	_, err = g.{{CamelCase .Name}}Service.Update(sc, uint(idInt), dto)
+	_, err := g.{{CamelCase .Name}}Service.Update(sc, id, dto)
 	if err != nil {
 		message := log.GetLog().Error(logInfo, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
@@ -220,14 +204,7 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 		"logInfo": logInfo,
 	}
 
-	idInt, err := strconv.ParseUint(id, 10, 32)
-	if err != nil {
-		message := log.GetLog().Error(logInfo, "id must integer")
-		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
-		return
-	}
-	
-	_, err = g.{{CamelCase .Name}}Service.Delete(sc, uint(idInt))
+	_, err := g.{{CamelCase .Name}}Service.Delete(sc, id)
 	if err != nil {
 		log.GetLog().Error(logInfo, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Error when delete record with ID %v", id)})

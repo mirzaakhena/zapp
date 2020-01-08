@@ -1,14 +1,13 @@
 package model
 
-import ( {{if HasTime .Fields}}
-	"time"{{end}}
-
-	"{{PackagePath}}/model/basic"
-)
+{{if HasTime .Fields}}
+import ( 
+	"time"
+) {{end}}
 
 // {{PascalCase .Name}} is
 type {{PascalCase .Name}} struct { 
-	basic.BaseModel{{range .Fields}}
+	BaseModel{{range .Fields}}
 	{{.Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}
 }
 

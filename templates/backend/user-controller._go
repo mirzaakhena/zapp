@@ -1,0 +1,132 @@
+package controller
+
+import (
+	"net/http"
+	"strings"
+
+	"bitbucket.org/mirzaakhena/warungku/model"
+	"bitbucket.org/mirzaakhena/warungku/service"
+	"bitbucket.org/mirzaakhena/warungku/utils/common"
+	"bitbucket.org/mirzaakhena/warungku/utils/log"
+	"github.com/gin-gonic/gin"
+)
+
+// UserController is
+type UserController struct {
+	userService service.IUserService
+}
+
+// NewUserController is
+func NewUserController(userService service.IUserService) *UserController {
+
+	c := UserController{
+		userService: userService,
+	}
+
+	return &c
+}
+
+// Login is
+func (u *UserController) Login(c *gin.Context) {
+	logInfo := log.Data{
+		ClientIP: c.ClientIP(),
+		Session:  common.GetShortUniqueID(),
+		Type:     "API",
+	}
+
+	var dto model.LoginUserRequest
+
+	if err := c.BindJSON(&dto); err != nil {
+		log.GetLog().Error(logInfo, "%v", err.Error())
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "Invalid Params. Please check data structure and type"})
+		return
+	}
+
+	sc := map[string]interface{}{
+		"logInfo": logInfo,
+		"userID":  "",
+	}
+
+	token, err := u.userService.Login(sc, dto)
+	if err != nil {
+		message := log.GetLog().Error(logInfo, "%v", err.Error())
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
+		return
+	}
+
+	message := log.GetLog().Info(logInfo, "Response. Login success with token %v", token)
+	c.JSON(http.StatusCreated, map[string]interface{}{"message": message, "data": token})
+
+}
+
+// ValidateToken is
+func (u *UserController) ValidateToken(c *gin.Context) {
+	token := c.Request.Header.Get("Authorization")
+	s := strings.Fields(token)
+	if len(s) != 2 {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+	if s[0] != "Bearer" {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+	userID := u.userService.ValidateLoginToken(nil, s[1])
+	if userID == "" {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+	c.Set("userID", userID)
+	c.Next()
+}
+
+// EnforceAccessControl is
+func (u *UserController) EnforceAccessControl(accessName string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		userID, exist := c.Get("userID")
+		if !exist {
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+
+		if !u.userService.HasAccess(userID.(string), accessName) {
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+
+		c.Next()
+	}
+}
+
+// Register is
+func (u *UserController) Register(c *gin.Context) {
+	logInfo := log.Data{
+		ClientIP: c.ClientIP(),
+		Session:  common.GetShortUniqueID(),
+		Type:     "API",
+	}
+
+	var dto model.RegisterUserRequest
+
+	if err := c.BindJSON(&dto); err != nil {
+		log.GetLog().Error(logInfo, "%v", err.Error())
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "Invalid Params. Please check data structure and type"})
+		return
+	}
+
+	log.GetLog().Info(logInfo, "Request. Data %v", common.GetJSON(dto))
+
+	sc := map[string]interface{}{
+		"logInfo": logInfo,
+	}
+
+	if err := u.userService.Register(sc, dto); err != nil {
+		message := log.GetLog().Error(logInfo, "%v", err.Error())
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
+		return
+	}
+
+	message := log.GetLog().Info(logInfo, "Response. Register success")
+	c.JSON(http.StatusCreated, map[string]interface{}{"message": message})
+}

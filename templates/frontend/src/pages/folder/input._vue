@@ -46,25 +46,17 @@ export default {
       bvModalEvt.preventDefault()
 
       if (root.$store.getters[`${entity}/getInputMode`] === 'CREATE') {        
-        root.$store.dispatch(`${entity}/createItem`, {
-          afterCalled: (success, data) => {
-            if (success) {
-              Swal.fire('Created!', `${data}`, 'success')
-              refs.modalInput.hide()
-            }
-          }          
+        root.$store.dispatch(`${entity}/createItem`).then(response => {
+          Swal.fire('Created!', `${response}`, 'success')
+          refs.modalInput.hide()
         })
         return
       } 
 
       if (root.$store.getters[`${entity}/getInputMode`] === 'UPDATE') {
-        root.$store.dispatch(`${entity}/updateItem`, {
-          afterCalled: (success, data) => {
-            if (success) {
-              Swal.fire('Updated!', `${data}`, 'success')
-              refs.modalInput.hide()
-            }
-          }           
+        root.$store.dispatch(`${entity}/updateItem`).then(response => {
+          Swal.fire('Updated!', `${response}`, 'success')
+          refs.modalInput.hide()
         })
         return
       }

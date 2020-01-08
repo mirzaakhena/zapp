@@ -1,0 +1,37 @@
+package repository
+
+import (
+	"bitbucket.org/mirzaakhena/warungku/model"
+	"github.com/jinzhu/gorm"
+)
+
+// IUserRepository is
+type IUserRepository interface {
+	Create(db interface{}, obj *model.User) error
+	GetByEmail(db interface{}, email string) *model.User
+}
+
+// UserRepository is
+type UserRepository struct{}
+
+// NewUserRepository is
+func NewUserRepository(db *gorm.DB) *UserRepository {
+	db.AutoMigrate(&model.User{})
+	return &UserRepository{}
+}
+
+// Create is
+func (u *UserRepository) Create(db interface{}, obj *model.User) error {
+	return db.(*gorm.DB).Create(obj).Error
+}
+
+// GetByEmail is
+func (u *UserRepository) GetByEmail(db interface{}, email string) *model.User {
+	var obj model.User
+	db.(*gorm.DB).First(&obj, "email = ?", email)
+	if obj.ID == "" {
+		return nil
+	}
+	return &obj
+
+}

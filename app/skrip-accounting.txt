@@ -1,0 +1,73 @@
+package, bitbucket.org/mirzaakhena/anc-template
+
+table, Account
+field, SpaceID, uint
+field, Code, string
+field, Name, string
+field, Level, int
+field, Side, string
+field, ChildType, string
+field, ParentAccountID, uint
+endtable
+
+table, Subaccount
+field, SpaceID, uint
+field, AccountID, uint
+field, ChildID, uint
+field, Code, string
+field, Name, string
+endtable
+
+table, Inventory
+field, SpaceID, uint
+field, SubaccountID, uint
+field, Unit, string
+field, Method, string
+field, MinimalQuantity, int
+endtable
+
+table, AccountBalance
+field, SpaceID, uint
+field, JournalID, uint
+field, Date, time.Time
+field, Sequence, int
+field, Direction, string
+field, AccountID, uint
+field, Amount, float64
+field, Balance, float64
+endtable
+
+table, SubaccountBalance
+field, SpaceID, uint
+field, JournalID, uint
+field, Date, time.Time
+field, Sequence, int
+field, Direction, string
+field, SubaccountID, uint
+field, Amount, float64
+field, Balance, float64
+endtable
+
+table, InventoryBalance
+field, SpaceID, uint
+field, JournalID, uint
+field, Date, time.Time
+field, Sequence, int
+field, Direction, string
+field, InventoryID, uint
+field, AmountQuantity, int
+field, AmountPrice, float64
+field, AmountTotalPrice, float64
+field, BalanceQuantity, int
+field, BalancePrice, float64
+field, BalanceTotalPrice, float64
+endtable
+
+table, Journal
+field, Date, time.Time
+field, SpaceID, uint
+field, UserID, uint
+field, Code, string
+field, TemplateCode, string
+field, Description, string
+endtable

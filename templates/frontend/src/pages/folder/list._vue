@@ -120,13 +120,8 @@ export default {
       }
 
       root.$store.commit(`${entity}/SET_MODE`, 'UPDATE')
-      root.$store.dispatch(`${entity}/getOneItem`, {        
-        itemId: item.id, 
-        afterCalled: (success) => {
-          if (success) {
-            root.$bvModal.show('modalInput')
-          }
-        },
+      root.$store.dispatch(`${entity}/getOneItem`, { itemId: item.id }).then(() => {
+        root.$bvModal.show('modalInput')
       })
       
     }  
@@ -144,13 +139,8 @@ export default {
     const deleteItem = (item) => {
       Swal.fire(deleteConfirmObject).then((result) => {
         if (result.value) {
-          root.$store.dispatch(`${entity}/deleteItem`, {
-            item,
-            afterCalled: (success, data) => {
-              if (success) {
-                Swal.fire('Deleted!', `${data}`, 'success')                
-              }  
-            }
+          root.$store.dispatch(`${entity}/deleteItem`, { itemId: item.id }).then(response => {
+            Swal.fire('Deleted!', `${response}`, 'success')
           })
         }
       })      

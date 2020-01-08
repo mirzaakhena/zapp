@@ -16,10 +16,64 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+func main() {
+	// content, err := ioutil.ReadFile("skrip.yaml")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// tp := ThePackage{}
+	// err = yaml.Unmarshal(content, &tp)
+	// if err != nil {
+	// 	log.Fatalf("error: %+v", err)
+	// }
+	// fmt.Printf("%+v\n", tp)
+
+	processIt()
+}
+
+func processIt() {
+
+	content, err := ioutil.ReadFile("skrip.yaml")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	tp := ThePackage{}
+	err = yaml.Unmarshal(content, &tp)
+	if err != nil {
+		log.Fatalf("error: %+v", err)
+	}
+
+	tp.Run()
+
+	cmd := exec.Command("go", "fmt", fmt.Sprintf("%s/...", tp.PackagePath))
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	if err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
+
+}
+
+// TextAndValue is
+type TextAndValue struct {
+	Text  string `yaml:"text"`
+	Value string `yaml:"value"`
+}
+
 // TheField is
 type TheField struct {
-	Name     string `yaml:"name"`
-	DataType string `yaml:"dataType"`
+	Name           string         `yaml:"name"`
+	DataType       string         `yaml:"dataType"`
+	EnumType       string         `yaml:"enumType"`
+	EnumValues     []TextAndValue `yaml:"enumValues"`
+	EntityName     string         `yaml:"entityName"`
+	EntityFieldRef TextAndValue   `yaml:"entityFieldRef"`
+	DefaultValue   string         `yaml:"defaultValue"`
+	Sortable       string         `yaml:"sortable"`
+	Filterable     string         `yaml:"filterable"`
 }
 
 // TheClass is
@@ -83,30 +137,6 @@ func HasTime(dataTypes []TheField) bool {
 	return false
 }
 
-func main() {
-
-	content, err := ioutil.ReadFile("skrip.yaml")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	tp := ThePackage{}
-	err = yaml.Unmarshal(content, &tp)
-	if err != nil {
-		log.Fatalf("error: %+v", err)
-	}
-
-	tp.Run()
-
-	cmd := exec.Command("go", "fmt", fmt.Sprintf("%s/...", tp.PackagePath))
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
-	if err != nil {
-		log.Fatalf("cmd.Run() failed with %s\n", err)
-	}
-}
-
 // Run is
 func (tp *ThePackage) Run() {
 
@@ -127,7 +157,7 @@ func (tp *ThePackage) Run() {
 
 	// create model folder
 	{
-		dir := fmt.Sprintf("../../../../%s/model/basic", tp.PackagePath)
+		dir := fmt.Sprintf("../../../../%s/model", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
@@ -137,9 +167,9 @@ func (tp *ThePackage) Run() {
 		os.MkdirAll(dir, 0777)
 	}
 
-	// create dao folder
+	// create repository folder
 	{
-		dir := fmt.Sprintf("../../../../%s/dao", tp.PackagePath)
+		dir := fmt.Sprintf("../../../../%s/repository", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
@@ -148,6 +178,9 @@ func (tp *ThePackage) Run() {
 		dir := ""
 
 		dir = fmt.Sprintf("../../../../%s/utils/common", tp.PackagePath)
+		os.MkdirAll(dir, 0777)
+
+		dir = fmt.Sprintf("../../../../%s/utils/token", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 
 		dir = fmt.Sprintf("../../../../%s/utils/config", tp.PackagePath)
@@ -197,10 +230,10 @@ func (tp *ThePackage) Run() {
 
 	for _, et := range tp.Entities {
 
-		// create dao
+		// create repository
 		{
-			templateFile := fmt.Sprintf("../templates/backend/dao._go")
-			outputFile := fmt.Sprintf("../../../../%s/dao/%s.go", tp.PackagePath, LowerCase(et.Name))
+			templateFile := fmt.Sprintf("../templates/backend/repository._go")
+			outputFile := fmt.Sprintf("../../../../%s/repository/%s.go", tp.PackagePath, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
@@ -215,13 +248,6 @@ func (tp *ThePackage) Run() {
 		{
 			templateFile := fmt.Sprintf("../templates/backend/model._go")
 			outputFile := fmt.Sprintf("../../../../%s/model/%s.go", tp.PackagePath, LowerCase(et.Name))
-			basic(tp, templateFile, outputFile, et)
-		}
-
-		// create model
-		{
-			templateFile := fmt.Sprintf("../templates/backend/model_basic._go")
-			outputFile := fmt.Sprintf("../../../../%s/model/basic/model.go", tp.PackagePath)
 			basic(tp, templateFile, outputFile, et)
 		}
 
@@ -283,14 +309,50 @@ func (tp *ThePackage) Run() {
 	}
 
 	{
+		templateFile := fmt.Sprintf("../templates/backend/model_basic._go")
+		outputFile := fmt.Sprintf("../../../../%s/model/model.go", tp.PackagePath)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/user-model._go")
+		outputFile := fmt.Sprintf("../../../../%s/model/user.go", tp.PackagePath)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/user-repository._go")
+		outputFile := fmt.Sprintf("../../../../%s/repository/user.go", tp.PackagePath)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/user-service._go")
+		outputFile := fmt.Sprintf("../../../../%s/service/user.go", tp.PackagePath)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/user-controller._go")
+		outputFile := fmt.Sprintf("../../../../%s/controller/user.go", tp.PackagePath)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
 		templateFile := fmt.Sprintf("../templates/backend/router._go")
-		outputFile := fmt.Sprintf("../../../../%s/app/router.go", tp.PackagePath)
+		outputFile := fmt.Sprintf("../../../../%s/controller/router.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
 		templateFile := fmt.Sprintf("../templates/backend/utils/common/identifier._go")
 		outputFile := fmt.Sprintf("../../../../%s/utils/common/identifier.go", tp.PackagePath)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/utils/common/password._go")
+		outputFile := fmt.Sprintf("../../../../%s/utils/common/password.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
@@ -303,6 +365,12 @@ func (tp *ThePackage) Run() {
 	{
 		templateFile := fmt.Sprintf("../templates/backend/utils/common/strings._go")
 		outputFile := fmt.Sprintf("../../../../%s/utils/common/strings.go", tp.PackagePath)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/utils/token/jwt._go")
+		outputFile := fmt.Sprintf("../../../../%s/utils/token/jwt.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
@@ -433,8 +501,8 @@ func (tp *ThePackage) Run() {
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/frontend/src/store/basiccrud._js")
-		outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/basiccrud.js", tp.PackagePath)
+		templateFile := fmt.Sprintf("../templates/frontend/src/store/crudtable._js")
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/store/crudtable.js", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 

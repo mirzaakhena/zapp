@@ -1,0 +1,15 @@
+package, bitbucket.org/mirzaakhena/zappsample
+
+table, User
+field, Name, string
+field, Email, string
+field, Password, string
+field, Token, string
+field, Status, string
+endtable
+
+table, Space
+field, Name, string
+field, Description, string
+field, Status, string
+endtable

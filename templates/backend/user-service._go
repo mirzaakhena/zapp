@@ -1,0 +1,105 @@
+package service
+
+import (
+	"fmt"
+
+	"bitbucket.org/mirzaakhena/warungku/model"
+	"bitbucket.org/mirzaakhena/warungku/repository"
+	"bitbucket.org/mirzaakhena/warungku/utils/common"
+	"bitbucket.org/mirzaakhena/warungku/utils/token"
+	"bitbucket.org/mirzaakhena/warungku/utils/transaction"
+)
+
+// IUserService is
+type IUserService interface {
+	Login(sc map[string]interface{}, dto model.LoginUserRequest) (string, error)
+	ValidateLoginToken(sc map[string]interface{}, token string) string
+	Register(sc map[string]interface{}, dto model.RegisterUserRequest) error
+	HasAccess(userID string, accessName string) bool
+}
+
+// UserService is
+type UserService struct {
+	trx            transaction.ITransaction
+	jwt            *token.Jwt
+	userRepository repository.IUserRepository
+}
+
+// NewUserService is
+func NewUserService(trx transaction.ITransaction, jwt *token.Jwt, userRepository repository.IUserRepository) *UserService {
+	return &UserService{
+		trx:            trx,
+		jwt:            jwt,
+		userRepository: userRepository,
+	}
+}
+
+// Login is
+func (u *UserService) Login(sc map[string]interface{}, dto model.LoginUserRequest) (string, error) {
+	tx := u.trx.GetDB(false)
+	existingUser := u.userRepository.GetByEmail(tx, dto.Email)
+	if existingUser == nil {
+		return "", fmt.Errorf("User not exist or wrong password 1")
+	}
+
+	if !common.IsValidPassword(dto.Password, existingUser.Password) {
+		return "", fmt.Errorf("User not exist or wrong password %v != %v", dto.Password, existingUser.Password)
+	}
+
+	token := u.jwt.GenerateToken("LOGIN", "INTERNAL", "USER", existingUser.ID, 24)
+
+	return token, nil
+}
+
+// ValidateLoginToken is
+func (u *UserService) ValidateLoginToken(sc map[string]interface{}, loginToken string) string {
+
+	jwtObject := u.jwt.ValidateToken("LOGIN", loginToken)
+	if jwtObject == nil {
+		return ""
+	}
+
+	return fmt.Sprintf("%v", jwtObject.ExtendData)
+}
+
+// Register is
+func (u *UserService) Register(sc map[string]interface{}, dto model.RegisterUserRequest) error {
+
+	tx := u.trx.GetDB(true)
+	u.trx.RollbackOnException(tx)
+
+	if existingUser := u.userRepository.GetByEmail(tx, dto.Email); existingUser != nil {
+		u.trx.Rollback(tx)
+		return fmt.Errorf("Email %v already exist", dto.Email)
+	}
+
+	var obj model.User
+
+	obj.ID = common.GetUUID()
+	obj.Name = dto.Name
+	obj.Email = dto.Email
+	obj.Password = common.GenerateHashPassword(dto.Password)
+	u.userRepository.Create(tx, &obj)
+
+	u.trx.Commit(tx)
+
+	return nil
+}
+
+// HasAccess is
+func (u *UserService) HasAccess(userID string, accessName string) bool {
+
+	if userID == "df9d6646-513d-47d6-a9a0-600a321f5f0b" && accessName == "OUTLET" {
+		return true
+	}
+
+	if userID == "f759b3d7-f730-400c-8877-e86c3168f8ea" && accessName == "MENUGROUP" {
+		return true
+	}
+
+	if userID == "0bd8fe85-f822-48ce-a3e4-1f0d39c40880" && accessName == "MENUITEM" {
+		return true
+	}
+
+	return false
+}

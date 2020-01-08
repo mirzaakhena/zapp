@@ -1,0 +1,71 @@
+package token
+
+import (
+	"fmt"
+	"time"
+
+	jwt "github.com/dgrijalva/jwt-go"
+)
+
+// IToken is
+type IToken interface {
+	GenerateToken(subject, issuer, audience string, extendData interface{}, expiredInHour uint) string
+	ValidateToken(subject, token string) *JwtObject
+}
+
+// Jwt is
+type Jwt struct {
+	SecretKey []byte
+}
+
+// JwtObject is
+type JwtObject struct {
+	jwt.StandardClaims
+	ExtendData interface{}
+}
+
+// GenerateToken is
+func (j *Jwt) GenerateToken(subject, issuer, audience string, extendData interface{}, expiredInHour uint) string {
+	t := time.Now().UTC()
+	claims := &JwtObject{
+		ExtendData: extendData,
+		StandardClaims: jwt.StandardClaims{
+			Subject:   subject,
+			Issuer:    issuer,
+			Audience:  audience,
+			IssuedAt:  t.Unix(),
+			ExpiresAt: t.Add(time.Duration(expiredInHour) * time.Hour).Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, _ := token.SignedString(j.SecretKey)
+	return tokenString
+}
+
+// ValidateToken is
+func (j *Jwt) ValidateToken(subject, tokenString string) *JwtObject {
+
+	token, err := jwt.ParseWithClaims(tokenString, &JwtObject{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		return j.SecretKey, nil
+	})
+
+	if err != nil {
+		return nil
+	}
+
+	claims, ok := token.Claims.(*JwtObject)
+	if !ok || !token.Valid {
+		// invalid token
+		return nil
+	}
+
+	if claims.Subject != subject {
+		// wrong subject
+		return nil
+	}
+
+	return claims
+}

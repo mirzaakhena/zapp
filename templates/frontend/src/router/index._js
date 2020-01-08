@@ -7,21 +7,21 @@ Vue.use(Router)
 Vue.use(Auth)
 
 const router = new Router({
-  routes: [ 
-    // {
-    //   path: '/login',
-    //   component: () => import('@/pages/login.vue'),
-    //   meta: {
-    //     authorities: 'GUEST'
-    //   },
-    // },
-    // {
-    //   path: '/register',
-    //   component: () => import('@/pages/register.vue'),
-    //   meta: {
-    //     authorities: 'GUEST'
-    //   },
-    // }, 
+  routes: [
+    {
+      path: '/login',
+      component: () => import('@/pages/login.vue'),
+      meta: {
+        authorities: 'GUEST'
+      },
+    },
+    {
+      path: '/register',
+      component: () => import('@/pages/register.vue'),
+      meta: {
+        authorities: 'GUEST'
+      },
+    },
     // 
     // {
     //   path: '/forgotpassword',
@@ -54,34 +54,33 @@ const router = new Router({
       children: [ {{range .Entities}}
         ...{{CamelCase .Name}}, {{end}}
       ],
-    },        
+    },
 
-    { path: '*', redirect: '/' }       
+    { path: '*', redirect: '/' }
   ],
 })
 
-// router.beforeEach((to, from, next) => {
-// 
-//   if (to.matched.some(record => record.meta.authorities === 'GUEST')) {
-//     if (Vue.auth.isAuthenticated()) {      
-//       next({
-//         path: '/'
-//       })
-//     } else {
-//      next()
-//     }
-//   } else if (to.matched.some(record => record.meta.authorities === 'USER')) {
-//     if (!Vue.auth.isAuthenticated()) {
-//       next({
-//         path: '/login'
-//       })
-//     } else {
-//       next()
-//     }
-//   } else {
-//     next()
-//   }
-// })
+router.beforeEach((to, from, next) => {  
+  if (to.matched.some(record => record.meta.authorities === 'GUEST')) {
+    if (Vue.auth.isAuthenticated()) {
+      next({
+        path: '/'
+      })
+    } else {
+     next()
+    }
+  } else if (to.matched.some(record => record.meta.authorities === 'USER')) {
+    if (!Vue.auth.isAuthenticated()) {
+      next({
+        path: '/login'
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
 
 
 export default router

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'   
-import basiccrud from './basiccrud' 
+import crudtable from './crudtable' 
 
 Vue.use(Vuex)
 
@@ -9,6 +9,6 @@ const store = new Vuex.Store({
   }  
 })
 {{range .Entities}}
-store.registerModule('{{CamelCase .Name}}', basiccrud()) {{end}}
+store.registerModule('{{CamelCase .Name}}', crudtable()) {{end}}
 
 export default store

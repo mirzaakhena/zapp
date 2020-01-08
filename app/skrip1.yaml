@@ -1,0 +1,25 @@
+packagePath: bitbucket.org/mirzaakhena/anc-template
+
+entities:
+  
+- name: WipTemplate
+  fields:
+  - name: SpaceID
+    dataType: uint    
+  - name: WipInventoryCode
+    dataType: string
+  - name: TemplateType
+    dataType: string    
+  - name: SubaccountCode
+    dataType: string
+  - name: Value
+    dataType: float64
+
+- name: ProductMapping
+  fields:
+  - name: SpaceID
+    dataType: uint
+  - name: WipInventoryCode
+    dataType: string
+  - name: ProductInventoryCode
+    dataType: string

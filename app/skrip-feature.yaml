@@ -27,17 +27,27 @@ entities:
 - name: MenuItem
   fields:
   - name: Category
-    dataType: string
+    dataType: enum
+    enumType: int
+    enumValues:
+      - text: HMD
+        value: 1
+      - text: PNP
+        value: 2
   - name: OutletCode
     dataType: string
   - name: MenuItemCode
     dataType: string
   - name: MenuGroupCode
-    dataType: string
+    dataType: entity
+    entityName: MenuGroup
+    entityFieldRef:
+      text: MenuGroupCode
+      value: MenuGroupCode
   - name: Price
     dataType: float64
   - name: IsTaxable
-    dataType: bool
+    dataType: bool    
 
 
 

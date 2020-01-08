@@ -1,0 +1,77 @@
+packagePath: bitbucket.org/mirzaakhena/usermanagement
+
+entities:
+  
+- name: User
+  fields:
+  - name: Name
+    dataType: string
+  - name: Email
+    dataType: string
+  - name: Password
+    dataType: string
+  - name: Token
+    dataType: string
+  - name: Status
+    dataType: string
+
+- name: Space
+  fields:
+  - name: Name
+    dataType: string
+  - name: Description
+    dataType: string
+
+- name: UserSpace
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: UserID
+    dataType: string
+  - name: User
+    dataType: !!User    
+  - name: Type
+    dataType: string
+
+- name: Role
+  fields:
+  - name: Name
+    dataType: string
+  - name: Description
+    dataType: string
+  - name: SpaceID
+    dataType: string  
+
+- name: UserRole
+  fields:
+  - name: UserID
+    dataType: string
+  - name: RoleID
+    dataType: string
+
+- name: Permission
+  fields:
+  - name: EndPoint
+    dataType: string
+  - name: Method
+    dataType: string
+  - name: Description
+    dataType: string
+  - name: Category
+    dataType: string
+
+- name: RolePermission
+  fields:
+  - name: RoleID
+    dataType: string
+  - name: PermissionID
+    dataType: string  
+
+
+
+
+
+
+
+
+
