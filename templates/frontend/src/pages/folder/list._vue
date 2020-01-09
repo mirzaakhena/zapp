@@ -106,23 +106,15 @@ export default {
     const queryItems = () => root.$store.dispatch(`${entity}/queryItems`)
 
     const openInput = (item) => {
+
       if (item === undefined) {
-        root.$store.commit(`${entity}/SET_MODE`, 'CREATE')
-        root.$store.commit(`${entity}/SET_INPUTTED_ITEM`, { {{range .Fields}} {{if (eq .DataType "string")}}
-          {{CamelCase .Name}}: '',{{else if (eq .DataType "int")}}
-          {{CamelCase .Name}}: 0,{{else if (eq .DataType "float64")}}
-          {{CamelCase .Name}}: 0.0,{{else if (eq .DataType "bool")}}
-          {{CamelCase .Name}}: false,{{else if (eq .DataType "time.Time")}}
-          {{CamelCase .Name}}: '2019-06-07T05:43:21Z', {{end}} {{end}}
-        })
         root.$bvModal.show('modalInput')
         return
       }
 
-      root.$store.commit(`${entity}/SET_MODE`, 'UPDATE')
       root.$store.dispatch(`${entity}/getOneItem`, { itemId: item.id }).then(() => {
         root.$bvModal.show('modalInput')
-      })
+      })      
       
     }  
 

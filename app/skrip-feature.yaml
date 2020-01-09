@@ -34,6 +34,7 @@ entities:
         value: 1
       - text: PNP
         value: 2
+    defaultValue: 1
   - name: OutletCode
     dataType: string
   - name: MenuItemCode

@@ -1,28 +1,28 @@
 <template>
-  <b-modal ref="modalInput" id="modalInput" title="Input {{PascalCase .Name}}" @ok="onSubmit">{{range .Fields}}{{if (eq .DataType "string")}}
+  <b-modal ref="modalInput" id="modalInput" title="Input {{PascalCase .Name}}" @ok="onSubmit" @shown="onShown" @hidden="onHidden">{{range .Fields}}{{if (eq .DataType "string")}}
 
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-input type="text" v-model="inputedItem.{{CamelCase .Name}}" required autocomplete="off"></b-form-input>
+      <b-form-input type="text" v-model="state.inputedItem.{{CamelCase .Name}}" required autocomplete="off"></b-form-input>
     </b-form-group>{{else if (eq .DataType "int")}}
 
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-input v-model.number="inputedItem.{{CamelCase .Name}}" type="number" required autocomplete="off"></b-form-input>
+      <b-form-input v-model.number="state.inputedItem.{{CamelCase .Name}}" type="number" required autocomplete="off"></b-form-input>
     </b-form-group>{{else if (eq .DataType "uint")}}    
 
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-input v-model.number="inputedItem.{{CamelCase .Name}}" type="number" required autocomplete="off"></b-form-input>
+      <b-form-input v-model.number="state.inputedItem.{{CamelCase .Name}}" type="number" required autocomplete="off"></b-form-input>
     </b-form-group>{{else if (eq .DataType "float64")}}
 
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-input v-model.number="inputedItem.{{CamelCase .Name}}" type="number" required autocomplete="off"></b-form-input>
+      <b-form-input v-model.number="state.inputedItem.{{CamelCase .Name}}" type="number" required autocomplete="off"></b-form-input>
     </b-form-group>{{else if (eq .DataType "bool")}}
 
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-checkbox v-model="inputedItem.{{CamelCase .Name}}"></b-form-checkbox>
+      <b-form-checkbox v-model="state.inputedItem.{{CamelCase .Name}}"></b-form-checkbox>
     </b-form-group>{{else if (eq .DataType "time.Time")}}
 
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-input type="text" v-model="inputedItem.{{CamelCase .Name}}" required autocomplete="off"></b-form-input>
+      <b-form-input type="text" v-model="state.inputedItem.{{CamelCase .Name}}" required autocomplete="off"></b-form-input>
     </b-form-group>{{end}}{{end}}
 
   </b-modal>
@@ -31,7 +31,7 @@
 
 <script>
 
-import { computed } from '@vue/composition-api';
+import { reactive } from '@vue/composition-api';
 import Swal from 'sweetalert2';
 
 export default {
@@ -39,31 +39,50 @@ export default {
 
     const entity = '{{CamelCase .Name}}'
 
-    const inputedItem = computed(() => root.$store.getters[`${entity}/getInputtedItem`])
+    const initialObject = () => {
+      return { {{range .Fields}}{{if (eq .DataType "string")}}
+        {{CamelCase .Name}}: '',{{else if (eq .DataType "uint")}}
+        {{CamelCase .Name}}: 0,{{else if (eq .DataType "int")}}
+        {{CamelCase .Name}}: 0,{{else if (eq .DataType "float64")}}
+        {{CamelCase .Name}}: 0.0,{{else if (eq .DataType "bool")}}
+        {{CamelCase .Name}}: false,{{else if (eq .DataType "time.Time")}}
+        {{CamelCase .Name}}: '2019-06-07T05:43:21Z', {{end}} {{end}}
+      }
+    }
+
+    const state = reactive({
+      inputedItem: initialObject()
+    })
 
     const onSubmit = async (bvModalEvt) => {      
       
       bvModalEvt.preventDefault()
 
-      if (root.$store.getters[`${entity}/getInputMode`] === 'CREATE') {        
-        root.$store.dispatch(`${entity}/createItem`).then(response => {
-          Swal.fire('Created!', `${response}`, 'success')
-          refs.modalInput.hide()
-        })
-        return
-      } 
-
-      if (root.$store.getters[`${entity}/getInputMode`] === 'UPDATE') {
+      if (root.$store.getters[`${entity}/getInputedItem`]) {
         root.$store.dispatch(`${entity}/updateItem`).then(response => {
           Swal.fire('Updated!', `${response}`, 'success')
           refs.modalInput.hide()
         })
-        return
-      }
-            
+        return 
+      } 
+
+      root.$store.dispatch(`${entity}/createItem`, {inputedItem: state.inputedItem}).then(response => {
+        Swal.fire('Created!', `${response}`, 'success')
+        refs.modalInput.hide()
+      })
+      
     }
 
-    return {onSubmit, inputedItem}
+    const onShown = () => {
+      const inputedObject = root.$store.getters[`${entity}/getInputedItem`]
+      state.inputedItem = inputedObject || initialObject()
+    }
+
+    const onHidden = () => {
+        root.$store.commit(`${entity}/SET_INPUTED_ITEM`, null)      
+    }
+
+    return {onSubmit, onShown, onHidden, state}
   }
 }
 </script>

@@ -10,8 +10,7 @@ function NewStore() {
       url: '',
       items: [],
       totalItems: 0,
-      inputtedItem: {},
-      mode: '',
+      inputedItem: null,
       paging: {
         page: 1,
         size: 20,
@@ -27,10 +26,6 @@ function NewStore() {
   
       SET_URL: (state, payload) => {
         state.url = payload
-      },
-  
-      SET_MODE: (state, payload) => {
-        state.mode = payload
       },
   
       SET_ITEMS: (state, {items, totalItems}) => {
@@ -63,17 +58,16 @@ function NewStore() {
         state.sorting.sortDesc = false
       },
   
-      SET_INPUTTED_ITEM: (state, payload) => {
-        state.inputtedItem = payload
+      SET_INPUTED_ITEM: (state, payload) => {
+        state.inputedItem = payload
       },
   
     },
   
     getters: {
-      getInputMode: state => state.mode,
       getItems: state => state.items,
       getTotalItems: state => state.totalItems,
-      getInputtedItem: state => state.inputtedItem,
+      getInputedItem: state => state.inputedItem,
       getPaging: state => state.paging,
       getSorting: state => state.sorting,
       getFiltering: state => state.filtering,    
@@ -168,15 +162,15 @@ function NewStore() {
             reject(error)
             return
           }
-          commit('SET_INPUTTED_ITEM', response.data.data)
+          commit('SET_INPUTED_ITEM', response.data.data)
           resolve(response.data.message)
         })
       },
   
-      createItem ({state, dispatch}) {
+      createItem ({state, dispatch}, {inputedItem}) {
         return new Promise(async (resolve, reject) => {
           const [error, response] = await to(request({
-            data: state.inputtedItem,
+            data: inputedItem,
             method: 'post',
             url: `api/${state.url}`,
           }))
@@ -193,9 +187,9 @@ function NewStore() {
       updateItem ({state, dispatch}) {
         return new Promise(async (resolve, reject) => {
           const [error, response] = await to(request({
-            data: state.inputtedItem,
+            data: state.inputedItem,
             method: 'put',
-            url: `api/${state.url}/${state.inputtedItem.id}`,
+            url: `api/${state.url}/${state.inputedItem.id}`,
           }))
           if (error) {
             reject(error)
@@ -206,7 +200,7 @@ function NewStore() {
         })
       },
   
-      async deleteItem({state, dispatch}, {itemId}) {
+      deleteItem({state, dispatch}, {itemId}) {
         return new Promise(async (resolve, reject) => {
           const [error, response] = await to(request({
             method: 'delete',

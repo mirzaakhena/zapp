@@ -47,12 +47,26 @@ func processIt() {
 
 	tp.Run()
 
-	cmd := exec.Command("go", "fmt", fmt.Sprintf("%s/...", tp.PackagePath))
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
-	if err != nil {
-		log.Fatalf("cmd.Run() failed with %s\n", err)
+	{
+		fmt.Println("go fmt")
+		cmd := exec.Command("go", "fmt", fmt.Sprintf("%s/...", tp.PackagePath))
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Run()
+		if err != nil {
+			log.Fatalf("cmd.Run() failed with %s\n", err)
+		}
+	}
+
+	{
+		fmt.Println("go get")
+		cmd := exec.Command("go", "get", fmt.Sprintf("./..."))
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Run()
+		if err != nil {
+			log.Fatalf("cmd.Run() failed with %s\n", err)
+		}
 	}
 
 }

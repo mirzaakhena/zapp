@@ -89,17 +89,18 @@ func (u *UserService) Register(sc map[string]interface{}, dto model.RegisterUser
 // HasAccess is
 func (u *UserService) HasAccess(userID string, accessName string) bool {
 
-	if userID == "df9d6646-513d-47d6-a9a0-600a321f5f0b" && accessName == "OUTLET" {
-		return true
-	}
+	// if userID == "df9d6646-513d-47d6-a9a0-600a321f5f0b" && accessName == "OUTLET" {
+	// 	return true
+	// }
 
-	if userID == "f759b3d7-f730-400c-8877-e86c3168f8ea" && accessName == "MENUGROUP" {
-		return true
-	}
+	// if userID == "f759b3d7-f730-400c-8877-e86c3168f8ea" && accessName == "MENUGROUP" {
+	// 	return true
+	// }
 
-	if userID == "0bd8fe85-f822-48ce-a3e4-1f0d39c40880" && accessName == "MENUITEM" {
-		return true
-	}
+	// if userID == "0bd8fe85-f822-48ce-a3e4-1f0d39c40880" && accessName == "MENUITEM" {
+	// 	return true
+	// }
 
-	return false
+	return true
+
 }

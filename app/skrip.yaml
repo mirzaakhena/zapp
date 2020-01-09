@@ -6,6 +6,7 @@ entities:
   fields:
   - name: Name
     dataType: string
+    defaultValue: 250
   - name: Code
     dataType: string
   - name: IPAddress
@@ -26,8 +27,6 @@ entities:
 
 - name: MenuItem
   fields:
-  - name: Category
-    dataType: string
   - name: OutletCode
     dataType: string
   - name: MenuItemCode
@@ -36,8 +35,6 @@ entities:
     dataType: string
   - name: Price
     dataType: float64
-  - name: IsTaxable
-    dataType: bool
 
 
 
