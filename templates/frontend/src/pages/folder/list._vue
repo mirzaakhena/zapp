@@ -81,7 +81,7 @@ export default {
 
     const entity = '{{CamelCase .Name}}'
 
-    root.$store.commit(`${entity}/SET_URL`, `/${entity}`)
+    root.$store.commit(`${entity}/SET_CONTEXT_PATH`, `${entity}`)
 
     const paging = computed(() => root.$store.getters[`${entity}/getPaging`])
 

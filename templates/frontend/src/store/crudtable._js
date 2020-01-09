@@ -24,7 +24,7 @@ function NewStore() {
   
     mutations: {
   
-      SET_URL: (state, payload) => {
+      SET_CONTEXT_PATH: (state, payload) => {
         state.url = payload
       },
   
@@ -125,7 +125,7 @@ function NewStore() {
         return new Promise(async (resolve, reject) => {
           const [error, response] = await to(request({
             method: 'get',
-            url: `api${state.url}`,
+            url: `api/${state.url}`,
             params: {
               ...state.paging,
               ...state.sorting,

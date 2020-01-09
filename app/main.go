@@ -88,6 +88,7 @@ type TheField struct {
 	DefaultValue   string         `yaml:"defaultValue"`
 	Sortable       string         `yaml:"sortable"`
 	Filterable     string         `yaml:"filterable"`
+	Regex          string         `yaml:"regex"`
 }
 
 // TheClass is
