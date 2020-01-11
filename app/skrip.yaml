@@ -19,7 +19,12 @@ entities:
 - name: MenuGroup
   fields:
   - name: OutletCode
-    dataType: string
+    dataType: enum
+    enumValues:
+      - text: 'HMD'
+        value: '1'
+      - text: 'PNP'
+        value: '2'        
   - name: MenuGroupCode
     dataType: string
   - name: Sequence

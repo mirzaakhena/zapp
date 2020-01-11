@@ -23,6 +23,10 @@
 
     <b-form-group label="{{PascalCase .Name}}">
       <b-form-input type="text" v-model="state.inputedItem.{{CamelCase .Name}}" required autocomplete="off"></b-form-input>
+    </b-form-group>{{else if (eq .DataType "enum")}}
+
+    <b-form-group label="{{PascalCase .Name}}">
+      <b-form-select v-model="state.inputedItem.outletCode" :options="options{{PascalCase .Name}}" />
     </b-form-group>{{end}}{{end}}
 
   </b-modal>
@@ -79,10 +83,22 @@ export default {
     }
 
     const onHidden = () => {
-        root.$store.commit(`${entity}/SET_INPUTED_ITEM`, null)      
+      root.$store.commit(`${entity}/SET_INPUTED_ITEM`, null)      
     }
 
-    return {onSubmit, onShown, onHidden, state}
+    {{range .Fields}}{{if (eq .DataType "enum")}}
+      const options{{PascalCase .Name}} = [ {{range .EnumValues}}
+        { value: '{{.Value}}', text: '{{.Text}}' }, {{end}}
+      ]
+    {{end}}{{end}}
+
+    return {
+      onSubmit, 
+      onShown, 
+      onHidden, 
+      state,
+
+    }
   }
 }
 </script>
