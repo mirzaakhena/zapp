@@ -1,51 +1,32 @@
-packagePath: bitbucket.org/mirzaakhena/warungku
+packagePath: bitbucket.org/hendra/tientoproduksi
 
 entities:
   
-- name: Outlet
+- name: PreOrder
   fields:
-  - name: Name
+  - name: Warna
     dataType: string
-    defaultValue: 250
-  - name: Code
+  - name: Model
     dataType: string
-  - name: IPAddress
+  - name: Sablon
     dataType: string
-  - name: Token
-    dataType: string
-  - name: Coordinate
-    dataType: string
-
-- name: MenuGroup
-  fields:
-  - name: OutletCode
-    dataType: enum
-    enumValues:
-      - text: 'HMD'
-        value: '1'
-      - text: 'PNP'
-        value: '2'        
-  - name: MenuGroupCode
-    dataType: string
-  - name: Sequence
+  - name: SizeAll
     dataType: uint
-
-- name: MenuItem
-  fields:
-  - name: OutletCode
-    dataType: string
-  - name: MenuItemCode
-    dataType: string
-  - name: MenuGroupCode
-    dataType: string
-  - name: Price
-    dataType: float64
-
-
-
-
-
-
-
+  - name: SizeXS
+    dataType: uint
+  - name: SizeS
+    dataType: uint    
+  - name: SizeM
+    dataType: uint
+  - name: SizeL
+    dataType: uint
+  - name: SizeXL
+    dataType: uint
+  - name: SizeXXL
+    dataType: uint
+  - name: Size3XL
+    dataType: uint
+  - name: Size4XL
+    dataType: uint
 
 

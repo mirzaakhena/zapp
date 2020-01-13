@@ -3,11 +3,11 @@ package service
 import (
 	"fmt"
 
-	"bitbucket.org/mirzaakhena/warungku/model"
-	"bitbucket.org/mirzaakhena/warungku/repository"
-	"bitbucket.org/mirzaakhena/warungku/utils/common"
-	"bitbucket.org/mirzaakhena/warungku/utils/token"
-	"bitbucket.org/mirzaakhena/warungku/utils/transaction"
+	"{{PackagePath}}/model"
+	"{{PackagePath}}/repository"
+	"{{PackagePath}}/utils/common"
+	"{{PackagePath}}/utils/token"
+	"{{PackagePath}}/utils/transaction"
 )
 
 // IUserService is

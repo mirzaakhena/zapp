@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strings"
 
-	"bitbucket.org/mirzaakhena/warungku/model"
-	"bitbucket.org/mirzaakhena/warungku/service"
-	"bitbucket.org/mirzaakhena/warungku/utils/common"
-	"bitbucket.org/mirzaakhena/warungku/utils/log"
+	"{{PackagePath}}/model"
+	"{{PackagePath}}/service"
+	"{{PackagePath}}/utils/common"
+	"{{PackagePath}}/utils/log"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,4 +1,4 @@
-packagePath: bitbucket.org/mirzaakhena/warungku
+packagePath: {{PackagePath}}
 
 entities:
   
@@ -28,7 +28,7 @@ entities:
   fields:
   - name: Category
     dataType: enum
-    enumType: int
+    enumDataType: int
     enumValues:
       - text: HMD
         value: 1

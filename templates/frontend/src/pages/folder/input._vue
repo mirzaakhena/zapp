@@ -26,7 +26,7 @@
     </b-form-group>{{else if (eq .DataType "enum")}}
 
     <b-form-group label="{{PascalCase .Name}}">
-      <b-form-select v-model="state.inputedItem.outletCode" :options="options{{PascalCase .Name}}" />
+      <b-form-select v-model="state.inputedItem.{{CamelCase .Name}}" :options="options{{PascalCase .Name}}" />
     </b-form-group>{{end}}{{end}}
 
   </b-modal>
@@ -45,11 +45,12 @@ export default {
 
     const initialObject = () => {
       return { {{range .Fields}}{{if (eq .DataType "string")}}
-        {{CamelCase .Name}}: '',{{else if (eq .DataType "uint")}}
+        {{CamelCase .Name}}: '{{.DefaultValue}}',{{else if (eq .DataType "enum")}}
+        {{CamelCase .Name}}: '{{.DefaultValue}}',{{else if (eq .DataType "uint")}}
         {{CamelCase .Name}}: 0,{{else if (eq .DataType "int")}}
         {{CamelCase .Name}}: 0,{{else if (eq .DataType "float64")}}
         {{CamelCase .Name}}: 0.0,{{else if (eq .DataType "bool")}}
-        {{CamelCase .Name}}: false,{{else if (eq .DataType "time.Time")}}
+        {{CamelCase .Name}}: {{.DefaultValue}},{{else if (eq .DataType "time.Time")}}
         {{CamelCase .Name}}: '2019-06-07T05:43:21Z', {{end}} {{end}}
       }
     }
@@ -83,21 +84,19 @@ export default {
     }
 
     const onHidden = () => {
-      root.$store.commit(`${entity}/SET_INPUTED_ITEM`, null)      
+      root.$store.commit(`${entity}/SET_INPUTED_ITEM`, null)
     }
-
     {{range .Fields}}{{if (eq .DataType "enum")}}
-      const options{{PascalCase .Name}} = [ {{range .EnumValues}}
-        { value: '{{.Value}}', text: '{{.Text}}' }, {{end}}
-      ]
-    {{end}}{{end}}
+    const options{{PascalCase .Name}} = [ {{range .EnumValues}}
+      { value: '{{.Value}}', text: '{{.Text}}' }, {{end}}
+    ]{{end}}{{end}}
 
     return {
       onSubmit, 
       onShown, 
       onHidden, 
-      state,
-
+      state,{{range .Fields}}{{if (eq .DataType "enum")}}
+      options{{PascalCase .Name}}, {{end}}{{end}}
     }
   }
 }

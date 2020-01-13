@@ -81,7 +81,7 @@ type TextAndValue struct {
 type TheField struct {
 	Name           string         `yaml:"name"`
 	DataType       string         `yaml:"dataType"`
-	EnumType       string         `yaml:"enumType"`
+	EnumDataType   string         `yaml:"enumDataType"`
 	EnumValues     []TextAndValue `yaml:"enumValues"`
 	EntityName     string         `yaml:"entityName"`
 	EntityFieldRef TextAndValue   `yaml:"entityFieldRef"`
