@@ -79,16 +79,16 @@ type TextAndValue struct {
 
 // TheField is
 type TheField struct {
-	Name           string         `yaml:"name"`
-	DataType       string         `yaml:"dataType"`
-	EnumType       string         `yaml:"enumType"`
-	EnumValues     []TextAndValue `yaml:"enumValues"`
-	EntityName     string         `yaml:"entityName"`
-	EntityFieldRef TextAndValue   `yaml:"entityFieldRef"`
-	DefaultValue   string         `yaml:"defaultValue"`
-	Sortable       string         `yaml:"sortable"`
-	Filterable     string         `yaml:"filterable"`
-	Regex          string         `yaml:"regex"`
+	Name            string         `yaml:"name"`
+	DataType        string         `yaml:"dataType"`
+	EnumDataType    string         `yaml:"enumDataType"`
+	EnumValues      []TextAndValue `yaml:"enumValues"`
+	EntityReference string         `yaml:"entityReference"`
+	EntityField     string         `yaml:"entityField"`
+	DefaultValue    string         `yaml:"defaultValue"`
+	Sortable        string         `yaml:"sortable"`
+	Filterable      string         `yaml:"filterable"`
+	Regex           string         `yaml:"regex"`
 }
 
 // TheClass is
@@ -213,10 +213,10 @@ func (tp *ThePackage) Run() {
 		os.MkdirAll(dir, 0777)
 	}
 
-	// {
-	// 	dir := fmt.Sprintf("../../../../%s/webapp/src/api/modules", tp.PackagePath)
-	// 	os.MkdirAll(dir, 0777)
-	// }
+	{
+		dir := fmt.Sprintf("../../../../%s/webapp/src/api", tp.PackagePath)
+		os.MkdirAll(dir, 0777)
+	}
 
 	{
 		dir := fmt.Sprintf("../../../../%s/webapp/src/store/modules", tp.PackagePath)
@@ -270,6 +270,13 @@ func (tp *ThePackage) Run() {
 		{
 			templateFile := fmt.Sprintf("../templates/backend/service._go")
 			outputFile := fmt.Sprintf("../../../../%s/service/%s.go", tp.PackagePath, LowerCase(et.Name))
+			basic(tp, templateFile, outputFile, et)
+		}
+
+		// create common api
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/api/restapi._js")
+			outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/restapi.js", tp.PackagePath)
 			basic(tp, templateFile, outputFile, et)
 		}
 

@@ -24,17 +24,17 @@
       :no-local-sorting="true" 
       @sort-changed="onSorting" >
       
-      <template v-slot:head(action)="data">
+      <template v-slot:head(action)="">
         <b-button variant="warning" @click="resetSorting" size="sm">Reset Sorting</b-button>
       </template>
 
-      <template v-slot:head(index)="data">
+      <template v-slot:head(index)="">
         #
       </template>
 
       <template v-slot:cell(index)="data">
         {{"{{"}} data.index + 1 {{"}}"}}
-      </template>     
+      </template>
 
       <template slot="top-row" slot-scope="{ fields }">
         <td v-for="field in fields" :key="field.key">
@@ -80,8 +80,6 @@ export default {
     ]
 
     const entity = '{{CamelCase .Name}}'
-
-    root.$store.commit(`${entity}/SET_CONTEXT_PATH`, `${entity}`)
 
     const paging = computed(() => root.$store.getters[`${entity}/getPaging`])
 
@@ -132,10 +130,10 @@ export default {
       Swal.fire(deleteConfirmObject).then((result) => {
         if (result.value) {
           root.$store.dispatch(`${entity}/deleteItem`, { itemId: item.id }).then(response => {
-            Swal.fire('Deleted!', `${response}`, 'success')
+            Swal.fire('Deleted!', `${response.message}`, 'success')
           })
         }
-      })      
+      })
     }
 
     queryItems()

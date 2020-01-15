@@ -1,0 +1,32 @@
+packagePath: bitbucket.org/hendra/tientoproduksi
+
+entities:
+  
+- name: PreOrder
+  fields:
+  - name: Warna
+    dataType: string
+  - name: Model
+    dataType: string
+  - name: Sablon
+    dataType: string
+  - name: SizeAll
+    dataType: uint
+  - name: SizeXS
+    dataType: uint
+  - name: SizeS
+    dataType: uint    
+  - name: SizeM
+    dataType: uint
+  - name: SizeL
+    dataType: uint
+  - name: SizeXL
+    dataType: uint
+  - name: SizeXXL
+    dataType: uint
+  - name: Size3XL
+    dataType: uint
+  - name: Size4XL
+    dataType: uint
+
+

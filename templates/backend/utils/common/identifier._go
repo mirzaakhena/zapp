@@ -16,6 +16,6 @@ func GetShortUniqueID() string {
 
 // GetUUID is
 func GetUUID() string {
-	x, _ := uuid.NewV4()
+	x := uuid.NewV4()
 	return x.String()
 }

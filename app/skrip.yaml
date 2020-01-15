@@ -6,9 +6,8 @@ entities:
   fields:
   - name: Name
     dataType: string
-    defaultValue: 250
   - name: Code
-    dataType: string
+    dataType: string 
   - name: IPAddress
     dataType: string
   - name: Token
@@ -19,16 +18,31 @@ entities:
 - name: MenuGroup
   fields:
   - name: OutletCode
-    dataType: string
+    dataType: enum
+    enumDataType: uint
+    enumValues:
+      - text: 'HMD'
+        value: 1
+      - text: 'PNP'
+        value: 2        
   - name: MenuGroupCode
     dataType: string
   - name: Sequence
     dataType: uint
-
+  - name: Hehe
+    dataType: enum
+    enumDataType: string
+    enumValues:
+      - text: JOJO
+        value: JOJO
+      - text: RERE
+        value: RERE
 - name: MenuItem
   fields:
   - name: OutletCode
-    dataType: string
+    dataType: entity
+    entityReference: Outlet
+    entityField: Code
   - name: MenuItemCode
     dataType: string
   - name: MenuGroupCode
