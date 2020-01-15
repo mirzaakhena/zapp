@@ -34,7 +34,17 @@ func (g *{{PascalCase .Name}}Repository) Create(db interface{}, obj *model.{{Pas
 // GetOne is 
 func (g *{{PascalCase .Name}}Repository) GetOne(db interface{}, ID string) *model.{{PascalCase .Name}} {
 	var obj model.{{PascalCase .Name}}
-	db.(*gorm.DB).First(&obj, "id = ?", ID)
+
+	query := db.(*gorm.DB)
+
+	{{range .Fields}}
+		{{if (eq .DataType "entity")}}
+			query = query.Preload("{{PascalCase .EntityReference}}")
+		{{end}}
+	{{end}}
+
+	query.First(&obj, "id = ?", ID)
+
 	if obj.ID == "" {
 		return nil
 	}
@@ -49,8 +59,10 @@ func (g *{{PascalCase .Name}}Repository) GetAll(db interface{}, page, size int, 
 	query := db.(*gorm.DB).Model(&model.{{PascalCase .Name}}{})
 
 	// filtering
-	for k, v := range filters {
-		query = query.Where(fmt.Sprintf("%s LIKE ?", common.SnakeCase(k)), fmt.Sprintf("%s%%", v))
+	if filters != nil {
+		for k, v := range filters {
+			query = query.Where(fmt.Sprintf("%s LIKE ?", common.SnakeCase(k)), fmt.Sprintf("%s%%", v))
+		}
 	}
 
 	// count
@@ -67,6 +79,12 @@ func (g *{{PascalCase .Name}}Repository) GetAll(db interface{}, page, size int, 
 
 	// paging
 	query = query.Offset((page - 1) * size).Limit(size)
+
+	{{range .Fields}}
+		{{if (eq .DataType "entity")}}
+			query = query.Preload("{{PascalCase .EntityReference}}")
+		{{end}}
+	{{end}}
 
 	query.Find(&objs)
 	return objs, count

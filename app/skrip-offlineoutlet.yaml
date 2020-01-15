@@ -1,0 +1,19 @@
+
+packagePath: bitbucket.org/kfc/offlinechecker
+
+entities:
+  
+- name: CheckedOutlet
+  fields:
+  - name: Name
+    dataType: string    
+  - name: IPAddress
+    dataType: string
+  - name: Exclude
+    dataType: bool
+  - name: Status
+    dataType: string
+  - name: ErrorMessage
+    dataType: string
+
+

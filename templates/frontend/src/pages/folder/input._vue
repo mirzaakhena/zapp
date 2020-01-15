@@ -27,6 +27,14 @@
 
     <b-form-group label="{{PascalCase .Name}}">
       <b-form-select v-model="state.inputedItem.{{CamelCase .Name}}" :options="options{{PascalCase .Name}}" />
+    </b-form-group>{{else if (eq .DataType "entity")}}
+
+    <b-form-group label="{{PascalCase .Name}}">    
+      <autocomplete 
+        ref="autocomplete{{PascalCase .Name}}Model"
+        :search="autocomplete{{PascalCase .Name}}.search" 
+        :get-result-value="autocomplete{{PascalCase .Name}}.getResultValue"
+        @submit="autocomplete{{PascalCase .Name}}.submit"/>
     </b-form-group>{{end}}{{end}}
 
   </b-modal>
@@ -35,22 +43,33 @@
 
 <script>
 
-import { reactive } from '@vue/composition-api';
-import Swal from 'sweetalert2';
+import { reactive } from '@vue/composition-api'
+import Swal from 'sweetalert2'
+{{range .Fields}}{{if (eq .DataType "entity")}}
+import Autocomplete from '@trevoreyre/autocomplete-vue'
+import to from 'await-to-js';
+import request from "@/utils/httprequest";
+{{end}}{{end}}
 
 export default {
+  {{range .Fields}}{{if (eq .DataType "entity")}}
+  components: {
+    Autocomplete,
+  },  
+  {{end}}{{end}}
   setup(_, {refs, root}) {
 
     const entity = '{{CamelCase .Name}}'
 
     const initialObject = () => {
-      return { {{range .Fields}}{{if (eq .DataType "string")}}
+      return { {{range .Fields}} {{if (eq .DataType "entity")}}
+        {{CamelCase .EntityReference}}ID: '',{{else if (eq .DataType "string")}}
         {{CamelCase .Name}}: '{{.DefaultValue}}',{{else if (eq .DataType "enum")}}
         {{CamelCase .Name}}: '{{.DefaultValue}}',{{else if (eq .DataType "uint")}}
         {{CamelCase .Name}}: 0,{{else if (eq .DataType "int")}}
         {{CamelCase .Name}}: 0,{{else if (eq .DataType "float64")}}
         {{CamelCase .Name}}: 0.0,{{else if (eq .DataType "bool")}}
-        {{CamelCase .Name}}: {{.DefaultValue}},{{else if (eq .DataType "time.Time")}}
+        {{CamelCase .Name}}: false,{{else if (eq .DataType "time.Time")}}
         {{CamelCase .Name}}: '2019-06-07T05:43:21Z', {{end}} {{end}}
       }
     }
@@ -65,14 +84,14 @@ export default {
 
       if (root.$store.getters[`${entity}/getInputedItem`]) {
         root.$store.dispatch(`${entity}/updateItem`).then(response => {
-          Swal.fire('Updated!', `${response}`, 'success')
+          Swal.fire('Updated!', `${response.message}`, 'success')
           refs.modalInput.hide()
         })
-        return 
+        return
       } 
 
       root.$store.dispatch(`${entity}/createItem`, {inputedItem: state.inputedItem}).then(response => {
-        Swal.fire('Created!', `${response}`, 'success')
+        Swal.fire('Created!', `${response.message}`, 'success')
         refs.modalInput.hide()
       })
       
@@ -80,7 +99,10 @@ export default {
 
     const onShown = () => {
       const inputedObject = root.$store.getters[`${entity}/getInputedItem`]
-      state.inputedItem = inputedObject || initialObject()
+      state.inputedItem = inputedObject || initialObject() 
+      {{range .Fields}}{{if (eq .DataType "entity")}}
+      refs.autocomplete{{PascalCase .Name}}Model.setValue(state.inputedItem.{{CamelCase .EntityReference}})
+      {{end}}{{end}}
     }
 
     const onHidden = () => {
@@ -89,14 +111,50 @@ export default {
     {{range .Fields}}{{if (eq .DataType "enum")}}
     const options{{PascalCase .Name}} = [ {{range .EnumValues}}
       { value: '{{.Value}}', text: '{{.Text}}' }, {{end}}
-    ]{{end}}{{end}}
+    ]{{end}}{{end}} 
+    {{range .Fields}}{{if (eq .DataType "entity")}}
+    const autocomplete{{PascalCase .Name}} = {
+
+      async search (searchInput) {
+
+        if (searchInput.length < 1) {         
+          return []
+        }        
+
+        const [error, response] = await to(request({
+          method: 'get',
+          url: '/api/{{CamelCase .EntityReference}}',
+          params: {
+            page: 1,
+            size: 10,
+            f_{{CamelCase .EntityField}}: `${searchInput}`,            
+          }
+        }))
+        if (error) {
+          return 
+        }            
+
+        return response.data.data.items
+
+      },
+
+      getResultValue (x) {
+        return `${x.{{CamelCase .EntityField}}}`
+      },
+
+      submit (result) {
+        state.inputedItem.{{CamelCase .EntityReference}}ID = result.id
+      },
+    }
+    {{end}}{{end}}    
 
     return {
       onSubmit, 
       onShown, 
       onHidden, 
       state,{{range .Fields}}{{if (eq .DataType "enum")}}
-      options{{PascalCase .Name}}, {{end}}{{end}}
+      options{{PascalCase .Name}},{{else if (eq .DataType "entity")}}
+      autocomplete{{PascalCase .Name}},{{end}}{{end}}
     }
   }
 }

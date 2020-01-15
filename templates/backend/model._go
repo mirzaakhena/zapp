@@ -8,18 +8,23 @@ import (
 // {{PascalCase .Name}} is
 type {{PascalCase .Name}} struct { 
 	BaseModel{{range .Fields}}{{if (eq .DataType "enum")}}
-	{{.Name}} string `json:"{{CamelCase .Name}}"` // {{else}}
-	{{.Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}{{end}}
+	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}"` // {{else if (eq .DataType "entity")}}
+	{{PascalCase .EntityReference}} *{{PascalCase .EntityReference}} `json:"{{CamelCase .EntityReference}}"` //
+	{{PascalCase .EntityReference}}ID string `json:"{{CamelCase .EntityReference}}ID"` //
+	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}"` // {{else}}
+	{{PascalCase .Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}{{end}}
 }
 
 // Create{{PascalCase .Name}}Request is
 type Create{{PascalCase .Name}}Request struct { {{range .Fields}}{{if (eq .DataType "enum")}}
-	{{.Name}} string `json:"{{CamelCase .Name}}"` // {{else}}
-	{{.Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}{{end}}
+	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}"` // {{else if (eq .DataType "entity")}}
+	{{PascalCase .EntityReference}}ID string `json:"{{CamelCase .EntityReference}}ID"` // {{else}}
+	{{PascalCase .Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}{{end}}
 }
 
 // Update{{PascalCase .Name}}Request is
 type Update{{PascalCase .Name}}Request struct { {{range .Fields}}{{if (eq .DataType "enum")}}
-	{{.Name}} string `json:"{{CamelCase .Name}}"` // {{else}}
-	{{.Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}{{end}}
+	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}"` // {{else if (eq .DataType "entity")}}
+	{{PascalCase .EntityReference}}ID string `json:"{{CamelCase .EntityReference}}ID"` // {{else}}
+	{{PascalCase .Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}{{end}}
 }

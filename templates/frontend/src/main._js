@@ -7,6 +7,7 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
+import '@/assets/style.css'
 
 Vue.use(BootstrapVue)
 

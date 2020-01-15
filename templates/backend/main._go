@@ -51,7 +51,11 @@ func main() {
 	{{CamelCase .Name}}Repository := repository.New{{PascalCase .Name}}Repository(db) {{end}}
 
 	userService := service.NewUserService(trx, &token.Jwt{SecretKey: secretKey}, userRepository) {{range .Entities}}
-	{{CamelCase .Name}}Service := service.New{{PascalCase .Name}}Service(trx, {{CamelCase .Name}}Repository) {{end}}
+	{{CamelCase .Name}}Service := &service.{{PascalCase .Name}}Service{
+		Trx: trx,
+		{{PascalCase .Name}}Repository: {{CamelCase .Name}}Repository, {{range .Fields}} {{if (eq .DataType "entity")}}
+		{{PascalCase .EntityReference}}Repository: {{CamelCase .EntityReference}}Repository, {{end}} {{end}}
+	} {{end}}
 
 	rc := controller.RouterConfig{
 		Router: ginRouter, 

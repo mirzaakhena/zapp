@@ -9,6 +9,6 @@ const store = new Vuex.Store({
   }  
 })
 {{range .Entities}}
-store.registerModule('{{CamelCase .Name}}', crudtable()) {{end}}
+store.registerModule('{{CamelCase .Name}}', crudtable('{{CamelCase .Name}}')){{end}}
 
 export default store

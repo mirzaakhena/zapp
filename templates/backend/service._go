@@ -20,40 +20,48 @@ type I{{PascalCase .Name}}Service interface {
 
 // {{PascalCase .Name}}Service is
 type {{PascalCase .Name}}Service struct {
-	trx transaction.ITransaction	
-	{{CamelCase .Name}}Repository repository.I{{PascalCase .Name}}Repository
-}
-
-// New{{PascalCase .Name}}Service is
-func New{{PascalCase .Name}}Service(trx transaction.ITransaction, {{CamelCase .Name}}Repository repository.I{{PascalCase .Name}}Repository) *{{PascalCase .Name}}Service {
-	return &{{PascalCase .Name}}Service{
-		trx: trx,		
-		{{CamelCase .Name}}Repository: {{CamelCase .Name}}Repository,
-	}
+	Trx transaction.ITransaction	
+	{{PascalCase .Name}}Repository repository.I{{PascalCase .Name}}Repository {{range .Fields}} {{if (eq .DataType "entity")}}
+	{{PascalCase .EntityReference}}Repository repository.I{{PascalCase .EntityReference}}Repository {{end}} {{end}}
 }
 
 // Create is
 func (g *{{PascalCase .Name}}Service) Create(sc map[string]interface{}, dto model.Create{{PascalCase .Name}}Request) (*model.{{PascalCase .Name}}, error) { 
 
+	tx := g.Trx.GetDB(true)
+	defer g.Trx.RollbackOnException(tx)
+
 	var obj model.{{PascalCase .Name}}
 
-	obj.ID = common.GetUUID() {{range .Fields}}
-	obj.{{.Name}} = dto.{{.Name}} {{end}}
+	{{range .Fields}} {{if (eq .DataType "entity")}}
+	{
+		refObject := g.{{PascalCase .EntityReference}}Repository.GetOne(tx, dto.{{PascalCase .EntityReference}}ID)
+		if refObject == nil {
+			g.Trx.Rollback(tx)
+			return nil, fmt.Errorf("obj with id %v not found", dto.{{PascalCase .EntityReference}}ID)
+		}
+		obj.{{PascalCase .EntityReference}} = refObject
+		obj.{{PascalCase .Name}} = refObject.{{PascalCase .EntityField}}
+	} {{else}}
+	obj.{{.Name}} = dto.{{.Name}} {{end}} {{end}} 
+	obj.ID = common.GetUUID() 
 
-	tx := g.trx.GetDB(false)
-	g.{{CamelCase .Name}}Repository.Create(tx, &obj)
+	g.{{PascalCase .Name}}Repository.Create(tx, &obj)
+	
+	g.Trx.Commit(tx)
+
 	return &obj, nil
 }
 
 // GetOne is
 func (g *{{PascalCase .Name}}Service) GetOne(sc map[string]interface{}, ID string) *model.{{PascalCase .Name}} {
-	return g.{{CamelCase .Name}}Repository.GetOne(g.trx.GetDB(false), ID)
+	return g.{{PascalCase .Name}}Repository.GetOne(g.Trx.GetDB(false), ID)
 }
 
 // GetAll is
 func (g *{{PascalCase .Name}}Service) GetAll(sc map[string]interface{}, req model.GetAllCommonRequest) *model.GetAllCommonResponse {
 
-	r, c := g.{{CamelCase .Name}}Repository.GetAll(g.trx.GetDB(false), req.Page, req.Size, req.SortBy, req.SortDesc, req.Filters)
+	r, c := g.{{PascalCase .Name}}Repository.GetAll(g.Trx.GetDB(false), req.Page, req.Size, req.SortBy, req.SortDesc, req.Filters)
 
 	items := []interface{}{}
 
@@ -72,22 +80,22 @@ func (g *{{PascalCase .Name}}Service) GetAll(sc map[string]interface{}, req mode
 // Delete is
 func (g *{{PascalCase .Name}}Service) Delete(sc map[string]interface{}, ID string) (*model.{{PascalCase .Name}}, error) {
 
-	tx := g.trx.GetDB(true)
+	tx := g.Trx.GetDB(true)
 
-	defer g.trx.RollbackOnException(tx)
+	defer g.Trx.RollbackOnException(tx)
 
-	obj := g.{{CamelCase .Name}}Repository.GetOne(tx, ID)
+	obj := g.{{PascalCase .Name}}Repository.GetOne(tx, ID)
 	if obj == nil {
-		g.trx.Rollback(tx)
+		g.Trx.Rollback(tx)
 		return nil, fmt.Errorf("obj with id %v not found", ID)
 	}
 
-	if err := g.{{CamelCase .Name}}Repository.Delete(tx, ID); err != nil {
-		g.trx.Rollback(tx)
+	if err := g.{{PascalCase .Name}}Repository.Delete(tx, ID); err != nil {
+		g.Trx.Rollback(tx)
 		return nil, err
 	}
 
-	g.trx.Commit(tx)
+	g.Trx.Commit(tx)
 
 	return obj, nil
 
@@ -96,24 +104,34 @@ func (g *{{PascalCase .Name}}Service) Delete(sc map[string]interface{}, ID strin
 // Update is
 func (g *{{PascalCase .Name}}Service) Update(sc map[string]interface{}, ID string, dto model.Update{{PascalCase .Name}}Request) (*model.{{PascalCase .Name}}, error) {
 
-	tx := g.trx.GetDB(true)
+	tx := g.Trx.GetDB(true)
 
-	defer g.trx.RollbackOnException(tx)
+	defer g.Trx.RollbackOnException(tx)
 	
-	obj := g.{{CamelCase .Name}}Repository.GetOne(tx, ID)
+	obj := g.{{PascalCase .Name}}Repository.GetOne(tx, ID)
 	if obj == nil {
-		g.trx.Rollback(tx)
+		g.Trx.Rollback(tx)
 		return nil, fmt.Errorf("obj with id %v not found", ID)
 	}
-	{{range .Fields}}
-	obj.{{.Name}} = dto.{{.Name}} {{end}}
 
-	if err := g.{{CamelCase .Name}}Repository.Update(tx, obj); err != nil {
-		g.trx.Rollback(tx)
+	{{range .Fields}} {{if (eq .DataType "entity")}}
+	{
+		refObject := g.{{PascalCase .EntityReference}}Repository.GetOne(tx, dto.{{PascalCase .EntityReference}}ID)
+		if refObject == nil {
+			g.Trx.Rollback(tx)
+			return nil, fmt.Errorf("obj with id %v not found", dto.{{PascalCase .EntityReference}}ID)
+		}
+		obj.{{PascalCase .EntityReference}} = refObject
+		obj.{{PascalCase .Name}} = refObject.{{PascalCase .EntityField}}
+	} {{else}}
+	obj.{{.Name}} = dto.{{.Name}} {{end}} {{end}} 
+
+	if err := g.{{PascalCase .Name}}Repository.Update(tx, obj); err != nil {
+		g.Trx.Rollback(tx)
 		return nil, err
 	}
 
-	g.trx.Commit(tx)
+	g.Trx.Commit(tx)
 
 	return obj, nil
 }
