@@ -5,6 +5,7 @@ entities:
 - name: Outlet
   fields:
   - name: Name
+    defaultValue: Pasir Kaliki
     dataType: string
   - name: Code
     dataType: string
@@ -51,9 +52,31 @@ entities:
     dataType: bool    
 
 
+enums:
+- name: Tahapan
+  values:
+  - text: Preorder
+    value: PREORDER
+  - text: Potong
+    value: POTONG
+  - text: Sablon
+    value: SABLON
+  - text: Jahit
+    value: JAHIT
+  - text: Packing
+    value: PACKING
+  - text: Gudang
+    value: GUDANG
+  - text: Reject
+    value: REJECT 
 
 
 
+commands:
+- name: journal
+
+query:
+- name: neracasaldo
 
 
 

@@ -44,19 +44,19 @@
 <script>
 
 import { reactive } from '@vue/composition-api'
-import Swal from 'sweetalert2'
-{{range .Fields}}{{if (eq .DataType "entity")}}
+// import Swal from 'sweetalert2'
+{{if (.HasAutocomplete)}}
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import to from 'await-to-js';
 import request from "@/utils/httprequest";
-{{end}}{{end}}
+{{end}}
 
 export default {
-  {{range .Fields}}{{if (eq .DataType "entity")}}
+  {{if (.HasAutocomplete)}}
   components: {
     Autocomplete,
   },  
-  {{end}}{{end}}
+  {{end}}
   setup(_, {refs, root}) {
 
     const entity = '{{CamelCase .Name}}'
@@ -84,14 +84,14 @@ export default {
 
       if (root.$store.getters[`${entity}/getInputedItem`]) {
         root.$store.dispatch(`${entity}/updateItem`).then(response => {
-          Swal.fire('Updated!', `${response.message}`, 'success')
+          // Swal.fire('Updated!', `${response.message}`, 'success')
           refs.modalInput.hide()
         })
         return
       } 
 
       root.$store.dispatch(`${entity}/createItem`, {inputedItem: state.inputedItem}).then(response => {
-        Swal.fire('Created!', `${response.message}`, 'success')
+        // Swal.fire('Created!', `${response.message}`, 'success')
         refs.modalInput.hide()
       })
       
@@ -101,8 +101,7 @@ export default {
       const inputedObject = root.$store.getters[`${entity}/getInputedItem`]
       state.inputedItem = inputedObject || initialObject() 
       {{range .Fields}}{{if (eq .DataType "entity")}}
-      refs.autocomplete{{PascalCase .Name}}Model.setValue(state.inputedItem.{{CamelCase .EntityReference}})
-      {{end}}{{end}}
+      refs.autocomplete{{PascalCase .Name}}Model.setValue(state.inputedItem.{{CamelCase .EntityReference}}){{end}}{{end}}
     }
 
     const onHidden = () => {
@@ -116,10 +115,6 @@ export default {
     const autocomplete{{PascalCase .Name}} = {
 
       async search (searchInput) {
-
-        if (searchInput.length < 1) {         
-          return []
-        }        
 
         const [error, response] = await to(request({
           method: 'get',

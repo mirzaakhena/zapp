@@ -45,6 +45,27 @@ func processIt() {
 		log.Fatalf("error: %+v", err)
 	}
 
+	enumsMap := map[string]TheEnum{}
+
+	for _, e := range tp.Enums {
+		enumsMap[e.Name] = e
+	}
+
+	for i := 0; i < len(tp.Entities); i++ {
+		for j := 0; j < len(tp.Entities[i].Fields); j++ {
+			if tp.Entities[i].Fields[j].DataType == "entity" {
+				tp.Entities[i].HasAutocomplete = true
+				break
+			}
+		}
+
+		for j := 0; j < len(tp.Entities[i].Fields); j++ {
+			if tp.Entities[i].Fields[j].DataType == "enum" {
+				tp.Entities[i].Fields[j].EnumValues = enumsMap[tp.Entities[i].Fields[j].EnumReference].Values
+			}
+		}
+	}
+
 	tp.Run()
 
 	{
@@ -79,22 +100,31 @@ type TextAndValue struct {
 
 // TheField is
 type TheField struct {
-	Name            string         `yaml:"name"`
-	DataType        string         `yaml:"dataType"`
-	EnumDataType    string         `yaml:"enumDataType"`
-	EnumValues      []TextAndValue `yaml:"enumValues"`
-	EntityReference string         `yaml:"entityReference"`
-	EntityField     string         `yaml:"entityField"`
-	DefaultValue    string         `yaml:"defaultValue"`
-	Sortable        string         `yaml:"sortable"`
-	Filterable      string         `yaml:"filterable"`
-	Regex           string         `yaml:"regex"`
+	Name            string `yaml:"name"`
+	DataType        string `yaml:"dataType"`
+	EnumReference   string `yaml:"enumReference"`
+	EntityReference string `yaml:"entityReference"`
+	EntityField     string `yaml:"entityField"`
+	DefaultValue    string `yaml:"defaultValue"`
+	Sortable        string `yaml:"sortable"`
+	Filterable      string `yaml:"filterable"`
+	Regex           string `yaml:"regex"`
+
+	EnumValues []TextAndValue
 }
 
 // TheClass is
 type TheClass struct {
 	Name   string     `yaml:"name"`
 	Fields []TheField `yaml:"fields"`
+
+	HasAutocomplete bool
+}
+
+// TheEnum is
+type TheEnum struct {
+	Name   string         `yaml:"name"`
+	Values []TextAndValue `yaml:"values"`
 }
 
 // ThePackage is
@@ -102,6 +132,7 @@ type ThePackage struct {
 	ApplicationName string     ``
 	PackagePath     string     `yaml:"packagePath"`
 	Entities        []TheClass `yaml:"entities"`
+	Enums           []TheEnum  `yaml:"enums"`
 }
 
 // CamelCase is
@@ -215,6 +246,11 @@ func (tp *ThePackage) Run() {
 
 	{
 		dir := fmt.Sprintf("../../../../%s/webapp/src/api", tp.PackagePath)
+		os.MkdirAll(dir, 0777)
+	}
+
+	{
+		dir := fmt.Sprintf("../../../../%s/webapp/src/assets", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
 
@@ -465,6 +501,12 @@ func (tp *ThePackage) Run() {
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/App._vue")
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/App.vue", tp.PackagePath)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/frontend/src/assets/style._css")
+		outputFile := fmt.Sprintf("../../../../%s/webapp/src/assets/style.css", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 

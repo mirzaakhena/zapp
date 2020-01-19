@@ -1,60 +1,83 @@
-packagePath: bitbucket.org/mirzaakhena/warungku
+packagePath: bitbucket.org/hendra/tientoproduksi2
 
 entities:
   
-- name: Outlet
+- name: Produksi
   fields:
-  - name: Name
+  - name: Tanggal
     dataType: string
-  - name: Code
-    dataType: string 
-  - name: IPAddress
-    dataType: string
-  - name: Token
-    dataType: string
-  - name: Coordinate
-    dataType: string
-
-- name: MenuGroup
-  fields:
-  - name: OutletCode
+  - name: Tahap
     dataType: enum
-    enumDataType: uint
-    enumValues:
-      - text: 'HMD'
-        value: 1
-      - text: 'PNP'
-        value: 2        
-  - name: MenuGroupCode
-    dataType: string
-  - name: Sequence
-    dataType: uint
-  - name: Hehe
-    dataType: enum
-    enumDataType: string
-    enumValues:
-      - text: JOJO
-        value: JOJO
-      - text: RERE
-        value: RERE
-- name: MenuItem
-  fields:
-  - name: OutletCode
+    enumReference: Tahapan      
+  - name: NamaOperator
     dataType: entity
-    entityReference: Outlet
-    entityField: Code
-  - name: MenuItemCode
+    entityReference: Operator
+    entityField: Nama
+  - name: NamaWarna
+    dataType: entity
+    entityReference: Warna
+    entityField: Nama
+  - name: NamaModelPakaian
+    dataType: entity
+    entityReference: ModelPakaian
+    entityField: Nama
+  - name: NamaSablon
+    dataType: entity
+    entityReference: Sablon
+    entityField: Nama    
+  - name: NamaUkuran
+    dataType: entity
+    entityReference: Ukuran
+    entityField: Nama      
+  - name: Jumlah
+    dataType: uint
+
+- name: Warna
+  fields:
+  - name: Nama
     dataType: string
-  - name: MenuGroupCode
+
+- name: ModelPakaian
+  fields:
+  - name: Nama
     dataType: string
-  - name: Price
-    dataType: float64
 
+- name: Sablon
+  fields:
+  - name: Nama
+    dataType: string
 
+- name: Ukuran
+  fields:
+  - name: Nama
+    dataType: string
 
+- name: Operator
+  fields:
+  - name: Nama
+    dataType: string
+  - name: Password
+    dataType: string
+  - name: Tahap
+    dataType: enum
+    enumReference: Tahapan
+  - name: Aktif
+    dataType: bool
 
-
-
-
-
-
+enums:
+- name: Tahapan
+  values:
+  - text: Preorder
+    value: PREORDER
+  - text: Potong
+    value: POTONG
+  - text: Sablon
+    value: SABLON
+  - text: Jahit
+    value: JAHIT
+  - text: Packing
+    value: PACKING
+  - text: Gudang
+    value: GUDANG
+  - text: Reject
+    value: REJECT 
