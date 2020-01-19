@@ -83,15 +83,13 @@ export default {
       bvModalEvt.preventDefault()
 
       if (root.$store.getters[`${entity}/getInputedItem`]) {
-        root.$store.dispatch(`${entity}/updateItem`).then(response => {
-          // Swal.fire('Updated!', `${response.message}`, 'success')
+        root.$store.dispatch(`${entity}/updateItem`).then(() => {
           refs.modalInput.hide()
         })
         return
       } 
 
-      root.$store.dispatch(`${entity}/createItem`, {inputedItem: state.inputedItem}).then(response => {
-        // Swal.fire('Created!', `${response.message}`, 'success')
+      root.$store.dispatch(`${entity}/createItem`, {inputedItem: state.inputedItem}).then(() => {
         refs.modalInput.hide()
       })
       

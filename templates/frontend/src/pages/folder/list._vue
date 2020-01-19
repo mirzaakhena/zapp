@@ -39,13 +39,10 @@
       <template slot="top-row" slot-scope="{ fields }">
         <td v-for="field in fields" :key="field.key">
           <b-button variant="warning" @click="resetFiltering" v-if="field.key === 'action'" size="sm">Reset Filtering</b-button>
-          <b-form-input 
-            autocomplete="off" 
-            v-if="field.key !== 'index' && field.key !== 'action'" 
-            size="sm" 
-            v-model="filtering['f_' + field.key]" 
-            :placeholder="field.label" 
-            @input="onFiltering" trim> </b-form-input>            
+          <b-form-input trim size="sm" autocomplete="off" :placeholder="field.label"
+            v-if="field.filterable"           
+            v-model="filtering['f_' + field.key]"              
+            @input="onFiltering" />
         </td>
       </template> 
 
@@ -76,7 +73,7 @@ export default {
     const fields = [
       'index',
       'action', {{range .Fields}}
-      {key: '{{CamelCase .Name}}', sortable: true}, {{end}}
+      {key: '{{CamelCase .Name}}', sortable: true, filterable: true}, {{end}}
     ]
 
     const entity = '{{CamelCase .Name}}'
