@@ -5,6 +5,7 @@ port = 8081
 [database]
 dialect = "sqlite3"
 connection_string = "database.db"
+log = true
 
 [email]
 from = "apps@mail.com"

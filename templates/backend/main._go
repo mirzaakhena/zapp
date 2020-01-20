@@ -41,7 +41,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	db.LogMode(true)
+	db.LogMode(cf.GetBool("database.log", "false"))
 
 	ginRouter := gin.Default()
 

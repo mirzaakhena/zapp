@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">      
+  <div class="container-fluid">
     
     <div style="margin-bottom:20px; margin-top:20px">
       <!-- Button New -->
@@ -11,14 +11,10 @@
       <div class="float-right">
         <b-pagination size="sm" @input="onPaging" v-model="paging.page" :total-rows="totalItems" :per-page="paging.size"></b-pagination>
       </div>
-    </div>    
+    </div>
 
-    <b-table 
-      small 
-      striped 
-      hover 
-      :fields="fields" 
-      :items="items"
+    <b-table small striped hover
+      :items="items" :fields="fields" 
       :sort-by.sync="sorting.sortBy" 
       :sort-desc.sync="sorting.sortDesc" 
       :no-local-sorting="true" 
@@ -40,8 +36,8 @@
         <td v-for="field in fields" :key="field.key">
           <b-button variant="warning" @click="resetFiltering" v-if="field.key === 'action'" size="sm">Reset Filtering</b-button>
           <b-form-input trim size="sm" autocomplete="off" :placeholder="field.label"
-            v-if="field.filterable"           
-            v-model="filtering['f_' + field.key]"              
+            v-if="field.filterable"
+            v-model="filtering['f_' + field.key]"
             @input="onFiltering" />
         </td>
       </template> 
@@ -51,7 +47,7 @@
           <b-button @click="openInput(data.item)" size="sm" variant="primary">Edit</b-button>
           <b-button @click="deleteItem(data.item)" size="sm" variant="danger">Delete</b-button>
         </b-button-group>
-      </template>        
+      </template>
 
     </b-table>
     <modal-input></modal-input>
@@ -109,9 +105,9 @@ export default {
 
       root.$store.dispatch(`${entity}/getOneItem`, { itemId: item.id }).then(() => {
         root.$bvModal.show('modalInput')
-      })      
-      
-    }  
+      })
+
+    }
 
     const deleteConfirmObject = {
       title: 'Are you sure?',
@@ -142,13 +138,13 @@ export default {
       sorting,
       paging,
       fields,
-      openInput, 
-      queryItems, 
-      deleteItem, 
-      resetFiltering, 
-      resetSorting,       
-      onFiltering, 
-      onSorting, 
+      openInput,
+      queryItems,
+      deleteItem,
+      resetFiltering,
+      resetSorting,
+      onFiltering,
+      onSorting,
       onPaging,
     }
   }

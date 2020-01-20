@@ -7,7 +7,7 @@
 
     <b-form-group label="{{PascalCase .Name}}">
       <b-form-input v-model.number="state.inputedItem.{{CamelCase .Name}}" type="number" required autocomplete="off"></b-form-input>
-    </b-form-group>{{else if (eq .DataType "uint")}}    
+    </b-form-group>{{else if (eq .DataType "uint")}}
 
     <b-form-group label="{{PascalCase .Name}}">
       <b-form-input v-model.number="state.inputedItem.{{CamelCase .Name}}" type="number" required autocomplete="off"></b-form-input>
@@ -78,7 +78,7 @@ export default {
       inputedItem: initialObject()
     })
 
-    const onSubmit = async (bvModalEvt) => {      
+    const onSubmit = async (bvModalEvt) => {
       
       bvModalEvt.preventDefault()
 
@@ -92,7 +92,7 @@ export default {
       root.$store.dispatch(`${entity}/createItem`, {inputedItem: state.inputedItem}).then(() => {
         refs.modalInput.hide()
       })
-      
+
     }
 
     const onShown = () => {
@@ -120,12 +120,12 @@ export default {
           params: {
             page: 1,
             size: 10,
-            f_{{CamelCase .EntityField}}: `${searchInput}`,            
+            f_{{CamelCase .EntityField}}: `${searchInput}`,
           }
         }))
         if (error) {
           return 
-        }            
+        }
 
         return response.data.data.items
 
@@ -139,7 +139,7 @@ export default {
         state.inputedItem.{{CamelCase .EntityReference}}ID = result.id
       },
     }
-    {{end}}{{end}}    
+    {{end}}{{end}}
 
     return {
       onSubmit, 
