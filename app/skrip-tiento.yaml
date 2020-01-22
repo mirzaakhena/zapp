@@ -1,0 +1,83 @@
+packagePath: bitbucket.org/hendra/tientoproduksi2
+
+entities:
+  
+- name: Produksi
+  fields:
+  - name: Tanggal
+    dataType: string
+  - name: Tahap
+    dataType: enum
+    enumReference: Tahapan      
+  - name: NamaOperator
+    dataType: entity
+    entityReference: Operator
+    entityField: Nama
+  - name: NamaWarna
+    dataType: entity
+    entityReference: Warna
+    entityField: Nama
+  - name: NamaModelPakaian
+    dataType: entity
+    entityReference: ModelPakaian
+    entityField: Nama
+  - name: NamaSablon
+    dataType: entity
+    entityReference: Sablon
+    entityField: Nama    
+  - name: NamaUkuran
+    dataType: entity
+    entityReference: Ukuran
+    entityField: Nama      
+  - name: Jumlah
+    dataType: uint
+
+- name: Warna
+  fields:
+  - name: Nama
+    dataType: string
+
+- name: ModelPakaian
+  fields:
+  - name: Nama
+    dataType: string
+
+- name: Sablon
+  fields:
+  - name: Nama
+    dataType: string
+
+- name: Ukuran
+  fields:
+  - name: Nama
+    dataType: string
+
+- name: Operator
+  fields:
+  - name: Nama
+    dataType: string
+  - name: Password
+    dataType: string
+  - name: Tahap
+    dataType: enum
+    enumReference: Tahapan
+  - name: Aktif
+    dataType: bool
+
+enums:
+- name: Tahapan
+  values:
+  - text: Preorder
+    value: PREORDER
+  - text: Potong
+    value: POTONG
+  - text: Sablon
+    value: SABLON
+  - text: Jahit
+    value: JAHIT
+  - text: Packing
+    value: PACKING
+  - text: Gudang
+    value: GUDANG
+  - text: Reject
+    value: REJECT 

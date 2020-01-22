@@ -49,6 +49,16 @@ func processIt() {
 
 	for _, e := range tp.Enums {
 		enumsMap[e.Name] = e
+
+		for i := 0; i < len(e.Values); i++ {
+			if len(strings.TrimSpace(e.Values[i].Value)) == 0 {
+				text := e.Values[i].Text
+				e.Values[i] = TextAndValue{
+					Text:  text,
+					Value: text,
+				}
+			}
+		}
 	}
 
 	for i := 0; i < len(tp.Entities); i++ {

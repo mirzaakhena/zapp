@@ -9,6 +9,7 @@ import (
 type IUserRepository interface {
 	Create(db interface{}, obj *model.User) error
 	GetByEmail(db interface{}, email string) *model.User
+	GetOne(db interface{}, ID string) *model.User
 }
 
 // UserRepository is
@@ -34,4 +35,18 @@ func (u *UserRepository) GetByEmail(db interface{}, email string) *model.User {
 	}
 	return &obj
 
+}
+
+// GetOne is
+func (u *UserRepository) GetOne(db interface{}, ID string) *model.User {
+	var obj model.User
+
+	query := db.(*gorm.DB)
+
+	query.First(&obj, "id = ?", ID)
+
+	if obj.ID == "" {
+		return nil
+	}
+	return &obj
 }
