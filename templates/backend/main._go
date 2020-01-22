@@ -43,6 +43,13 @@ func main() {
 	}
 	db.LogMode(cf.GetBool("database.log", "false"))
 
+	// f, err := os.OpenFile("testlogfile", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	// if err != nil {
+	// 	log.Fatalf("error opening file: %v", err)
+	// }
+	// db.SetLogger(log.New(f, "\r\n", 0))
+	// gin.DefaultWriter = f
+
 	ginRouter := gin.Default()
 
 	trx := transaction.NewGormTransactionDB(db)
