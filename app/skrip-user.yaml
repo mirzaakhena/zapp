@@ -1,0 +1,65 @@
+
+
+- name: Space
+  fields:
+  - name: Name
+    dataType: string
+  - name: Description
+    dataType: string
+
+
+- name: Role
+  fields:
+  - name: Name
+    dataType: string
+  - name: Description
+    dataType: string    
+
+
+- name: UserRoleAccessControl
+  fields:
+  - name: SpaceName
+    dataType: entity
+    entityReference: Space
+    entityField: Name
+  - name: UserEmail
+    dataType: entity
+    entityReference: User
+    entityField: Email
+  - name: RoleName
+    dataType: entity
+    entityReference: Role
+    entityField: Name
+  
+
+- name: RoleAccessControl
+  fields:
+  - name: RoleName
+    dataType: entity
+    entityReference: Role
+    entityField: Name
+  - name: AccessControl
+    dataType: enum
+    enumReference: AccessControl
+
+
+
+- name: Operator
+  fields:
+  - name: Name
+    dataType: string
+  - name: Password
+    dataType: string
+
+
+
+- name: AccessControl
+  values:
+  - text: ACCOUNT_READ
+  - text: ACCOUNT_WRITE
+  - text: SUBACCOUNT_READ
+  - text: SUBACCOUNT_WRITE
+  - text: INVENTORY_READ
+  - text: INVENTORY_WRITE
+  - text: JOURNAL_READ
+  - text: JOURNAL_WRITE

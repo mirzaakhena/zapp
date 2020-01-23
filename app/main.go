@@ -467,7 +467,7 @@ func (tp *ThePackage) Run() {
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/frontend/config._toml")
+		templateFile := fmt.Sprintf("../templates/backend/config._toml")
 		outputFile := fmt.Sprintf("../../../../%s/config.toml", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
