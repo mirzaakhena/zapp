@@ -3,6 +3,7 @@ packagePath: bitbucket.org/mirzaakhena/laundryrakyat
 entities:
   
 - name: Cucian
+  tableName: cucian
   fields:
   - name: ID
     dataType: uint64
@@ -25,9 +26,12 @@ entities:
   - name: Keterangan
     dataType: string
   - name: MetodePembayaran
-    dataType: int
+    dataType: enum
+    enumReference: MetodePembayaran    
   - name: NamaPaketCuci
-    dataType: string
+    dataType: entity
+    entityReference: PaketCuci
+    entityField: Nama     
   - name: Pembulat
     dataType: float64
   - name: WaktuAmbilAktual
@@ -38,22 +42,35 @@ entities:
     dataType: time.Time
   - name: WaktuSelesai
     dataType: time.Time
-  - name: OperatorCucianSelesaiID
-    dataType: uint64
-  - name: OperatorSerahCucianID
-    dataType: uint64
-  - name: OperatorTerimaSelesaiID
-    dataType: uint64    
-  - name: PegawaiID
-    dataType: uint64
-  - name: PelangganID
-    dataType: uint64
-  - name: PewangiID
-    dataType: uint64    
+  - name: OperatorCucianSelesai
+    dataType: entity
+    entityReference: User
+    entityField: Name    
+  - name: OperatorSerahCucian
+    dataType: entity
+    entityReference: User
+    entityField: Name   
+  - name: OperatorTerimaSelesai
+    dataType: entity
+    entityReference: User
+    entityField: Name
+  - name: Pegawai
+    dataType: entity
+    entityReference: Pegawai
+    entityField: Nama
+  - name: Pelanggan
+    dataType: entity
+    entityReference: Pelanggan
+    entityField: Nama
+  - name: Pewangi
+    dataType: entity
+    entityReference: Pewangi
+    entityField: Nama
   - name: Posisi
     dataType: string
 
 - name: CuciSatuan
+  tableName: cuci_satuan  
   fields:
   - name: ID
     dataType: uint64  
@@ -65,25 +82,36 @@ entities:
     dataType: string     
 
 - name: CucianCuciSatuan
+  tableName: cucian_cuci_satuan
   fields:
-  - name: CuciSatuanID
-    dataType: uint64
-  - name: CucianID
-    dataType: uint64
+  - name: CuciSatuan
+    dataType: entity
+    entityReference: CuciSatuan
+    entityField: Nama   
+  - name: Cucian
+    dataType: entity
+    entityReference: Cucian
+    entityField: ID
   - name: Jumlah
     dataType: uint  
 
 - name: CucianDibayar
+  tableName: cucian_dibayar
   fields:
   - name: ID
     dataType: uint64
-  - name: CucianID
-    dataType: uint64
+  - name: Cucian
+    dataType: entity
+    entityReference: Cucian
+    entityField: ID
 
 - name: GajiPerhari
+  tableName: gaji_perhari
   fields:
-  - name: PegawaiID
-    dataType: uint64
+  - name: Pegawai
+    dataType: entity
+    entityReference: Pegawai
+    entityField: Nama
   - name: Tanggal
     dataType: time.Time
   - name: BeratCucian
@@ -94,13 +122,17 @@ entities:
     dataType: uint
 
 - name: Kasbon
+  tableName: kasbon
   fields:
   - name: ID
     dataType: uint64
   - name: PegawaiID
-    dataType: uint64
+    dataType: entity
+    entityReference: Pegawai
+    entityField: Nama
 
 - name: KategoriPemasukan
+  tableName: kategori_pemasukan
   fields:
   - name: ID
     dataType: uint64
@@ -110,6 +142,7 @@ entities:
     dataType: string
 
 - name: KategoriPengeluaran
+  tableName: kategori_pengeluaran
   fields:
   - name: ID
     dataType: uint64
@@ -119,6 +152,7 @@ entities:
     dataType: string    
 
 - name: Laporan
+  tableName: laporan
   fields:
   - name: Tanggal
     dataType: time.Time
@@ -156,6 +190,7 @@ entities:
     dataType: float64    
 
 - name: Operator
+  tableName: operator
   fields:
   - name: ID
     dataType: uint64
@@ -165,12 +200,14 @@ entities:
     dataType: bool
   - name: Password
     dataType: string
-  - name: Role
-    dataType: string
+  - name: Role    
+    dataType: enum
+    enumReference: OperatorRole
   - name: Username
     dataType: string    
 
 - name: PaketCuci
+  tableName: paket_cuci
   fields:
   - name: ID
     dataType: uint64
@@ -182,6 +219,7 @@ entities:
     dataType: float64
 
 - name: Pegawai
+  tableName: pegawai
   fields:
   - name: ID
     dataType: uint64
@@ -190,8 +228,8 @@ entities:
   - name: DiHapus
     dataType: bool
 
-
 - name: Pelanggan
+  tableName: pelanggan
   fields:
   - name: ID
     dataType: uint64
@@ -201,19 +239,25 @@ entities:
     dataType: string
   - name: Telepon
     dataType: string    
-  - name: PewangiFavoritID
-    dataType: uint64
+  - name: PewangiFavorit
+    dataType: entity
+    entityReference: Pewangi
+    entityField: Nama
 
 - name: PemasukanUmum
+  tableName: pemasukan_umum
   fields:
   - name: ID
     dataType: uint64
   - name: Keterangan
     dataType: string
-  - name: KategoriPemasukanID
-    dataType: uint64
+  - name: KategoriPemasukan
+    dataType: entity
+    entityReference: KategoriPemasukan
+    entityField: Nama
 
 - name: PengaturanUmum
+  tableName: pengaturan_umum
   fields:
   - name: ID
     dataType: string
@@ -223,15 +267,19 @@ entities:
     dataType: string
 
 - name: PengeluaranUmum
+  tableName: pengeluaran_umum
   fields:
   - name: ID
     dataType: uint64
   - name: Keterangan
     dataType: string
-  - name: KategoriPengeluaranID
-    dataType: uint64
+  - name: KategoriPengeluaran
+    dataType: entity
+    entityReference: KategoriPengeluaran
+    entityField: Nama
 
 - name: Pewangi
+  tableName: pewangi
   fields:
   - name: ID
     dataType: uint64
@@ -241,6 +289,7 @@ entities:
     dataType: bool
 
 - name: PrimaryKeyTable
+  tableName: primarykeytable
   fields:
   - name: SequenceName
     dataType: string
@@ -248,6 +297,7 @@ entities:
     dataType: uint64
 
 - name: TransaksiPemasukan
+  tableName: transaksi_pemasukan
   fields:
   - name: ID
     dataType: uint64
@@ -256,9 +306,26 @@ entities:
   - name: Tanggal
     dataType: time.Time
   - name: Operator
+    dataType: entity
+    entityReference: User
+    entityField: Nama
+
+- name: TransaksiPengeluaran
+  tableName: transaksi_pengeluaran
+  fields:
+  - name: ID
     dataType: uint64
+  - name: Nilai
+    dataType: float64
+  - name: Tanggal
+    dataType: time.Time
+  - name: Operator
+    dataType: entity
+    entityReference: User
+    entityField: Nama 
 
 - name: Voucher
+  tableName: voucher
   fields:
   - name: Kode
     dataType: string
@@ -269,6 +336,37 @@ entities:
   - name: TanggalTerbit
     dataType: time.Time    
   - name: VoucherType
-    dataType: uint   
-  - name: CucianID
-    dataType: uint64        
+    dataType: enum
+    enumReference: VoucherType      
+  - name: Cucian
+    dataType: entity
+    entityReference: Cucian
+    entityField: ID
+
+enums:
+
+- name: MetodePembayaran
+  values:
+  - text: BayarLunas
+    value: 0
+	- text: BayarDiakhir
+    value: 1
+	- text: PakaiKuota
+    value: 2
+
+- name: OperatorRole
+  values:
+  - text: Admin
+    value: 0
+	- text: Kasir
+    value: 1
+
+- name: VoucherType
+  values:
+  - text: PERSEN
+    value: 0
+	- text: HARGA
+    value: 1
+	- text: BERAT
+    value: 1    
+ 

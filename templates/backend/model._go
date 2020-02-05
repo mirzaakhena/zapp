@@ -15,6 +15,12 @@ type {{PascalCase .Name}} struct {
 	{{PascalCase .Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}{{end}}
 }
 
+{{if gt (len .TableName) 0}}
+// TableName is
+func ({{PascalCase .Name}}) TableName() string {
+	return "{{.TableName}}"
+} {{end}}
+
 // Create{{PascalCase .Name}}Request is
 type Create{{PascalCase .Name}}Request struct { {{range .Fields}}{{if (eq .DataType "enum")}}
 	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}"` // {{else if (eq .DataType "entity")}}

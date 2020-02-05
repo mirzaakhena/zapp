@@ -125,9 +125,9 @@ type TheField struct {
 
 // TheClass is
 type TheClass struct {
-	Name   string     `yaml:"name"`
-	Fields []TheField `yaml:"fields"`
-
+	Name            string     `yaml:"name"`
+	Fields          []TheField `yaml:"fields"`
+	TableName       string     `yaml:"tableName"`
 	HasAutocomplete bool
 }
 
@@ -151,6 +151,10 @@ func CamelCase(name string) string {
 	// force it!
 	if name == "IPAddress" {
 		return "ipAddress"
+	}
+
+	if name == "ID" {
+		return "id"
 	}
 
 	out := []rune(name)
