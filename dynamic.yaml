@@ -1,0 +1,40 @@
+code: CODE_TEMPLATE
+name: NAME_TEMPLATE
+components:
+
+- type: input
+  output: varOutput
+  preprocessor: |
+    return input
+    
+
+- type: display  
+  input: varInput
+  preprocessor: |
+    return value
+
+
+- type: select
+  output: varOutput
+  values:
+  - text: Merah
+    value: MERAH
+  - text: Kuning
+    value: KUNING
+  preprocessor: |
+    return value  
+
+
+- type: lookup
+  output: varOutput
+  query: |
+    inventory(id: ${input}) {
+      firstName
+        posts {
+          title
+          votes
+        }
+      }
+    }
+  preprocessor: |
+    return value

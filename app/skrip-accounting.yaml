@@ -1,0 +1,293 @@
+packagePath: bitbucket.org/hendra/accounting
+
+entities:
+- name: Account
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: Code
+    dataType: string
+  - name: Name
+    dataType: string
+  - name: Level
+    dataType: uint
+  - name: Side
+    dataType: enum
+    enumReference: AccountSide
+  - name: ChildType
+    dataType: enum
+    enumReference: AccountChildType
+  - name: ParentAccountID
+    dataType: string
+  
+
+
+
+- name: Subaccount
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: AccountCode
+    dataType: entity
+    entityReference: Account
+    entityField: Code    
+  - name: InventoryID
+    dataType: string
+  - name: InventoryCode
+    dataType: string 
+  - name: Code
+    dataType: string
+  - name: Name
+    dataType: string
+
+
+
+
+
+- name: Inventory
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: AccountCode
+    dataType: entity
+    entityReference: Account
+    entityField: Code    
+  - name: SubaccountCode
+    dataType: entity
+    entityReference: Subaccount
+    entityField: Code
+  - name: Code
+    dataType: string
+  - name: Name
+    dataType: string
+  - name: Unit
+    dataType: string
+  - name: MethodPrice
+    dataType: enum
+    enumReference: MethodPriceEnum
+  - name: MinimalQuantity
+    dataType: uint    
+
+
+
+
+- name: AccountBalance
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: JournalCode
+    dataType: entity
+    entityReference: Journal
+    entityField: Code    
+  - name: Date
+    dataType: time.Time
+  - name: Sequence
+    dataType: int
+  - name: Direction
+    dataType: enum
+    enumReference: BalanceDirection
+  - name: AccountCode
+    dataType: entity
+    entityReference: Account
+    entityField: Code    
+  - name: Amount
+    dataType: float64
+  - name: Balance
+    dataType: float64    
+
+
+
+
+- name: SubaccountBalance
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: JournalCode
+    dataType: entity
+    entityReference: Journal
+    entityField: Code    
+  - name: Date
+    dataType: time.Time
+  - name: Sequence
+    dataType: int
+  - name: Direction
+    dataType: enum
+    enumReference: BalanceDirection
+  - name: SubaccountCode
+    dataType: entity
+    entityReference: Subaccount
+    entityField: Code    
+  - name: AccountCode
+    dataType: entity
+    entityReference: Account
+    entityField: Code    
+  - name: Amount
+    dataType: float64
+  - name: Balance
+    dataType: float64   
+
+
+
+
+- name: InventoryBalance
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: JournalCode
+    dataType: entity
+    entityReference: Journal
+    entityField: Code    
+  - name: Date
+    dataType: time.Time
+  - name: Sequence
+    dataType: int
+  - name: Direction
+    dataType: enum
+    enumReference: BalanceDirection
+  - name: InventoryCode
+    dataType: entity
+    entityReference: Inventory
+    entityField: Code    
+  - name: AccountCode
+    dataType: entity
+    entityReference: Account
+    entityField: Code    
+  - name: AmountQuantity
+    dataType: uint
+  - name: AmountPrice
+    dataType: float64
+  - name: AmountTotalPrice
+    dataType: float64        
+  - name: BalanceQuantity
+    dataType: uint
+  - name: BalancePrice
+    dataType: float64
+  - name: BalanceTotalPrice
+    dataType: float64           
+
+
+
+
+
+- name: InventoryPrice
+  fields:
+  - name: SpaceID
+    dataType: string  
+  - name: InventoryCode
+    dataType: entity
+    entityReference: Inventory
+    entityField: Code
+  - name: JournalCode
+    dataType: entity
+    entityReference: Journal
+    entityField: Code
+  - name: Date
+    dataType: time.Time
+  - name: InventoryBalanceID
+    dataType: string
+  - name: Price
+    dataType: float64   
+  - name: InitialQuantity
+    dataType: uint
+  - name: CurrentQuantity
+    dataType: uint
+
+
+
+
+- name: Journal
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: Date
+    dataType: time.Time
+  - name: UserID
+    dataType: string
+  - name: Code
+    dataType: string
+  - name: Description
+    dataType: string
+
+
+
+- name: Space
+  fields:
+  - name: Name
+    dataType: string
+  - name: Description
+    dataType: string
+
+
+- name: Role
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: Name
+    dataType: string
+  - name: Description
+    dataType: string    
+  
+
+- name: RoleAccessControl
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: RoleName
+    dataType: entity
+    entityReference: Role
+    entityField: Name
+  - name: AccessControl
+    dataType: enum
+    enumReference: AccessControl
+
+
+
+- name: UserRoleAccessControl
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: UserEmail
+    dataType: entity
+    entityReference: User
+    entityField: Email
+  - name: RoleName
+    dataType: entity
+    entityReference: Role
+    entityField: Name
+
+
+
+enums:
+- name: MethodPriceEnum
+  values:
+  - text: FIFO
+  - text: LIFO
+  - text: WEAV
+
+- name: AccountSide
+  values:
+  - text: ACTIVA
+  - text: PASSIVA
+
+- name: AccountChildType
+  values:
+  - text: ACCOUNT
+  - text: SUBACCOUNT
+  - text: INVENTORY
+
+- name: BalanceDirection
+  values:
+  - text: DEBIT
+  - text: CREDIT
+
+- name: AccessControl
+  values:
+  - text: ACCOUNT_READ
+  - text: ACCOUNT_WRITE
+  - text: SUBACCOUNT_READ
+  - text: SUBACCOUNT_WRITE
+  - text: INVENTORY_READ
+  - text: INVENTORY_WRITE
+  - text: JOURNAL_READ
+  - text: JOURNAL_WRITE
+
