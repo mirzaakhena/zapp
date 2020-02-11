@@ -45,8 +45,11 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 
 	log.GetLog().Info(logInfo, "Request. Data %v", common.GetJSON(dto))
 
+	userID, _ := c.Get("userID")
+
 	sc := map[string]interface{}{
 		"logInfo": logInfo,
+		"userID":  userID,
 	}
 
 	obj, err := g.{{CamelCase .Name}}Service.Create(sc, dto)
@@ -73,8 +76,11 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 
 	log.GetLog().Info(logInfo, "Request. ID %v", id)
 
+	userID, _ := c.Get("userID")
+
 	sc := map[string]interface{}{
 		"logInfo": logInfo,
+		"userID":  userID,
 	}
 
 	obj := g.{{CamelCase .Name}}Service.GetOne(sc, id)
@@ -133,8 +139,11 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 
 	log.GetLog().Info(logInfo, "Request. Page %v, size %v, filter %v", page, size, common.GetJSON(filters))
 
+	userID, _ := c.Get("userID")
+
 	sc := map[string]interface{}{
 		"logInfo": logInfo,
+		"userID":  userID,
 	}
 
 	req := model.GetAllCommonRequest{
@@ -171,8 +180,11 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 
 	log.GetLog().Info(logInfo, "Request. ID %v, data %v", id, common.GetJSON(dto))
 
+	userID, _ := c.Get("userID")
+
 	sc := map[string]interface{}{
 		"logInfo": logInfo,
+		"userID":  userID,
 	}
 
 	_, err := g.{{CamelCase .Name}}Service.Update(sc, id, dto)
@@ -200,8 +212,11 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 
 	log.GetLog().Info(logInfo, "Request. ID %v", id)
 
+	userID, _ := c.Get("userID")
+
 	sc := map[string]interface{}{
 		"logInfo": logInfo,
+		"userID":  userID,
 	}
 
 	_, err := g.{{CamelCase .Name}}Service.Delete(sc, id)

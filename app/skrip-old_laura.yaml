@@ -349,24 +349,24 @@ enums:
   values:
   - text: BayarLunas
     value: 0
-	- text: BayarDiakhir
+  - text: BayarDiakhir
     value: 1
-	- text: PakaiKuota
+  - text: PakaiKuota
     value: 2
 
 - name: OperatorRole
   values:
   - text: Admin
     value: 0
-	- text: Kasir
+  - text: Kasir
     value: 1
 
 - name: VoucherType
   values:
   - text: PERSEN
     value: 0
-	- text: HARGA
+  - text: HARGA
     value: 1
-	- text: BERAT
+  - text: BERAT
     value: 1    
  

@@ -1,0 +1,190 @@
+packagePath: bitbucket.org/mirzaakhena/order
+
+entities:
+  
+
+
+- name: Pegawai
+  fields:
+  - name: Space
+    dataType: string
+    defaultValue: 1  
+  - name: Nama
+    dataType: string
+  - name: Alamat
+    dataType: string
+  - name: Telepon
+    dataType: string
+    
+
+
+
+- name: Pelanggan
+  fields:
+  - name: Space
+    dataType: string
+    defaultValue: 1      
+  - name: Nama
+    dataType: string
+  - name: Alamat
+    dataType: string
+  - name: Telepon
+    dataType: string    
+
+
+
+
+- name: PaketJasa
+  fields:
+  - name: Space
+    dataType: string  
+    defaultValue: 1          
+  - name: Nama
+    dataType: string  
+  - name: Biaya
+    dataType: float64
+  - name: DurasiPengerjaan
+    dataType: uint
+  - name: SatuanKuantitas
+    dataType: string
+  - name: KuantitasMinimal
+    dataType: float64
+  - name: BatasWajarKuantitas
+    dataType: float64   
+
+
+
+
+- name: StatusPengerjaan
+  fields:
+  - name: Space
+    dataType: string  
+    defaultValue: 1          
+  - name: PaketJasaRef
+    dataType: entity
+    entityReference: PaketJasa
+    entityField: Nama  
+  - name: Nama
+    dataType: string 
+  - name: Poin
+    dataType: string
+  - name: TipePoin
+    dataType: enum
+    enumReference: TipePoinEnum
+  - name: Sequence
+    dataType: int
+    
+
+
+
+- name: Pesanan
+  fields:
+  - name: Space
+    dataType: string  
+    defaultValue: 1          
+  - name: Kode
+    dataType: string
+  - name: PelangganRef
+    dataType: entity
+    entityReference: Pelanggan
+    entityField: Nama
+  - name: OperatorTerima
+    dataType: entity
+    entityReference: User
+    entityField: Name     
+  - name: WaktuTerima
+    dataType: time.Time
+  - name: TotalBiaya
+    dataType: float64
+  - name: UangMuka
+    dataType: float64
+  - name: Pembulatan
+    dataType: float64
+  - name: DiskonPersen
+    dataType: float64
+  - name: DiskonHarga
+    dataType: float64 
+
+
+
+- name: Jasa
+  fields:
+  - name: Space
+    dataType: string
+    defaultValue: 1          
+  - name: PesananRef
+    dataType: entity
+    entityReference: Pesanan
+    entityField: Kode    
+  - name: OperatorSerah
+    dataType: entity
+    entityReference: User
+    entityField: Name
+  - name: PaketJasaRef
+    dataType: entity
+    entityReference: PaketJasa
+    entityField: Nama    
+  - name: Sequence
+    dataType: uint  
+  - name: Kuantitas
+    dataType: float64
+  - name: WaktuSelesaiFinal
+    dataType: time.Time    
+  - name: WaktuSerahEkspektasi
+    dataType: time.Time    
+  - name: WaktuSerahAktual
+    dataType: time.Time            
+  - name: Keterangan
+    dataType: string    
+
+
+
+
+
+- name: ProsesJasa
+  fields:
+  - name: Space
+    dataType: string
+    defaultValue: 1          
+  - name: JasaRef
+    dataType: entity
+    entityReference: Jasa
+    entityField: ID 
+  - name: WaktuSelesai
+    dataType: time.Time 
+  - name: OperatorSelesai
+    dataType: entity
+    entityReference: User
+    entityField: Name
+  - name: StatusPengerjaanRef
+    dataType: entity
+    entityReference: StatusPengerjaan
+    entityField: Nama    
+
+
+
+
+- name: PelakuProsesJasa
+  fields:
+  - name: Space
+    dataType: string
+    defaultValue: 1          
+  - name: ProsesJasaRef
+    dataType: entity
+    entityReference: ProsesJasa
+    entityField: ID
+  - name: PegawaiRef
+    dataType: entity
+    entityReference: Pegawai
+    entityField: Nama
+
+
+
+enums:
+
+- name: TipePoinEnum
+  values:
+  - text: Tetap
+    value: TETAP
+  - text: PengaliKuantitas
+    value: PENGALI_KUANTITAS
