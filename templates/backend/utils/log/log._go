@@ -72,13 +72,12 @@ func (l *logrusImpl) WithFile(appsName string, maxAge int) {
 			panic("maxAge should > 0")
 		}
 
-		path := appsName + ".log"
 		writer, _ := rotatelogs.New(
-			"./logs/"+path+".%Y%m%d",
-			rotatelogs.WithLinkName(path),
+			fmt.Sprintf("/var/log/%s/logs/%s.log.%s", appsName, appsName, "%Y%m%d"), 
+			rotatelogs.WithLinkName(fmt.Sprintf("/var/log/%s/%s.log", appsName, appsName) ),
 			rotatelogs.WithMaxAge(time.Duration(maxAge*24)*time.Hour),
 			rotatelogs.WithRotationTime(time.Duration(1*24)*time.Hour),
-		)
+		)		
 
 		defaultLogger.theLogger.AddHook(lfshook.NewHook(
 			lfshook.WriterMap{
