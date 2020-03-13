@@ -13,9 +13,9 @@ import (
 // IUserService is
 type IUserService interface {
 	Login(sc map[string]interface{}, dto model.LoginUserRequest) (string, error)
-	ValidateLoginToken(sc map[string]interface{}, token string) string
+	ValidateLoginToken(sc map[string]interface{}, token string) interface{}
 	Register(sc map[string]interface{}, dto model.RegisterUserRequest) error
-	HasAccess(userID string, accessName string) bool
+	HasAccess(extendData map[string]interface{}, accessName string) bool
 }
 
 // UserService is
@@ -46,20 +46,26 @@ func (u *UserService) Login(sc map[string]interface{}, dto model.LoginUserReques
 		return "", fmt.Errorf("User not exist or wrong password %v != %v", dto.Password, existingUser.Password)
 	}
 
-	token := u.jwt.GenerateToken("LOGIN", "INTERNAL", "USER", existingUser.ID, 24)
+	extendData := map[string]interface{}{
+		"userID": existingUser.ID,
+		"role":   existingUser.Role,
+		"name":   existingUser.Name,
+	}
+
+	token := u.jwt.GenerateToken("LOGIN", "INTERNAL", "USER", extendData, 24)
 
 	return token, nil
 }
 
 // ValidateLoginToken is
-func (u *UserService) ValidateLoginToken(sc map[string]interface{}, loginToken string) string {
+func (u *UserService) ValidateLoginToken(sc map[string]interface{}, loginToken string) interface{} {
 
 	jwtObject := u.jwt.ValidateToken("LOGIN", loginToken)
 	if jwtObject == nil {
 		return ""
 	}
 
-	return fmt.Sprintf("%v", jwtObject.ExtendData)
+	return jwtObject.ExtendData
 }
 
 // Register is
@@ -79,6 +85,7 @@ func (u *UserService) Register(sc map[string]interface{}, dto model.RegisterUser
 	obj.Name = dto.Name
 	obj.Email = dto.Email
 	obj.Password = common.GenerateHashPassword(dto.Password)
+	obj.Role = "USER"	
 	u.userRepository.Create(tx, &obj)
 
 	u.trx.Commit(tx)
@@ -87,7 +94,7 @@ func (u *UserService) Register(sc map[string]interface{}, dto model.RegisterUser
 }
 
 // HasAccess is
-func (u *UserService) HasAccess(userID string, accessName string) bool {
+func (u *UserService) HasAccess(extendData map[string]interface{}, accessName string) bool {
 
 	// if userID == "df9d6646-513d-47d6-a9a0-600a321f5f0b" && accessName == "OUTLET" {
 	// 	return true

@@ -21,7 +21,7 @@ type Jwt struct {
 // JwtObject is
 type JwtObject struct {
 	jwt.StandardClaims
-	ExtendData interface{}
+	ExtendData interface{} `json:"extendData"`
 }
 
 // GenerateToken is
@@ -57,8 +57,14 @@ func (j *Jwt) ValidateToken(subject, tokenString string) *JwtObject {
 	}
 
 	claims, ok := token.Claims.(*JwtObject)
-	if !ok || !token.Valid {
+	if !ok {
 		// invalid token
+		return nil
+	}
+
+	// expired check
+
+	if !token.Valid {
 		return nil
 	}
 

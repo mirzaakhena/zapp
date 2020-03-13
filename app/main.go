@@ -323,12 +323,12 @@ func (tp *ThePackage) Run() {
 			basic(tp, templateFile, outputFile, et)
 		}
 
-		// create common api
-		{
-			templateFile := fmt.Sprintf("../templates/frontend/src/api/restapi._js")
-			outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/restapi.js", tp.PackagePath)
-			basic(tp, templateFile, outputFile, et)
-		}
+		// // create common api
+		// {
+		// 	templateFile := fmt.Sprintf("../templates/frontend/src/api/restapi._js")
+		// 	outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/restapi.js", tp.PackagePath)
+		// 	basic(tp, templateFile, outputFile, et)
+		// }
 
 		// create api modules
 		// {

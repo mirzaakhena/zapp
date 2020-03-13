@@ -1,7 +1,7 @@
 <template>
-  <div id="home" :class="[{'collapsed' : collapsed}]" >
+  <div id="home" :class="[{'collapsed' : state.collapsed}]" >
     <b-navbar toggleable="lg" type="dark" variant="dark" :sticky="true">
-      <b-navbar-brand href="#">NavBar</b-navbar-brand>
+      <b-navbar-brand href="#">Experimenfx1</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -21,7 +21,7 @@
 
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
-            <template slot="button-content"><em>User</em></template>
+            <template slot="button-content"><em>{{"{{"}}state.name{{"}}"}}</em></template>
             <b-dropdown-item href="#">Profile</b-dropdown-item>
             <b-dropdown-item href="#">Setting</b-dropdown-item>
             <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
@@ -29,7 +29,7 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <sidebar-menu :menu="menu" width="200px" :collapsed="collapsed" @collapse="onCollapse" />     
+    <sidebar-menu :menu="state.menu" width="200px" :collapsed="state.collapsed" @collapse="onCollapse" />     
     <router-view></router-view> 
   </div>
 
@@ -38,34 +38,61 @@
 <script>
 
 import { SidebarMenu } from 'vue-sidebar-menu'
+import { reactive, computed } from '@vue/composition-api'
 
 export default {
   components: {
     SidebarMenu,
   },
-  methods: {
-    onCollapse (collapsed) {
-      this.collapsed = collapsed
-    },
-    logout () {
-      this.$auth.removeToken()
-      this.$router.push('/login')      
-    }      
-  },
-  data () {
-    return {
-      collapsed: false,
-      menu: [
-        {
-          header: true,
-          title: 'Main Navigation',
-        }, {{range .Entities}}{ 
-          href: '/{{LowerCase .Name}}',
-          title: '{{PascalCase .Name}}'
-        }, {{end}}                     
-      ]      
+  setup (_, {root}) {
+
+    const logout = () => {
+      root.$auth.removeToken()
+      root.$router.push('/login')  
     }
-  }
+
+    const state = reactive({
+      name: computed(() => {
+        return root.$auth.getExtendData().name
+      }),
+      collapsed: false,
+      menu: computed(()=>{
+
+        if (root.$auth.getExtendData().role === "USER") {
+          return [
+            {
+              header: true,
+              title: 'Main Navigation',
+            }, {{range .Entities}}{ 
+              href: '/{{LowerCase .Name}}',
+              title: '{{PascalCase .Name}}'
+            }, {{end}} 
+          ]          
+        }  
+        
+        return [
+          {
+            header: true,
+            title: 'Main Navigation',
+          }, {{range .Entities}}{ 
+            href: '/{{LowerCase .Name}}',
+            title: '{{PascalCase .Name}}'
+          }, {{end}} 
+        ]        
+
+      }),      
+    })
+
+    const onCollapse = (collapsed) => state.collapsed = collapsed    
+
+    return {
+      onCollapse,
+      logout,
+      state,
+    }
+
+  },
+
 }
 </script>
 

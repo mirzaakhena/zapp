@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 
+	"github.com/gin-gonic/autotls"	
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	"github.com/jinzhu/gorm"	
 	_ "github.com/jinzhu/gorm/dialects/mysql"  //
 	_ "github.com/jinzhu/gorm/dialects/sqlite" //
+
 	"{{PackagePath}}/controller"
 	"{{PackagePath}}/repository"
 	"{{PackagePath}}/service"
@@ -72,6 +74,13 @@ func main() {
 
 	rc.Setup()	
 
-	ginRouter.Run(fmt.Sprintf(":%d", cf.GetInt("server.port", "8081")))
+	if gin.Mode() == gin.ReleaseMode {
+		if err := autotls.Run(ginRouter, cf.GetString("server.domain", "{{AppName}}.com")); err != nil {
+			log.GetLog().Fatal("", "Error on TLS %v", err.Error())
+		}
+
+	} else {
+		ginRouter.Run(fmt.Sprintf(":%d", cf.GetInt("server.port", "8081")))
+	
 
 }

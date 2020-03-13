@@ -71,12 +71,12 @@ func (u *UserController) ValidateToken(c *gin.Context) {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
-	userID := u.userService.ValidateLoginToken(nil, s[1])
-	if userID == "" {
+	extendDataObj := u.userService.ValidateLoginToken(nil, s[1])
+	if extendDataObj == "" {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
-	c.Set("userID", userID)
+	c.Set("extendData", extendDataObj.(map[string]interface{}))
 	c.Next()
 }
 
@@ -84,13 +84,13 @@ func (u *UserController) ValidateToken(c *gin.Context) {
 func (u *UserController) EnforceAccessControl(accessName string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		userID, exist := c.Get("userID")
+		extendData, exist := c.Get("extendData")
 		if !exist {
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}
 
-		if !u.userService.HasAccess(userID.(string), accessName) {
+		if !u.userService.HasAccess(extendData.(map[string]interface{}), accessName) {
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}

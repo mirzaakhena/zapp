@@ -1,9 +1,7 @@
 import to from 'await-to-js';
-import NewRestApi from "@/api/restapi";
+import request from "@/utils/httprequest";
 
 function NewStore(urlContextPath) {
-
-  const restapi = NewRestApi(urlContextPath)
 
   return {
 
@@ -120,7 +118,16 @@ function NewStore(urlContextPath) {
           delete state.sorting['sortDesc']
         }
 
-        const [error, response] = await to(restapi.getAll(state.paging, state.sorting, state.filtering))
+        const [error, response] = await to(request({
+          method: 'get',
+          url: `api/${urlContextPath}`,
+          params: {
+            ...state.paging,
+            ...state.sorting,
+            ...state.filtering,
+          }
+        }))
+
         if (error) {
           commit('SET_ITEMS', {
             items: [], 
@@ -130,8 +137,8 @@ function NewStore(urlContextPath) {
         }
 
         commit('SET_ITEMS', {
-          items: response.items, 
-          totalItems: response.totalCount
+          items: response.data.data.items, 
+          totalItems: response.data.data.totalCount
         })
 
         return Promise.resolve(response)
@@ -139,7 +146,11 @@ function NewStore(urlContextPath) {
       },
   
       async createItem ({dispatch}, {inputedItem}) {
-        const [error, response] = await to(restapi.create(inputedItem))
+        const [error, response] = await to(request({
+          data: inputedItem,
+          method: 'post',
+          url: `api/${urlContextPath}`,
+        }))
         if (error) {
           return Promise.reject(error)
         }
@@ -148,7 +159,10 @@ function NewStore(urlContextPath) {
       },
   
       async getOneItem ({commit}, {itemId}) {
-        const [error, response] = await to(restapi.getOne(itemId))
+        const [error, response] = await to(request({
+          method: 'get',
+          url: `api/${urlContextPath}/${itemId}`,
+        }))
         if (error) {
           return Promise.reject(error)
         }
@@ -157,16 +171,23 @@ function NewStore(urlContextPath) {
       },
   
       async updateItem ({state, dispatch}) {
-        const [error, response] = await to(restapi.update(state.inputedItem, state.inputedItem.id))
+        const [error, response] = await to(request({
+          data: state.inputedItem,
+          method: 'put',
+          url: `api/${urlContextPath}/${state.inputedItem.id}`,
+        }))
         if (error) {
           return Promise.reject(error)
         }
         dispatch('queryItems')
-        return Promise.resolve(response)
+        return Promise.resolve(response)      
       },
   
       async deleteItem({dispatch}, {itemId}) {
-        const [error, response] = await to(restapi.delete(itemId))
+        const [error, response] = await to(request({
+          method: 'delete',
+          url: `api/${urlContextPath}/${itemId}`,
+        }))        
         if (error) {
           return Promise.reject(error)
         }

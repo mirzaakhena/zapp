@@ -23,7 +23,11 @@ export default function (Vue) {
       } else {
         return false
       }
-    }
+    },
+    getExtendData () {
+      var token = localStorage.getItem('token')
+      return getExtendDataFromJWT(token)
+    },
   }
 
   Object.defineProperties(Vue.prototype, {
@@ -39,4 +43,10 @@ export default function (Vue) {
     var payloadDecoded = atob(tokens[1])
     return JSON.parse(payloadDecoded).exp
   }
+
+  function getExtendDataFromJWT (token) {
+    var tokens = token.split('.')
+    var payloadDecoded = atob(tokens[1])
+    return JSON.parse(payloadDecoded).extendData
+  }  
 }
