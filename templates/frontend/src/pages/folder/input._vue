@@ -44,7 +44,6 @@
 <script>
 
 import { reactive } from '@vue/composition-api'
-// import Swal from 'sweetalert2'
 {{if (.HasAutocomplete)}}
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import to from 'await-to-js';
@@ -96,14 +95,16 @@ export default {
     }
 
     const onShown = () => {
-      const inputedObject = root.$store.getters[`${entity}/getInputedItem`]
-      state.inputedItem = inputedObject || initialObject() 
+      let inputedItem = root.$store.getters[`${entity}/getInputedItem`]
+      if (inputedItem !== null) {
+        state.inputedItem = inputedItem
+      }
       {{range .Fields}}{{if (eq .DataType "entity")}}
       refs.autocomplete{{PascalCase .Name}}Model.setValue(state.inputedItem.{{CamelCase .EntityReference}}){{end}}{{end}}
     }
 
     const onHidden = () => {
-      root.$store.commit(`${entity}/SET_INPUTED_ITEM`, null)
+      state.inputedItem = initialObject()
     }
     {{range .Fields}}{{if (eq .DataType "enum")}}
     const options{{PascalCase .Name}} = [ {{range .EnumValues}}

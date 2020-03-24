@@ -6,16 +6,33 @@ import (
 	"{{PackagePath}}/model"
 	"{{PackagePath}}/repository"
 	"{{PackagePath}}/utils/common"
+	"{{PackagePath}}/utils/log"
 	"{{PackagePath}}/utils/token"
-	"{{PackagePath}}/utils/transaction"
+	"{{PackagePath}}/utils/transaction"	
 )
 
 // IUserService is
 type IUserService interface {
-	Login(sc map[string]interface{}, dto model.LoginUserRequest) (string, error)
-	ValidateLoginToken(sc map[string]interface{}, token string) interface{}
-	Register(sc map[string]interface{}, dto model.RegisterUserRequest) error
+	Login(ctx map[string]interface{}, dto model.LoginUserRequest) (string, error)
+	ValidateLoginToken(ctx map[string]interface{}, token string) interface{}
+	Register(ctx map[string]interface{}, dto model.RegisterUserRequest) error
 	HasAccess(extendData map[string]interface{}, accessName string) bool
+}
+
+// GetUserID is
+func GetUserID(ctx map[string]interface{}) string {
+
+	userIDIntf, okHaveUserID := ctx["userID"]
+	if !okHaveUserID {
+		log.GetLog().Fatal(ctx, "Does not have userID")
+	}
+
+	userID, okCast2 := userIDIntf.(string)
+	if !okCast2 {
+		log.GetLog().Fatal(ctx, "userID cannot cast to string")
+	}
+
+	return userID
 }
 
 // UserService is
@@ -35,9 +52,11 @@ func NewUserService(trx transaction.ITransaction, jwt *token.Jwt, userRepository
 }
 
 // Login is
-func (u *UserService) Login(sc map[string]interface{}, dto model.LoginUserRequest) (string, error) {
-	tx := u.trx.GetDB(false)
-	existingUser := u.userRepository.GetByEmail(tx, dto.Email)
+func (u *UserService) Login(ctx map[string]interface{}, dto model.LoginUserRequest) (string, error) {
+	ctx["trx"] = u.trx.GetDB(false)
+	defer delete(ctx, "trx")
+
+	existingUser := u.userRepository.GetByEmail(ctx, dto.Email)
 	if existingUser == nil {
 		return "", fmt.Errorf("User not exist or wrong password 1")
 	}
@@ -58,7 +77,7 @@ func (u *UserService) Login(sc map[string]interface{}, dto model.LoginUserReques
 }
 
 // ValidateLoginToken is
-func (u *UserService) ValidateLoginToken(sc map[string]interface{}, loginToken string) interface{} {
+func (u *UserService) ValidateLoginToken(ctx map[string]interface{}, loginToken string) interface{} {
 
 	jwtObject := u.jwt.ValidateToken("LOGIN", loginToken)
 	if jwtObject == nil {
@@ -69,13 +88,14 @@ func (u *UserService) ValidateLoginToken(sc map[string]interface{}, loginToken s
 }
 
 // Register is
-func (u *UserService) Register(sc map[string]interface{}, dto model.RegisterUserRequest) error {
+func (u *UserService) Register(ctx map[string]interface{}, dto model.RegisterUserRequest) error {
 
-	tx := u.trx.GetDB(true)
-	u.trx.RollbackOnException(tx)
+	ctx["trx"] = u.trx.GetDB(true)
+	defer delete(ctx, "trx")
+	defer u.trx.RollbackOnException(ctx)
 
-	if existingUser := u.userRepository.GetByEmail(tx, dto.Email); existingUser != nil {
-		u.trx.Rollback(tx)
+	if existingUser := u.userRepository.GetByEmail(ctx, dto.Email); existingUser != nil {
+		u.trx.Rollback(ctx)
 		return fmt.Errorf("Email %v already exist", dto.Email)
 	}
 
@@ -86,9 +106,9 @@ func (u *UserService) Register(sc map[string]interface{}, dto model.RegisterUser
 	obj.Email = dto.Email
 	obj.Password = common.GenerateHashPassword(dto.Password)
 	obj.Role = "USER"	
-	u.userRepository.Create(tx, &obj)
+	u.userRepository.Create(ctx, &obj)
 
-	u.trx.Commit(tx)
+	u.trx.Commit(ctx)
 
 	return nil
 }

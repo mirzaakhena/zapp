@@ -16,6 +16,12 @@ type UserController struct {
 	userService service.IUserService
 }
 
+// GetUserID is
+func GetUserID(c *gin.Context) string {
+	extendDataIntf, _ := c.Get("extendData")
+	return extendDataIntf.(map[string]interface{})["userID"].(string)
+}
+
 // NewUserController is
 func NewUserController(userService service.IUserService) *UserController {
 

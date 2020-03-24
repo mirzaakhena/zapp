@@ -1,7 +1,6 @@
 package log
 
 import (
-	"bytes"
 	"fmt"
 	"runtime"
 	"strings"
@@ -11,7 +10,6 @@ import (
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 
-	nested "github.com/antonfisher/nested-logrus-formatter"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 )
 
@@ -48,11 +46,8 @@ func GetLog() ILogger {
 	defaultLoggerOnce.Do(func() {
 		defaultLogger = logrusImpl{theLogger: logrus.New()}
 		defaultLogger.useFile = false
-		defaultLogger.theLogger.SetFormatter(&nested.Formatter{
-			NoColors:        false,
-			HideKeys:        true,
+		defaultLogger.theLogger.SetFormatter(&logrus.JSONFormatter{
 			TimestampFormat: "0102 150405.000",
-			FieldsOrder:     []string{"func"},
 		})
 	})
 	return &defaultLogger
@@ -96,45 +91,8 @@ func (l *logrusImpl) WithFile(appsName string, maxAge int) {
 func (l *logrusImpl) getLogEntry(data interface{}) *logrus.Entry {
 	pc, _, _, _ := runtime.Caller(2)
 	funcName := runtime.FuncForPC(pc).Name()
-
-	var buffer bytes.Buffer
-
-	buffer.WriteString("|FN:")
-
 	x := strings.LastIndex(funcName, "/")
-
-	buffer.WriteString(funcName[x+1:])
-
-	if data == nil {
-		return l.theLogger.WithField("info", buffer.String())
-	}
-
-	dataMap, ok := data.(Data)
-	if !ok {
-		return l.theLogger.WithField("info", buffer.String())
-	}
-
-	// if clientIP, ok := dataMap.ClientIP; ok {
-	buffer.WriteString("|IP:")
-	buffer.WriteString(dataMap.ClientIP)
-	// }
-
-	// if session, ok := dataMap["session"]; ok {
-	buffer.WriteString("|SS:")
-	buffer.WriteString(dataMap.Session)
-	// }
-
-	// if userID, ok := dataMap["userId"]; ok {
-	buffer.WriteString("|US:")
-	buffer.WriteString(dataMap.UserID)
-	// }
-
-	// if types, ok := dataMap["types"]; ok {
-	buffer.WriteString("|TY:")
-	buffer.WriteString(dataMap.Type)
-	// }
-
-	return l.theLogger.WithField("info", buffer.String())
+	return l.theLogger.WithField("func", funcName[x+1:])
 }
 
 // Debug is

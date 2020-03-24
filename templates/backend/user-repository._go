@@ -2,14 +2,15 @@ package repository
 
 import (
 	"{{PackagePath}}/model"
+	"{{PackagePath}}/utils/transaction"
 	"github.com/jinzhu/gorm"
 )
 
 // IUserRepository is
 type IUserRepository interface {
-	Create(db interface{}, obj *model.User) error
-	GetByEmail(db interface{}, email string) *model.User
-	GetOne(db interface{}, ID string) *model.User
+	Create(ctx map[string]interface{}, obj *model.User) error
+	GetByEmail(ctx map[string]interface{}, email string) *model.User
+	GetOne(ctx map[string]interface{}, ID string) *model.User
 }
 
 // UserRepository is
@@ -22,14 +23,14 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 }
 
 // Create is
-func (u *UserRepository) Create(db interface{}, obj *model.User) error {
-	return db.(*gorm.DB).Create(obj).Error
+func (u *UserRepository) Create(ctx map[string]interface{}, obj *model.User) error {
+	return transaction.GetDB(ctx).Create(obj).Error
 }
 
 // GetByEmail is
-func (u *UserRepository) GetByEmail(db interface{}, email string) *model.User {
+func (u *UserRepository) GetByEmail(ctx map[string]interface{}, email string) *model.User {
 	var obj model.User
-	db.(*gorm.DB).First(&obj, "email = ?", email)
+	transaction.GetDB(ctx).First(&obj, "email = ?", email)
 	if obj.ID == "" {
 		return nil
 	}
@@ -38,10 +39,10 @@ func (u *UserRepository) GetByEmail(db interface{}, email string) *model.User {
 }
 
 // GetOne is
-func (u *UserRepository) GetOne(db interface{}, ID string) *model.User {
+func (u *UserRepository) GetOne(ctx map[string]interface{}, ID string) *model.User {
 	var obj model.User
 
-	query := db.(*gorm.DB)
+	query := transaction.GetDB(ctx)
 
 	query.First(&obj, "id = ?", ID)
 

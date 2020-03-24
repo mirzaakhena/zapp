@@ -123,7 +123,7 @@ export default {
       Swal.fire(deleteConfirmObject).then((result) => {
         if (result.value) {
           root.$store.dispatch(`${entity}/deleteItem`, { itemId: item.id }).then(response => {
-            Swal.fire('Deleted!', `${response.message}`, 'success')
+            Swal.fire('Deleted!', `${response.data.message}`, 'success')
           })
         }
       })

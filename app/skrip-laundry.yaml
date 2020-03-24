@@ -1,0 +1,176 @@
+packagePath: bitbucket.org/elektron/cucian
+
+entities:
+  
+
+
+- name: Pegawai
+  fields:
+  - name: Nama
+    dataType: string
+  - name: Alamat
+    dataType: string
+  - name: Telepon
+    dataType: string
+    
+
+
+
+
+- name: Pelanggan
+  fields:  
+  - name: Nama
+    dataType: string
+  - name: Alamat
+    dataType: string
+  - name: Telepon
+    dataType: string    
+
+
+
+
+
+- name: PaketCucian
+  fields:       
+  - name: Nama
+    dataType: string  
+  - name: Harga
+    dataType: float64
+  - name: DurasiPengerjaan
+    dataType: uint
+    defaultValue: 24
+  - name: SatuanKuantitas
+    dataType: string
+  - name: KuantitasMinimal
+    dataType: float64
+    defaultValue: 1
+  - name: BatasWajarKuantitas
+    dataType: float64
+    defaultValue: 10   
+  - name: Poin
+    dataType: float64
+    defaultValue: 1
+  - name: TipePoin
+    dataType: enum
+    enumReference: TipePoinEnum
+  - name: Prioritas
+    dataType: int
+    defaultValue: 1    
+
+
+    
+
+
+
+- name: Cucian
+  fields:    
+  - name: Kode
+    dataType: string
+  - name: NamaPelanggan
+    dataType: entity
+    entityReference: Pelanggan
+    entityField: Nama
+  - name: NamaUserMasuk
+    dataType: entity
+    entityReference: User
+    entityField: Name   
+  - name: NamaUserSelesai
+    dataType: entity
+    entityReference: User
+    entityField: Name
+  - name: NamaUserAmbil
+    dataType: entity
+    entityReference: User
+    entityField: Name   
+  - name: NamaPegawai
+    dataType: entity
+    entityReference: Pegawai
+    entityField: Nama           
+  - name: WaktuMasuk
+    dataType: time.Time
+  - name: WaktuSelesai
+    dataType: time.Time    
+  - name: WaktuAmbilEkspektasi
+    dataType: time.Time    
+  - name: WaktuAmbilAktual
+    dataType: time.Time       
+  - name: TotalBiaya
+    dataType: float64
+  - name: UangMuka
+    dataType: float64
+    defaultValue: 0
+  - name: Pembulatan
+    dataType: float64
+    defaultValue: 0
+  - name: DiskonPersen
+    dataType: float64
+    defaultValue: 0
+  - name: Keterangan
+    dataType: string
+
+
+
+
+
+
+- name: CucianItem
+  fields:     
+  - name: CucianRef
+    dataType: entity
+    entityReference: Cucian
+    entityField: Kode
+  - name: PaketCucianRef
+    dataType: entity
+    entityReference: PaketCucian
+    entityField: Nama    
+  - name: Kuantitas
+    dataType: float64
+    defaultValue: 1
+
+
+
+- name: KategoriPengeluaran
+  fields:
+  - name: Nama
+    dataType: string  
+
+
+- name: Pengeluaran
+  fields:
+  - name: Tanggal
+    dataType: time.Time  
+  - name: NamaUser
+    dataType: entity
+    entityReference: User
+    entityField: Name      
+  - name: NamaKategoriPengeluaran
+    dataType: entity
+    entityReference: KategoriPengeluaran
+    entityField: Nama
+  - name: Nilai
+    dataType: float64
+  - name: Keterangan
+    dataType: string  
+
+
+- name: Kasbon
+  fields:   
+  - name: NamaPegawai
+    dataType: entity
+    entityReference: Pegawai
+    entityField: Nama
+  - name: PengeluaranRef
+    dataType: entity
+    entityReference: Pengeluaran
+    entityField: ID
+
+
+
+enums:
+
+- name: TipePoinEnum
+  values:
+  - text: Tetap
+    value: TETAP
+  - text: PengaliKuantitas
+    value: PENGALI_KUANTITAS

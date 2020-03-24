@@ -5,7 +5,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-const nanoidstr = "A2BC3DE4FG5HJ6KL7MN8PQ9RSTUVWXYZ"
+const nanoidstr = "01A2BC3DE4FG5HIJ6KL7MN8OPQ9RSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 // GetShortUniqueID is
 func GetShortUniqueID() string {

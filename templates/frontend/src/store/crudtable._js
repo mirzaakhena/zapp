@@ -88,7 +88,7 @@ function NewStore(urlContextPath) {
         commit('RESET_SORTING')
         dispatch('resetPaging')
       },
-  
+
       onFiltering ({dispatch}) {
         dispatch('resetPaging')
       },
@@ -155,6 +155,7 @@ function NewStore(urlContextPath) {
           return Promise.reject(error)
         }
         dispatch('queryItems')
+        commit('SET_INPUTED_ITEM', null)   
         return Promise.resolve(response)
       },
   
@@ -166,7 +167,7 @@ function NewStore(urlContextPath) {
         if (error) {
           return Promise.reject(error)
         }
-        commit('SET_INPUTED_ITEM', response.data)
+        commit('SET_INPUTED_ITEM', response.data.data)
         return Promise.resolve(response)
       },
   
@@ -180,6 +181,7 @@ function NewStore(urlContextPath) {
           return Promise.reject(error)
         }
         dispatch('queryItems')
+        commit('SET_INPUTED_ITEM', null)
         return Promise.resolve(response)      
       },
   

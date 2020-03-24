@@ -6,15 +6,16 @@ import (
 	"github.com/jinzhu/gorm"
 	"{{PackagePath}}/model"
 	"{{PackagePath}}/utils/common"
+	"{{PackagePath}}/utils/transaction"
 )
 
 // I{{PascalCase .Name}}Repository is
 type I{{PascalCase .Name}}Repository interface {
-	Create(db interface{}, obj *model.{{PascalCase .Name}}) error
-	GetOne(db interface{}, ID string) *model.{{PascalCase .Name}}
-	GetAll(db interface{}, page, size int, sortBy string, sortDesc bool, filters map[string]string) ([]model.{{PascalCase .Name}}, uint)
-	Delete(db interface{}, ID string) error
-	Update(db interface{}, obj *model.{{PascalCase .Name}}) error
+	Create(ctx map[string]interface{}, obj *model.{{PascalCase .Name}}) error
+	GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}}
+	GetAll(ctx map[string]interface{}, page, size int, sortBy string, sortDesc bool, filters map[string]string) ([]model.{{PascalCase .Name}}, uint)
+	Delete(ctx map[string]interface{}, ID string) error
+	Update(ctx map[string]interface{}, obj *model.{{PascalCase .Name}}) error
 }
 
 // {{PascalCase .Name}}Repository is
@@ -27,15 +28,15 @@ func New{{PascalCase .Name}}Repository(db *gorm.DB) *{{PascalCase .Name}}Reposit
 }
 
 // Create is
-func (g *{{PascalCase .Name}}Repository) Create(db interface{}, obj *model.{{PascalCase .Name}}) error {
-	return db.(*gorm.DB).Create(obj).Error
+func (g *{{PascalCase .Name}}Repository) Create(ctx map[string]interface{}, obj *model.{{PascalCase .Name}}) error {
+	return transaction.GetDB(ctx).Create(obj).Error
 }
 
 // GetOne is 
-func (g *{{PascalCase .Name}}Repository) GetOne(db interface{}, ID string) *model.{{PascalCase .Name}} {
+func (g *{{PascalCase .Name}}Repository) GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}} {
 	var obj model.{{PascalCase .Name}}
 
-	query := db.(*gorm.DB)
+	query := transaction.GetDB(ctx)
 
 	{{range .Fields}}
 		{{if (eq .DataType "entity")}}
@@ -52,11 +53,11 @@ func (g *{{PascalCase .Name}}Repository) GetOne(db interface{}, ID string) *mode
 }
 
 // GetAll is
-func (g *{{PascalCase .Name}}Repository) GetAll(db interface{}, page, size int, sortBy string, sortDesc bool, filters map[string]string) ([]model.{{PascalCase .Name}}, uint) {
+func (g *{{PascalCase .Name}}Repository) GetAll(ctx map[string]interface{}, page, size int, sortBy string, sortDesc bool, filters map[string]string) ([]model.{{PascalCase .Name}}, uint) {
 	var objs []model.{{PascalCase .Name}}
 	var count uint
-	
-	query := db.(*gorm.DB).Model(&model.{{PascalCase .Name}}{})
+
+	query := transaction.GetDB(ctx).Model(&model.{{PascalCase .Name}}{})
 
 	// filtering
 	if filters != nil {
@@ -91,11 +92,11 @@ func (g *{{PascalCase .Name}}Repository) GetAll(db interface{}, page, size int, 
 }
 
 // Delete is
-func (g *{{PascalCase .Name}}Repository) Delete(db interface{}, ID string) error {
-	return db.(*gorm.DB).Delete(model.{{PascalCase .Name}}{}, "id = ?", ID).Error
+func (g *{{PascalCase .Name}}Repository) Delete(ctx map[string]interface{}, ID string) error {
+	return transaction.GetDB(ctx).Delete(model.{{PascalCase .Name}}{}, "id = ?", ID).Error
 }
 
 // Update is
-func (g *{{PascalCase .Name}}Repository) Update(db interface{}, obj *model.{{PascalCase .Name}}) error {
-	return db.(*gorm.DB).Save(obj).Error
+func (g *{{PascalCase .Name}}Repository) Update(ctx map[string]interface{}, obj *model.{{PascalCase .Name}}) error {
+	return transaction.GetDB(ctx).Save(obj).Error
 }
