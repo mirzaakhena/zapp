@@ -35,7 +35,7 @@ func main() {
 
 	log.GetLog().WithFile("{{AppName}}", 14)
 
-	log.GetLog().Info("main", "Apps run")
+	log.GetLog().Info(nil, "Apps run")
 
 	cf := config.NewSimpleConfig("config", "$GOPATH/src/{{PackagePath}}")
 
@@ -76,7 +76,7 @@ func main() {
 
 	if gin.Mode() == gin.ReleaseMode {
 		if err := autotls.Run(ginRouter, cf.GetString("server.domain", "{{AppName}}.com")); err != nil {
-			log.GetLog().Fatal("", "Error on TLS %v", err.Error())
+			log.GetLog().Fatal(nil, "Error on TLS %v", err.Error())
 		}
 
 	} else {

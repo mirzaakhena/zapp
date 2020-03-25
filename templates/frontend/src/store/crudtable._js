@@ -145,7 +145,7 @@ function NewStore(urlContextPath) {
         
       },
   
-      async createItem ({dispatch}, {inputedItem}) {
+      async createItem ({commit, dispatch}, {inputedItem}) {
         const [error, response] = await to(request({
           data: inputedItem,
           method: 'post',
@@ -171,7 +171,7 @@ function NewStore(urlContextPath) {
         return Promise.resolve(response)
       },
   
-      async updateItem ({state, dispatch}) {
+      async updateItem ({state, commit, dispatch}) {
         const [error, response] = await to(request({
           data: state.inputedItem,
           method: 'put',

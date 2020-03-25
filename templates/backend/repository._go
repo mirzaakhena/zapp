@@ -81,12 +81,6 @@ func (g *{{PascalCase .Name}}Repository) GetAll(ctx map[string]interface{}, page
 	// paging
 	query = query.Offset((page - 1) * size).Limit(size)
 
-	{{range .Fields}}
-		{{if (eq .DataType "entity")}}
-			query = query.Preload("{{PascalCase .EntityReference}}")
-		{{end}}
-	{{end}}
-
 	query.Find(&objs)
 	return objs, count
 }

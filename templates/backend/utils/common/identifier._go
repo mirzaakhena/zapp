@@ -1,17 +1,17 @@
 package common
 
 import (
-	gonanoid "github.com/matoous/go-nanoid"
 	uuid "github.com/satori/go.uuid"
+	"github.com/segmentio/ksuid"
 )
 
-const nanoidstr = "01A2BC3DE4FG5HIJ6KL7MN8OPQ9RSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+// const nanoidstr = "01A2BC3DE4FG5HIJ6KL7MN8OPQ9RSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 // GetShortUniqueID is
 func GetShortUniqueID() string {
-	// return ksuid.New().String()
-	a, _ := gonanoid.Generate(nanoidstr, 12)
-	return a
+	return ksuid.New().String()
+	// a, _ := gonanoid.Generate(nanoidstr, 12)
+	// return a
 }
 
 // GetUUID is

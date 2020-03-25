@@ -81,7 +81,7 @@ func (u *UserService) ValidateLoginToken(ctx map[string]interface{}, loginToken 
 
 	jwtObject := u.jwt.ValidateToken("LOGIN", loginToken)
 	if jwtObject == nil {
-		return ""
+		return nil
 	}
 
 	return jwtObject.ExtendData

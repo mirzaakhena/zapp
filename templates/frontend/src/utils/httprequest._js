@@ -20,6 +20,10 @@ service.interceptors.response.use((response) => {
 }, (error) => {
 
   if (error.response.status === 403) {
+    if (!Vue.auth.isAuthenticated()) {      
+      Swal.fire("Owh!", "Your session expired. Please try to relogin ", "error")
+      return Promise.resolve()  
+    }    
     Swal.fire("Oops!", "You have no access to this function", "error")
     return Promise.reject(error.response)
   }

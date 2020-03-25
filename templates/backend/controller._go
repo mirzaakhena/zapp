@@ -77,7 +77,7 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 
 	obj := g.{{CamelCase .Name}}Service.GetOne(sc, id)
 	if obj == nil {
-		message := log.GetLog().Info(&c, "RESPONSE ID %v not found", id)
+		message := log.GetLog().Info(sc, "RESPONSE ID %v not found", id)
 		c.JSON(http.StatusOK, map[string]interface{}{"message": message})
 		return
 	}

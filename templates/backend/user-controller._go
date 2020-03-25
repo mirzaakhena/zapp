@@ -34,33 +34,28 @@ func NewUserController(userService service.IUserService) *UserController {
 
 // Login is
 func (u *UserController) Login(c *gin.Context) {
-	logInfo := log.Data{
-		ClientIP: c.ClientIP(),
-		Session:  common.GetShortUniqueID(),
-		Type:     "API",
+	sc := map[string]interface{}{
+		"ip":      c.ClientIP(),
+		"session": common.GetShortUniqueID(),
+		"source":  "API",
 	}
 
 	var dto model.LoginUserRequest
 
 	if err := c.BindJSON(&dto); err != nil {
-		log.GetLog().Error(logInfo, "%v", err.Error())
+				log.GetLog().Error(sc, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "Invalid Params. Please check data structure and type"})
 		return
 	}
 
-	sc := map[string]interface{}{
-		"logInfo": logInfo,
-		"userID":  "",
-	}
-
 	token, err := u.userService.Login(sc, dto)
 	if err != nil {
-		message := log.GetLog().Error(logInfo, "%v", err.Error())
+		message := log.GetLog().Error(sc, "RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
 		return
 	}
 
-	message := log.GetLog().Info(logInfo, "Response. Login success with token %v", token)
+	message := log.GetLog().Info(sc, "RESPONSE. Login success with token %v", token)
 	c.JSON(http.StatusCreated, map[string]interface{}{"message": message, "data": token})
 
 }
@@ -69,16 +64,14 @@ func (u *UserController) Login(c *gin.Context) {
 func (u *UserController) ValidateToken(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
 	s := strings.Fields(token)
-	if len(s) != 2 {
-		c.AbortWithStatus(http.StatusForbidden)
-		return
-	}
-	if s[0] != "Bearer" {
+	if len(s) != 2 || s[0] != "Bearer" {
+		log.GetLog().Error(nil, "Not proper Authorization token")
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 	extendDataObj := u.userService.ValidateLoginToken(nil, s[1])
-	if extendDataObj == "" {
+	if extendDataObj == nil {
+		log.GetLog().Error(nil, "Not Valid token")
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
@@ -92,11 +85,14 @@ func (u *UserController) EnforceAccessControl(accessName string) gin.HandlerFunc
 
 		extendData, exist := c.Get("extendData")
 		if !exist {
+			log.GetLog().Error(nil, "extendData not exist")			
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}
 
-		if !u.userService.HasAccess(extendData.(map[string]interface{}), accessName) {
+		extendDataMap := extendData.(map[string]interface{})
+		if !u.userService.HasAccess(extendDataMap, accessName) {
+			log.GetLog().Error(nil, "%s does not have access to %s", extendDataMap["name"].(string), accessName)
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}
@@ -107,32 +103,28 @@ func (u *UserController) EnforceAccessControl(accessName string) gin.HandlerFunc
 
 // Register is
 func (u *UserController) Register(c *gin.Context) {
-	logInfo := log.Data{
-		ClientIP: c.ClientIP(),
-		Session:  common.GetShortUniqueID(),
-		Type:     "API",
+	sc := map[string]interface{}{
+		"ip":      c.ClientIP(),
+		"session": common.GetShortUniqueID(),
+		"source":  "API",
 	}
 
 	var dto model.RegisterUserRequest
 
 	if err := c.BindJSON(&dto); err != nil {
-		log.GetLog().Error(logInfo, "%v", err.Error())
+		log.GetLog().Error(sc, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "Invalid Params. Please check data structure and type"})
 		return
 	}
 
-	log.GetLog().Info(logInfo, "Request. Data %v", common.GetJSON(dto))
-
-	sc := map[string]interface{}{
-		"logInfo": logInfo,
-	}
+	log.GetLog().Info(sc, "REQUEST. Data %v", common.GetJSON(dto))
 
 	if err := u.userService.Register(sc, dto); err != nil {
-		message := log.GetLog().Error(logInfo, "%v", err.Error())
+		message := log.GetLog().Error(sc, "RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
 		return
 	}
 
-	message := log.GetLog().Info(logInfo, "Response. Register success")
+	message := log.GetLog().Info(sc, "RESPONSE. Register success")
 	c.JSON(http.StatusCreated, map[string]interface{}{"message": message})
 }
