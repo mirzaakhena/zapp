@@ -34,11 +34,8 @@ func NewUserController(userService service.IUserService) *UserController {
 
 // Login is
 func (u *UserController) Login(c *gin.Context) {
-	sc := map[string]interface{}{
-		"ip":      c.ClientIP(),
-		"session": common.GetShortUniqueID(),
-		"source":  "API",
-	}
+
+	sc := CreateServiceContext(c)
 
 	var dto model.LoginUserRequest
 
@@ -103,11 +100,8 @@ func (u *UserController) EnforceAccessControl(accessName string) gin.HandlerFunc
 
 // Register is
 func (u *UserController) Register(c *gin.Context) {
-	sc := map[string]interface{}{
-		"ip":      c.ClientIP(),
-		"session": common.GetShortUniqueID(),
-		"source":  "API",
-	}
+
+	sc := CreateServiceContext(c)
 
 	var dto model.RegisterUserRequest
 

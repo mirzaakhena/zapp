@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
+	"bitbucket.org/mirzaakhena/experimenfx1/utils/common"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -13,6 +15,17 @@ type RouterConfig struct {
 	Router              *gin.Engine
 	UserController      *UserController	{{range .Entities}}
 	{{PascalCase .Name}}Controller *{{PascalCase .Name}}Controller {{end}}
+}
+
+// CreateServiceContext is
+func CreateServiceContext(c *gin.Context) map[string]interface{} {
+	sc := map[string]interface{}{
+		"ip":        c.ClientIP(),
+		"session":   common.GetShortUniqueID(),
+		"source":    "API",
+		"methodURL": fmt.Sprintf("%s %s", c.Request.Method, c.Request.URL.Path),
+	}
+	return sc
 }
 
 // Setup is

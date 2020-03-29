@@ -30,14 +30,8 @@ func New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service service.I{{Pas
 // Create is
 func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 
-	userID := GetUserID(c)
-
-	sc := map[string]interface{}{
-		"ip":      c.ClientIP(),
-		"session": common.GetShortUniqueID(),
-		"source":  "API",
-		"userID":  userID,
-	}
+	sc := CreateServiceContext(c)
+	sc["userID"] = GetUserID(c)
 
 	var dto model.Create{{PascalCase .Name}}Request
 	if err := c.BindJSON(&dto); err != nil {
@@ -62,14 +56,8 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 // GetOne is
 func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 
-	userID := GetUserID(c)
-
-	sc := map[string]interface{}{
-		"ip":      c.ClientIP(),
-		"session": common.GetShortUniqueID(),
-		"source":  "API",
-		"userID":  userID,
-	}
+	sc := CreateServiceContext(c)
+	sc["userID"] = GetUserID(c)
 
 	id := c.Param("{{CamelCase .Name}}ID")
 
@@ -89,14 +77,8 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 // GetAll is
 func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 
-	userID := GetUserID(c)
-
-	sc := map[string]interface{}{
-		"ip":      c.ClientIP(),
-		"session": common.GetShortUniqueID(),
-		"source":  "API",
-		"userID":  userID,
-	}
+	sc := CreateServiceContext(c)
+	sc["userID"] = GetUserID(c)
 
 	pageStr := c.DefaultQuery("page", "1")
 	page, err := strconv.Atoi(pageStr)
@@ -150,14 +132,8 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 // Update is
 func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 
-	userID := GetUserID(c)
-
-	sc := map[string]interface{}{
-		"ip":      c.ClientIP(),
-		"session": common.GetShortUniqueID(),
-		"source":  "API",
-		"userID":  userID,
-	}
+	sc := CreateServiceContext(c)
+	sc["userID"] = GetUserID(c)
 
 	id := c.Param("{{CamelCase .Name}}ID")
 
@@ -185,14 +161,8 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 // Delete is
 func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 
-	userID := GetUserID(c)
-
-	sc := map[string]interface{}{
-		"ip":      c.ClientIP(),
-		"session": common.GetShortUniqueID(),
-		"source":  "API",
-		"userID":  userID,
-	}
+	sc := CreateServiceContext(c)
+	sc["userID"] = GetUserID(c)
 
 	id := c.Param("{{CamelCase .Name}}ID")
 
