@@ -15,3 +15,6 @@ from = "apps@mail.com"
 [link]
 activation = "/activate"
 resetpassword = "/resetpassword"
+
+[html]
+dist_path = "../webapp/dist"

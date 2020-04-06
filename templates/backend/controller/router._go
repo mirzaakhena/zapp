@@ -5,13 +5,15 @@ import (
 	"net/http"
 	"time"
 
-	"bitbucket.org/mirzaakhena/experimenfx1/utils/common"
+	"{{PackagePath}}/utils/common"
+	"{{PackagePath}}/utils/config"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 // RouterConfig is
 type RouterConfig struct {
+	Config              config.IConfig
 	Router              *gin.Engine
 	UserController      *UserController	{{range .Entities}}
 	{{PascalCase .Name}}Controller *{{PascalCase .Name}}Controller {{end}}
@@ -39,10 +41,13 @@ func (r *RouterConfig) Setup() {
 		MaxAge:          12 * time.Hour,
 	}))
 
-	r.Router.StaticFile("./favicon.ico", "../webcontent/favicon.ico")
-	r.Router.Static("/static", "../webcontent/static")
-	r.Router.LoadHTMLGlob("../webcontent/templates/*")
-	r.Router.GET("/", r.UserController.ValidateToken, func(c *gin.Context) {
+	htmlPathDist := r.Config.GetString("html.dist_path", "")
+
+	r.Router.StaticFile("./favicon.ico", fmt.Sprintf("%s/favicon.ico", htmlPathDist))
+	r.Router.Static("/static", fmt.Sprintf("%s/static", htmlPathDist))
+	r.Router.LoadHTMLGlob(fmt.Sprintf("%s/index.html", htmlPathDist))
+
+	r.Router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{"title": "MainMenu"})
 	})
 

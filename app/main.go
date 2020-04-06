@@ -259,11 +259,6 @@ func (tp *ThePackage) Run() {
 	}
 
 	{
-		dir := fmt.Sprintf("../../../../%s/webapp/src/api", tp.PackagePath)
-		os.MkdirAll(dir, 0777)
-	}
-
-	{
 		dir := fmt.Sprintf("../../../../%s/webapp/src/assets", tp.PackagePath)
 		os.MkdirAll(dir, 0777)
 	}
@@ -283,11 +278,6 @@ func (tp *ThePackage) Run() {
 		os.Mkdir(f, 0777)
 	}
 
-	// {
-	// 	f := fmt.Sprintf("../../../../%s/webapp/src/components", tp.PackagePath)
-	// 	os.Mkdir(f, 0777)
-	// }
-
 	{
 		f := fmt.Sprintf("../../../../%s/webapp/src/utils", tp.PackagePath)
 		os.Mkdir(f, 0777)
@@ -297,28 +287,28 @@ func (tp *ThePackage) Run() {
 
 		// create repository
 		{
-			templateFile := fmt.Sprintf("../templates/backend/repository._go")
+			templateFile := fmt.Sprintf("../templates/backend/repository/repository._go")
 			outputFile := fmt.Sprintf("../../../../%s/repository/%s.go", tp.PackagePath, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create controller
 		{
-			templateFile := fmt.Sprintf("../templates/backend/controller._go")
+			templateFile := fmt.Sprintf("../templates/backend/controller/controller._go")
 			outputFile := fmt.Sprintf("../../../../%s/controller/%s.go", tp.PackagePath, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create model
 		{
-			templateFile := fmt.Sprintf("../templates/backend/model._go")
+			templateFile := fmt.Sprintf("../templates/backend/model/model._go")
 			outputFile := fmt.Sprintf("../../../../%s/model/%s.go", tp.PackagePath, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
 
 		// create service
 		{
-			templateFile := fmt.Sprintf("../templates/backend/service._go")
+			templateFile := fmt.Sprintf("../templates/backend/service/service._go")
 			outputFile := fmt.Sprintf("../../../../%s/service/%s.go", tp.PackagePath, LowerCase(et.Name))
 			basic(tp, templateFile, outputFile, et)
 		}
@@ -375,43 +365,43 @@ func (tp *ThePackage) Run() {
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/backend/main._go")
+		templateFile := fmt.Sprintf("../templates/backend/app/main._go")
 		outputFile := fmt.Sprintf("../../../../%s/app/main.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/backend/model_basic._go")
+		templateFile := fmt.Sprintf("../templates/backend/model/model_basic._go")
 		outputFile := fmt.Sprintf("../../../../%s/model/model.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/backend/user-model._go")
+		templateFile := fmt.Sprintf("../templates/backend/model/user-model._go")
 		outputFile := fmt.Sprintf("../../../../%s/model/user.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/backend/user-repository._go")
+		templateFile := fmt.Sprintf("../templates/backend/repository/user-repository._go")
 		outputFile := fmt.Sprintf("../../../../%s/repository/user.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/backend/user-service._go")
+		templateFile := fmt.Sprintf("../templates/backend/service/user-service._go")
 		outputFile := fmt.Sprintf("../../../../%s/service/user.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/backend/user-controller._go")
+		templateFile := fmt.Sprintf("../templates/backend/controller/user-controller._go")
 		outputFile := fmt.Sprintf("../../../../%s/controller/user.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
 	{
-		templateFile := fmt.Sprintf("../templates/backend/router._go")
+		templateFile := fmt.Sprintf("../templates/backend/controller/router._go")
 		outputFile := fmt.Sprintf("../../../../%s/controller/router.go", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
@@ -473,6 +463,12 @@ func (tp *ThePackage) Run() {
 	{
 		templateFile := fmt.Sprintf("../templates/backend/config._toml")
 		outputFile := fmt.Sprintf("../../../../%s/config.toml", tp.PackagePath)
+		basic(tp, templateFile, outputFile, tp)
+	}
+
+	{
+		templateFile := fmt.Sprintf("../templates/backend/.build._sh")
+		outputFile := fmt.Sprintf("../../../../%s/.build.sh", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
 
@@ -565,12 +561,6 @@ func (tp *ThePackage) Run() {
 		outputFile := fmt.Sprintf("../../../../%s/webapp/src/main.js", tp.PackagePath)
 		basic(tp, templateFile, outputFile, tp)
 	}
-
-	// {
-	// 	templateFile := fmt.Sprintf("../templates/frontend/src/api/index._js")
-	// 	outputFile := fmt.Sprintf("../../../../%s/webapp/src/api/index.js", tp.PackagePath)
-	// 	basic(tp, templateFile, outputFile, tp)
-	// }
 
 	{
 		templateFile := fmt.Sprintf("../templates/frontend/src/store/index._js")

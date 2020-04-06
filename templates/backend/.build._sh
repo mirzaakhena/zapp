@@ -1,0 +1,3 @@
+rm -rf dist/{{AppName}}
+
+go build -o dist/{{AppName}} $GOPATH/src/{{PackagePath}}/app/main.go

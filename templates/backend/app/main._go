@@ -67,6 +67,7 @@ func main() {
 	} {{end}}
 
 	rc := controller.RouterConfig{
+		Config: cf,
 		Router: ginRouter, 
 		UserController: controller.NewUserController(userService),	{{range .Entities}}
 		{{PascalCase .Name}}Controller: controller.New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service), {{end}}

@@ -30,3 +30,5 @@ yarn-error.log*
 
 static/*
 templates/*
+
+/webapp/dist
