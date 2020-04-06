@@ -33,24 +33,26 @@ var secretKey = []byte{
 
 func main() {
 
-	log.GetLog().WithFile("{{AppName}}", 14)
-
-	log.GetLog().Info(nil, "Apps run")
-
 	cf := config.NewSimpleConfig("config", "$GOPATH/src/{{PackagePath}}")
+
+	log.GetLog().WithFile(cf.GetString("log.path", "."), cf.GetString("application.name", "{{AppName}}"), cf.GetInt("log.max_age", 14))
+
+	log.GetLog().Info(nil, "Apps is start running")
 
 	db, err := gorm.Open(cf.GetString("database.dialect", "sqlite3"), cf.GetString("database.connection_string", "database.db"))
 	if err != nil {
 		panic(err)
 	}
-	db.LogMode(cf.GetBool("database.log", "false"))
+	db.LogMode(cf.GetBool("database.log", false))
 
-	// f, err := os.OpenFile("testlogfile", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	// if err != nil {
-	// 	log.Fatalf("error opening file: %v", err)
+	// {
+	// 	f, err := os.OpenFile("sql.debug.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	// 	if err != nil {
+	// 		log.GetLog().Fatal(nil, "Error opening file %v", err.Error())
+	// 	}
+	// 	db.SetLogger(defaultLog.New(f, "[SQL] ", 0))
+	// 	gin.DefaultWriter = f
 	// }
-	// db.SetLogger(log.New(f, "\r\n", 0))
-	// gin.DefaultWriter = f
 
 	ginRouter := gin.Default()
 
@@ -81,7 +83,7 @@ func main() {
 		}
 
 	} else {
-		ginRouter.Run(fmt.Sprintf(":%d", cf.GetInt("server.port", "8081")))
+		ginRouter.Run(fmt.Sprintf(":%d", cf.GetInt("server.port", 8081)))
 	}
 	
 }

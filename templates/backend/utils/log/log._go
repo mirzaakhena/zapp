@@ -32,7 +32,7 @@ type ILogger interface {
 	Error(sc map[string]interface{}, description string, args ...interface{}) string
 	Fatal(sc map[string]interface{}, description string, args ...interface{}) string
 	Panic(sc map[string]interface{}, description string, args ...interface{}) string
-	WithFile(appsName string, maxAge int)
+	WithFile(path, appsName string, maxAge int)
 }
 
 // LogrusImpl is
@@ -59,7 +59,7 @@ func GetLog() ILogger {
 // filename is just a name of log file without any extension
 //
 // maxAge is age (in days) of the logs file before it gets purged from the file system
-func (l *logrusImpl) WithFile(appsName string, maxAge int) {
+func (l *logrusImpl) WithFile(path, appsName string, maxAge int) {
 
 	if !l.useFile {
 
@@ -68,8 +68,8 @@ func (l *logrusImpl) WithFile(appsName string, maxAge int) {
 		}
 
 		writer, _ := rotatelogs.New(
-			fmt.Sprintf("/var/log/%s/logs/%s.log.%s", appsName, appsName, "%Y%m%d"), 
-			rotatelogs.WithLinkName(fmt.Sprintf("/var/log/%s/%s.log", appsName, appsName) ),
+			fmt.Sprintf("%s/logs/%s.log.%s", path, appsName, "%Y%m%d"),
+			rotatelogs.WithLinkName(fmt.Sprintf("%s/%s.log", path, appsName)),
 			rotatelogs.WithMaxAge(time.Duration(maxAge*24)*time.Hour),
 			rotatelogs.WithRotationTime(time.Duration(1*24)*time.Hour),
 		)		
@@ -80,6 +80,8 @@ func (l *logrusImpl) WithFile(appsName string, maxAge int) {
 				logrus.WarnLevel:  writer,
 				logrus.ErrorLevel: writer,
 				logrus.DebugLevel: writer,
+				logrus.FatalLevel: writer,
+				logrus.PanicLevel: writer,				
 			},
 			defaultLogger.theLogger.Formatter,
 		))

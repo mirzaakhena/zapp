@@ -1,7 +1,9 @@
+[application]
+name = "{{AppName}}"
+
 [server]
 domain = "{{AppName}}.com"
 ssl = "server"
-protocol = "http"
 port = 8081
 
 [database]
@@ -18,3 +20,7 @@ resetpassword = "/resetpassword"
 
 [html]
 dist_path = "../webapp/dist"
+
+[log]
+path = "."
+max_age = 14
