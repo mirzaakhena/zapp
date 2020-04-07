@@ -12,12 +12,13 @@ Notice that you have template script in `app/skrip.yaml` that describe the model
 
 
 ## GENERATE THE PROJECT
-Open this cloned project with your IDE and then run with console
+Open this cloned project with your IDE (Visual Studio Code is recommended) and then run with console
 ```
 cd app/
 go run main.go
 ```
-Then project will generated in `$GOPATH/src/bitbucket.org/mirzaakhena/experimenfx1`. Under that path, You will see there is 2 directory which is `client/` and `server/`
+In the first time you call this, it will take some time maybe 5 minutes because Golang dependency is being downloaded
+The project will generated in `$GOPATH/src/bitbucket.org/mirzaakhena/experimenfx1`. Under that path, you will see there is 2 directory which is `client/` and `server/`
 
 
 ## WORKING ON DEVELOPMENT MODE
@@ -30,12 +31,10 @@ Go to `client/` directory
 cd client/
 ```
 
-Download webapp dependency
+Download webapp dependency. It will take some time to download the dependency
 ```
 npm install
 ```
-
-This client code currently written in vuejs framework
 
 Run the client in development mode
 ```
@@ -49,14 +48,13 @@ Go to `server/app/` directory
 cd server/app/
 ```
 
-This server code currently written in golang code
-
 Run the server application
 ```
 go run main.go
 ```
 
 Open your browser then access the `http://localhost:4000`
+The API which is consumed by frontend is provided in `http://localhost:8081`
 
 In the beginning, you will see the login page. Click the register button then register your self there. Back to login page, then login with the username and password.
 
@@ -97,3 +95,4 @@ cd server/dist/
 ```
 
 Open browser then access `http://localhost:8081`
+
