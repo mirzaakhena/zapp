@@ -37,3 +37,8 @@ enums:
     value: TUNAI
   - text: Utang
     value: UTANG
+
+
+usecase:
+- name: CancelOrder
+  
