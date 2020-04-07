@@ -10,7 +10,7 @@ port = 8081
 [database]
 dialect = "sqlite3"
 connection_string = "database.db"
-log = true
+log = false
 
 [email]
 from = "apps@mail.com"
@@ -20,7 +20,7 @@ activation = "/activate"
 resetpassword = "/resetpassword"
 
 [html]
-dist_path = "../webapp/dist"
+dist_path = "../../client/dist"
 
 [log]
 path = "."

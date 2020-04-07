@@ -395,13 +395,13 @@ func (tp *ThePackage) Run() {
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/config._toml")
-				outputFile := fmt.Sprintf("../../../../%s/config.toml", tp.PackagePath)
+				outputFile := fmt.Sprintf("../../../../%s/server/config.toml", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/build._sh")
-				outputFile := fmt.Sprintf("../../../../%s/build.sh", tp.PackagePath)
+				outputFile := fmt.Sprintf("../../../../%s/server/build.sh", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0755)
 			}
 
