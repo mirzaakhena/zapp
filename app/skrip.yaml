@@ -2,7 +2,6 @@ packagePath: bitbucket.org/mirzaakhena/experimenfx1
 
 entities:
   
-
 - name: Pelanggan
   fields:  
   - name: Nama
@@ -11,7 +10,6 @@ entities:
     dataType: string
   - name: Telepon
     dataType: string    
-
 
 - name: OrderJasa
   fields:  
@@ -30,8 +28,6 @@ entities:
   - name: JenisPembayaran
     dataType: enum
     enumReference: JenisPembayaranEnum 
-
-
 
 enums:
 

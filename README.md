@@ -14,25 +14,56 @@ go run main.go
 Then project will generated in `$GOPATH/src/github.com/mirzaakhena/sample`
 
 
-## WORKING ON GENERATED CODE
-Open that new project with your IDE And you need 2 console to run in development mode
+## WORKING ON DEVELOPMENT MODE
+Open that new project with your IDE And you need 2 console
 
 First console to run the frontend side
+
+Go to `client/` directory
 ```
-cd webapp/
+cd client/
+```
+
+Download dependency
+```
 npm install
-npm run build
+```
+
+Run the client
+```
 npm run serve
 ```
 
 Second console to run the backend side
+
+Go to `server/app/` directory
 ```
-cd app/
+cd server/app/
+```
+
+Run the server application
+```
 go run main.go
 ```
 
-## In Development Mode
 Open browser then access `http://localhost:4000`
 
-## In Production Mode
+
+## BUILD FOR PRODUCTION
+
+Go to `client/` directory
+```
+cd client/
+```
+
+Build it
+```
+npm run build
+```
+
+Then output will be on `dist/`
+
+
+
+
 Open browser then access `http://localhost:8081`
