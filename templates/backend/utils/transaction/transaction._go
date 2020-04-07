@@ -1,7 +1,7 @@
 package transaction
 
 import (
-	"{{PackagePath}}/utils/log"
+	"{{PackagePath}}/server/utils/log"
 	"github.com/jinzhu/gorm"
 )
 

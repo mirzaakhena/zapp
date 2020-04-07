@@ -3,10 +3,10 @@ package service
 import (
 	"fmt"
 
-	"{{PackagePath}}/model"
-	"{{PackagePath}}/repository"
-	"{{PackagePath}}/utils/common"
-	"{{PackagePath}}/utils/transaction"
+	"{{PackagePath}}/server/model"
+	"{{PackagePath}}/server/repository"
+	"{{PackagePath}}/server/utils/common"
+	"{{PackagePath}}/server/utils/transaction"
 )
 
 // I{{PascalCase .Name}}Service is

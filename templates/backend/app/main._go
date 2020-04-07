@@ -9,31 +9,18 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"  //
 	_ "github.com/jinzhu/gorm/dialects/sqlite" //
 
-	"{{PackagePath}}/controller"
-	"{{PackagePath}}/repository"
-	"{{PackagePath}}/service"
-	"{{PackagePath}}/utils/config"
-	"{{PackagePath}}/utils/log"	
-	"{{PackagePath}}/utils/token"	
-	"{{PackagePath}}/utils/transaction"
+	"{{PackagePath}}/server/controller"
+	"{{PackagePath}}/server/repository"
+	"{{PackagePath}}/server/service"
+	"{{PackagePath}}/server/utils/config"
+	"{{PackagePath}}/server/utils/log"	
+	"{{PackagePath}}/server/utils/token"	
+	"{{PackagePath}}/server/utils/transaction"
 )
-
-var secretKey = []byte{
-	'\x3c', '\xcd', '\x11', '\x71', '\xe1', '\x8b', '\xcc', '\xb5',
-	'\xb1', '\x95', '\x8e', '\x7d', '\x22', '\xdb', '\x08', '\x29',
-	'\xa1', '\x28', '\x29', '\xd4', '\xbd', '\x12', '\xe5', '\xda',
-	'\xa0', '\xf5', '\x4f', '\x36', '\x37', '\xd4', '\xd4', '\x5c',
-
-	'\x7c', '\xea', '\xbd', '\x0a', '\x6f', '\x2a', '\xec', '\x2d',
-	'\xaa', '\xab', '\xba', '\x92', '\x81', '\x00', '\xe3', '\xa0',
-	'\x93', '\x0b', '\x10', '\x75', '\xc6', '\x97', '\xa8', '\x6a',
-	'\xc9', '\xfd', '\x48', '\xdc', '\xbc', '\xb5', '\xce', '\xfe',
-}
-
 
 func main() {
 
-	cf := config.NewSimpleConfig("config", "$GOPATH/src/{{PackagePath}}")
+	cf := config.NewSimpleConfig("config", "$GOPATH/src/{{PackagePath}}/server")
 
 	log.GetLog().WithFile(cf.GetString("log.path", "."), cf.GetString("application.name", "{{AppName}}"), cf.GetInt("log.max_age", 14))
 
@@ -61,6 +48,7 @@ func main() {
 	userRepository := repository.NewUserRepository(db) {{range .Entities}}
 	{{CamelCase .Name}}Repository := repository.New{{PascalCase .Name}}Repository(db) {{end}}
 
+	secretKey := []byte(cf.GetString("apps.secret_key", ""))
 	userService := service.NewUserService(trx, &token.Jwt{SecretKey: secretKey}, userRepository) {{range .Entities}}
 	{{CamelCase .Name}}Service := &service.{{PascalCase .Name}}Service{
 		Trx: trx,

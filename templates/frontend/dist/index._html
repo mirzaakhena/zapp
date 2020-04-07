@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Hello, welcome to zapp</h1> 
+  <p>
+    If you read this message, means you are not run this command yet in your frontend folder
+    <div style="border: 1px solid brown; padding: 20px">
+      <pre>npm run build</pre>
+    </div>
+  </p>
+</body>
+</html>

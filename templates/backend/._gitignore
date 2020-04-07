@@ -1,7 +1,7 @@
 .DS_Store
 node_modules
-/dist
-/webcontent
+server/dist
+client/dist
 
 # local env files
 .env.local
@@ -24,11 +24,5 @@ yarn-error.log*
 *.db
 
 *.log
-*._go
 *.log.*
-/aaa
-
-static/*
-templates/*
-
-/webapp/dist
+server/app/logs

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"{{PackagePath}}/utils/common"
-	"{{PackagePath}}/utils/config"
+	"{{PackagePath}}/server/utils/common"
+	"{{PackagePath}}/server/utils/config"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )

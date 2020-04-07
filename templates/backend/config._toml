@@ -1,5 +1,6 @@
 [application]
 name = "{{AppName}}"
+secret_key = "3ccd1171e18bccb5b1958e7d22db0829a12829d4bd12e5daa0f54f3637d4d45c7ceabd0a6f2aec2daaabba928100e3a0930b1075c697a86ac9fd48dcbcb5cefe"
 
 [server]
 domain = "{{AppName}}.com"

@@ -6,10 +6,10 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"{{PackagePath}}/model"
-	"{{PackagePath}}/service"
-	"{{PackagePath}}/utils/common"
-	"{{PackagePath}}/utils/log"
+	"{{PackagePath}}/server/model"
+	"{{PackagePath}}/server/service"
+	"{{PackagePath}}/server/utils/common"
+	"{{PackagePath}}/server/utils/log"
 )
 
 // {{PascalCase .Name}}Controller is

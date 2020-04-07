@@ -3,12 +3,12 @@ package service
 import (
 	"fmt"
 
-	"{{PackagePath}}/model"
-	"{{PackagePath}}/repository"
-	"{{PackagePath}}/utils/common"
-	"{{PackagePath}}/utils/log"
-	"{{PackagePath}}/utils/token"
-	"{{PackagePath}}/utils/transaction"	
+	"{{PackagePath}}/server/model"
+	"{{PackagePath}}/server/repository"
+	"{{PackagePath}}/server/utils/common"
+	"{{PackagePath}}/server/utils/log"
+	"{{PackagePath}}/server/utils/token"
+	"{{PackagePath}}/server/utils/transaction"	
 )
 
 // IUserService is

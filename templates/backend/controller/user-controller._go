@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strings"
 
-	"{{PackagePath}}/model"
-	"{{PackagePath}}/service"
-	"{{PackagePath}}/utils/common"
-	"{{PackagePath}}/utils/log"
+	"{{PackagePath}}/server/model"
+	"{{PackagePath}}/server/service"
+	"{{PackagePath}}/server/utils/common"
+	"{{PackagePath}}/server/utils/log"
 	"github.com/gin-gonic/gin"
 )
 

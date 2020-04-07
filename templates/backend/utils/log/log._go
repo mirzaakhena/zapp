@@ -16,14 +16,6 @@ import (
 var defaultLogger logrusImpl
 var defaultLoggerOnce sync.Once
 
-// Data is
-type Data struct {
-	ClientIP string `` // c.ClientIP() set from controller before entering service
-	Session  string `` // ksuid.New().String() or gonanoid.Generate(x, 12) set from first caller
-	UserID   string `` // from client
-	Type     string `` // MOB/BOF/MSQ/SYS/SCH --> mobile / backoffice / message queuing / system / scheduller
-}
-
 // ILogger is
 type ILogger interface {
 	Debug(sc map[string]interface{}, description string, args ...interface{}) string
