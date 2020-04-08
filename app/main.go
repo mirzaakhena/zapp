@@ -438,7 +438,6 @@ func (tp *ThePackage) Run() {
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
-			{
 				templateFile := fmt.Sprintf("../templates/frontend/package._json")
 				outputFile := fmt.Sprintf("../../../../%s/client/package.json", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)

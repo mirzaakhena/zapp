@@ -1,11 +1,12 @@
 # ZAPP
-Is a scaffolding generator that will produce basic CRUD project complete with server and client code based on some input. Server code is written in Golang Language and client code is written in SPA VueJS Framework.
+Is a scaffolding generator that will produce basic CRUD project complete with server and client code based on script input. Currently server code is written in Golang Language and client code is written in SPA VueJS Framework.
 
-DISCLAIMER: This is still experimental project
+DISCLAIMER: This is still experimental project!
+
 
 ## PREREQUISITE
+Make sure you already install Golang and NPM in your system. Then `git clone` this project and follow those step below for generate, compile and run it
 
-Make sure you already install Golang and NPM in your system. Then just git clone this project
 
 ## WRITE YOUR PROJECT
 Notice that you have template script in `app/skrip.yaml` that describe the model you want to generate. Some of this field should be self explanatory and you can experiment it by changing the field or create another entities
@@ -17,7 +18,7 @@ Open this cloned project with your IDE (Visual Studio Code is recommended) and t
 cd app/
 go run main.go
 ```
-In the first time you call this, it will take some time maybe 5 minutes because Golang dependency is being downloaded
+At the first time you call this, it will take some time maybe 5 minutes because Golang dependency is being downloaded
 The project will generated in `$GOPATH/src/bitbucket.org/mirzaakhena/experimenfx1`. Under that path, you will see there is 2 directory which is `client/` and `server/`
 
 
