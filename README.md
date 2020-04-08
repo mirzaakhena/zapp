@@ -55,11 +55,10 @@ go run main.go
 ```
 
 Open your browser then access the `http://localhost:4000`
-The API which is consumed by frontend is provided in `http://localhost:8081`
 
-In the beginning, you will see the login page. Click the register button then register your self there. Back to login page, then login with the username and password.
+In the beginning, you will see the login page. Click the register button then register your self there. Back to login page, then login with the username and password. The API available in `http://localhost:8081`
 
-By default it use SQLite DB. But you can easily change it into Other Database that supported by GORM.
+By default it use SQLite DB. But you can easily change it into other database that supported by GORM.
 
 
 
