@@ -438,108 +438,106 @@ func (tp *ThePackage) Run() {
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
-				templateFile := fmt.Sprintf("../templates/frontend/package._json")
-				outputFile := fmt.Sprintf("../../../../%s/client/package.json", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/App._vue")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/App.vue", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/assets/style._css")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/assets/style.css", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/dist/index._html")
-				outputFile := fmt.Sprintf("../../../../%s/client/dist/index.html", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/pages/forgotpassword._vue")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/pages/forgotpassword.vue", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/pages/home._vue")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/pages/home.vue", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/pages/login._vue")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/pages/login.vue", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/pages/notfound._vue")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/pages/notfound.vue", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/pages/register._vue")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/pages/register.vue", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/pages/successregister._vue")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/pages/successregister.vue", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/main._js")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/main.js", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/store/index._js")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/store/index.js", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/store/crudtable._js")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/store/crudtable.js", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/router/index._js")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/router/index.js", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/utils/httprequest._js")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/utils/httprequest.js", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/utils/auth._js")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/utils/auth.js", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
-
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/src/utils/filter._js")
-				outputFile := fmt.Sprintf("../../../../%s/client/src/utils/filter.js", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
+			templateFile := fmt.Sprintf("../templates/frontend/package._json")
+			outputFile := fmt.Sprintf("../../../../%s/client/package.json", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
 		}
 
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/App._vue")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/App.vue", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/assets/style._css")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/assets/style.css", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/dist/index._html")
+			outputFile := fmt.Sprintf("../../../../%s/client/dist/index.html", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/pages/forgotpassword._vue")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/pages/forgotpassword.vue", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/pages/home._vue")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/pages/home.vue", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/pages/login._vue")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/pages/login.vue", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/pages/notfound._vue")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/pages/notfound.vue", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/pages/register._vue")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/pages/register.vue", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/pages/successregister._vue")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/pages/successregister.vue", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/main._js")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/main.js", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/store/index._js")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/store/index.js", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/store/crudtable._js")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/store/crudtable.js", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/router/index._js")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/router/index.js", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/utils/httprequest._js")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/utils/httprequest.js", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/utils/auth._js")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/utils/auth.js", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/src/utils/filter._js")
+			outputFile := fmt.Sprintf("../../../../%s/client/src/utils/filter.js", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
 	}
 
 	// multiple generated file

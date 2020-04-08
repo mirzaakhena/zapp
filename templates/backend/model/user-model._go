@@ -3,10 +3,18 @@ package model
 // User is
 type User struct {
 	BaseModel
-	Name     string `json:"name"`  //
-	Email    string `json:"email"` //
-	Password string `json:"-"`     //
-	Role     string `json:"role"`  //	
+	Name     string `` //
+	Email    string `` //
+	Password string `` //
+	Role     string `` //
+}
+
+// UserResponse is
+type UserResponse struct {
+	ID    string `json:"id"`    //
+	Name  string `json:"name"`  //
+	Email string `json:"email"` //
+	Role  string `json:"role"`  //
 }
 
 // RegisterUserRequest is

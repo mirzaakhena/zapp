@@ -7,15 +7,16 @@ import (
 	"{{PackagePath}}/server/repository"
 	"{{PackagePath}}/server/utils/common"
 	"{{PackagePath}}/server/utils/transaction"
+	"github.com/jinzhu/copier"
 )
 
 // I{{PascalCase .Name}}Service is
 type I{{PascalCase .Name}}Service interface {
-	Create(ctx map[string]interface{}, obj model.Create{{PascalCase .Name}}Request) (*model.{{PascalCase .Name}}, error)
-	GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}}
+	Create(ctx map[string]interface{}, obj model.Create{{PascalCase .Name}}Request) (string, error)
+	GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}}Response
 	GetAll(ctx map[string]interface{}, req model.GetAllCommonRequest) *model.GetAllCommonResponse
-	Delete(ctx map[string]interface{}, ID string) (*model.{{PascalCase .Name}}, error)
-	Update(ctx map[string]interface{}, ID string, obj model.Update{{PascalCase .Name}}Request) (*model.{{PascalCase .Name}}, error)
+	Delete(ctx map[string]interface{}, ID string) error
+	Update(ctx map[string]interface{}, ID string, obj model.Update{{PascalCase .Name}}Request) error
 }
 
 // {{PascalCase .Name}}Service is
@@ -26,7 +27,7 @@ type {{PascalCase .Name}}Service struct {
 }
 
 // Create is
-func (g *{{PascalCase .Name}}Service) Create(ctx map[string]interface{}, dto model.Create{{PascalCase .Name}}Request) (*model.{{PascalCase .Name}}, error) {
+func (g *{{PascalCase .Name}}Service) Create(ctx map[string]interface{}, dto model.Create{{PascalCase .Name}}Request) (string, error) {
 
 	ctx["trx"] = g.Trx.GetDB(true)
 	defer delete(ctx, "trx")
@@ -39,9 +40,9 @@ func (g *{{PascalCase .Name}}Service) Create(ctx map[string]interface{}, dto mod
 		refObject := g.{{PascalCase .EntityReference}}Repository.GetOne(ctx, dto.{{PascalCase .EntityReference}}ID)
 		if refObject == nil {
 			g.Trx.Rollback(ctx)
-			return nil, fmt.Errorf("obj with id %v not found", dto.{{PascalCase .EntityReference}}ID)
+			return "", fmt.Errorf("obj with id %v not found", dto.{{PascalCase .EntityReference}}ID)
 		}
-		obj.{{PascalCase .EntityReference}} = refObject
+		obj.{{PascalCase .EntityReference}}ID = refObject.ID
 		obj.{{PascalCase .Name}} = refObject.{{PascalCase .EntityField}}
 	} {{else}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}} {{end}} 
@@ -51,14 +52,17 @@ func (g *{{PascalCase .Name}}Service) Create(ctx map[string]interface{}, dto mod
 
 	g.Trx.Commit(ctx)
 
-	return &obj, nil
+	return obj.ID, nil
 }
 
 // GetOne is
-func (g *{{PascalCase .Name}}Service) GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}} {
+func (g *{{PascalCase .Name}}Service) GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}}Response {
 	ctx["trx"] = g.Trx.GetDB(false)
 	defer delete(ctx, "trx")
-	return g.{{PascalCase .Name}}Repository.GetOne(ctx, ID)
+	obj := g.{{PascalCase .Name}}Repository.GetOne(ctx, ID)
+	result := model.{{PascalCase .Name}}Response{}
+	copier.Copy(&result, obj)
+	return &result
 }
 
 // GetAll is
@@ -83,7 +87,7 @@ func (g *{{PascalCase .Name}}Service) GetAll(ctx map[string]interface{}, req mod
 }
 
 // Delete is
-func (g *{{PascalCase .Name}}Service) Delete(ctx map[string]interface{}, ID string) (*model.{{PascalCase .Name}}, error) {
+func (g *{{PascalCase .Name}}Service) Delete(ctx map[string]interface{}, ID string) error {
 
 	ctx["trx"] = g.Trx.GetDB(true)
 	defer delete(ctx, "trx")
@@ -92,22 +96,22 @@ func (g *{{PascalCase .Name}}Service) Delete(ctx map[string]interface{}, ID stri
 	obj := g.{{PascalCase .Name}}Repository.GetOne(ctx, ID)
 	if obj == nil {
 		g.Trx.Rollback(ctx)
-		return nil, fmt.Errorf("obj with id %v not found", ID)
+		return fmt.Errorf("obj with id %v not found", ID)
 	}
 
 	if err := g.{{PascalCase .Name}}Repository.Delete(ctx, ID); err != nil {
 		g.Trx.Rollback(ctx)
-		return nil, err
+		return err
 	}
 
 	g.Trx.Commit(ctx)
 
-	return obj, nil
+	return nil
 
 }
 
 // Update is
-func (g *{{PascalCase .Name}}Service) Update(ctx map[string]interface{}, ID string, dto model.Update{{PascalCase .Name}}Request) (*model.{{PascalCase .Name}}, error) {
+func (g *{{PascalCase .Name}}Service) Update(ctx map[string]interface{}, ID string, dto model.Update{{PascalCase .Name}}Request) error {
 
 	ctx["trx"] = g.Trx.GetDB(true)
 	defer delete(ctx, "trx")
@@ -116,7 +120,7 @@ func (g *{{PascalCase .Name}}Service) Update(ctx map[string]interface{}, ID stri
 	obj := g.{{PascalCase .Name}}Repository.GetOne(ctx, ID)
 	if obj == nil {
 		g.Trx.Rollback(ctx)
-		return nil, fmt.Errorf("obj with id %v not found", ID)
+		return fmt.Errorf("obj with id %v not found", ID)
 	}
 
 	{{range .Fields}} {{if (eq .DataType "entity")}}
@@ -124,19 +128,19 @@ func (g *{{PascalCase .Name}}Service) Update(ctx map[string]interface{}, ID stri
 		refObject := g.{{PascalCase .EntityReference}}Repository.GetOne(ctx, dto.{{PascalCase .EntityReference}}ID)
 		if refObject == nil {
 			g.Trx.Rollback(ctx)
-			return nil, fmt.Errorf("obj with id %v not found", dto.{{PascalCase .EntityReference}}ID)
+			return fmt.Errorf("obj with id %v not found", dto.{{PascalCase .EntityReference}}ID)
 		}
-		obj.{{PascalCase .EntityReference}} = refObject
+		obj.{{PascalCase .EntityReference}}ID = refObject.ID
 		obj.{{PascalCase .Name}} = refObject.{{PascalCase .EntityField}}
 	} {{else}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}} {{end}} 
 
 	if err := g.{{PascalCase .Name}}Repository.Update(ctx, obj); err != nil {
 		g.Trx.Rollback(ctx)
-		return nil, err
+		return err
 	}
 
 	g.Trx.Commit(ctx)
 
-	return obj, nil
+	return nil
 }

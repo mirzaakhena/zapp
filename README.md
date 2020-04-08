@@ -4,6 +4,10 @@ Is a scaffolding generator that will produce basic CRUD project complete with se
 DISCLAIMER: This is still experimental project!
 
 
+## PURPOSE
+* Accomodate your laziness to coding
+* Learn how to code
+
 ## PREREQUISITE
 Make sure you already install Golang and NPM in your system. Then `git clone` this project and follow those step below for generate, compile and run it
 
@@ -25,14 +29,14 @@ The project will generated in `$GOPATH/src/bitbucket.org/mirzaakhena/experimenfx
 ## WORKING ON DEVELOPMENT MODE
 Open that new project with your IDE And you need 2 console
 
-First console will run the frontend side
+#1 console will run the frontend side
 
 Go to `client/` directory
 ```
 cd client/
 ```
 
-Download webapp dependency. It will take some time to download the dependency
+Download webapp dependency. It will take some time to download web dependency
 ```
 npm install
 ```
@@ -42,7 +46,7 @@ Run the client in development mode
 npm run serve
 ```
 
-Second console will run the backend side
+#2 console will run the backend side
 
 Go to `server/app/` directory
 ```
@@ -74,7 +78,7 @@ Build it
 npm run build
 ```
 
-Then client file output will be on `client/dist/`
+Client distribution file will be on `client/dist/`
 
 Go to `server/` directory
 ```
@@ -86,7 +90,7 @@ Build it
 ./build.sh
 ```
 
-Then server executable output will be on `server/dist/`
+Server executable file will be on `server/dist/`
 
 Run it by
 ```
@@ -95,4 +99,5 @@ cd server/dist/
 ```
 
 Open browser then access `http://localhost:8081`
+
 

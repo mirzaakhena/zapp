@@ -42,14 +42,14 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 
 	log.GetLog().Info(sc, "REQUEST data %v", common.GetJSON(dto))
 
-	obj, err := g.{{CamelCase .Name}}Service.Create(sc, dto)
+	objID, err := g.{{CamelCase .Name}}Service.Create(sc, dto)
 	if err != nil {
 		message := log.GetLog().Error(sc, "RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
 		return
 	}
 
-	message := log.GetLog().Info(sc, "RESPONSE %v success created", obj.ID)
+	message := log.GetLog().Info(sc, "RESPONSE %v success created", objID)
 	c.JSON(http.StatusCreated, map[string]interface{}{"message": message})
 }
 
@@ -146,7 +146,7 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 
 	log.GetLog().Info(sc, "REQUEST ID %v, data %v", id, common.GetJSON(dto))
 
-	_, err := g.{{CamelCase .Name}}Service.Update(sc, id, dto)
+	err := g.{{CamelCase .Name}}Service.Update(sc, id, dto)
 	if err != nil {
 		message := log.GetLog().Error(sc, "RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
@@ -168,7 +168,7 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 
 	log.GetLog().Info(sc, "REQUEST ID %v", id)
 
-	_, err := g.{{CamelCase .Name}}Service.Delete(sc, id)
+	err := g.{{CamelCase .Name}}Service.Delete(sc, id)
 	if err != nil {
 		log.GetLog().Error(sc, "RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Error when delete record with ID %v", id)})
