@@ -197,6 +197,20 @@ func HasTime(dataTypes []TheField) bool {
 	return false
 }
 
+// GetUniqueFields is
+func GetUniqueFields(dataTypes []TheField) []TheField {
+	uniqueFields := []TheField{}
+	existing := map[string]TheField{}
+	for _, tm := range dataTypes {
+		_, exist := existing[tm.EntityReference]
+		if !exist {
+			existing[tm.EntityReference] = tm
+			uniqueFields = append(uniqueFields, tm)
+		}
+	}
+	return uniqueFields
+}
+
 // Run is
 func (tp *ThePackage) Run() {
 
@@ -635,14 +649,15 @@ func basic(pkg *ThePackage, templateFile, outputFile string, object interface{},
 	}
 
 	FuncMap := template.FuncMap{
-		"HasTime":     HasTime,
-		"CamelCase":   CamelCase,
-		"PascalCase":  PascalCase,
-		"SnakeCase":   SnakeCase,
-		"UpperCase":   UpperCase,
-		"LowerCase":   LowerCase,
-		"AppName":     func() string { return pkg.ApplicationName },
-		"PackagePath": func() string { return pkg.PackagePath },
+		"UniqueFields": GetUniqueFields,
+		"HasTime":      HasTime,
+		"CamelCase":    CamelCase,
+		"PascalCase":   PascalCase,
+		"SnakeCase":    SnakeCase,
+		"UpperCase":    UpperCase,
+		"LowerCase":    LowerCase,
+		"AppName":      func() string { return pkg.ApplicationName },
+		"PackagePath":  func() string { return pkg.PackagePath },
 	}
 
 	t, err := template.

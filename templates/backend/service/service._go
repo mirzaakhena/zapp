@@ -22,7 +22,7 @@ type I{{PascalCase .Name}}Service interface {
 // {{PascalCase .Name}}Service is
 type {{PascalCase .Name}}Service struct {
 	Trx transaction.ITransaction	
-	{{PascalCase .Name}}Repository repository.I{{PascalCase .Name}}Repository {{range .Fields}} {{if (eq .DataType "entity")}}
+	{{PascalCase .Name}}Repository repository.I{{PascalCase .Name}}Repository {{range UniqueFields .Fields}} {{if (eq .DataType "entity")}}
 	{{PascalCase .EntityReference}}Repository repository.I{{PascalCase .EntityReference}}Repository {{end}} {{end}}
 }
 
@@ -37,12 +37,12 @@ func (g *{{PascalCase .Name}}Service) Create(ctx map[string]interface{}, dto mod
 
 	{{range .Fields}} {{if (eq .DataType "entity")}}
 	{
-		refObject := g.{{PascalCase .EntityReference}}Repository.GetOne(ctx, dto.{{PascalCase .EntityReference}}ID)
+		refObject := g.{{PascalCase .EntityReference}}Repository.GetOne(ctx, dto.{{PascalCase .Name}}ObjID)
 		if refObject == nil {
 			g.Trx.Rollback(ctx)
-			return "", fmt.Errorf("obj with id %v not found", dto.{{PascalCase .EntityReference}}ID)
+			return "", fmt.Errorf("obj with id %v not found", dto.{{PascalCase .Name}}ObjID)
 		}
-		obj.{{PascalCase .EntityReference}}ID = refObject.ID
+		obj.{{PascalCase .Name}}ObjID = refObject.ID
 		obj.{{PascalCase .Name}} = refObject.{{PascalCase .EntityField}}
 	} {{else}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}} {{end}} 
@@ -125,12 +125,12 @@ func (g *{{PascalCase .Name}}Service) Update(ctx map[string]interface{}, ID stri
 
 	{{range .Fields}} {{if (eq .DataType "entity")}}
 	{
-		refObject := g.{{PascalCase .EntityReference}}Repository.GetOne(ctx, dto.{{PascalCase .EntityReference}}ID)
+		refObject := g.{{PascalCase .EntityReference}}Repository.GetOne(ctx, dto.{{PascalCase .Name}}ObjID)
 		if refObject == nil {
 			g.Trx.Rollback(ctx)
-			return fmt.Errorf("obj with id %v not found", dto.{{PascalCase .EntityReference}}ID)
+			return fmt.Errorf("obj with id %v not found", dto.{{PascalCase .Name}}ObjID)
 		}
-		obj.{{PascalCase .EntityReference}}ID = refObject.ID
+		obj.{{PascalCase .Name}}ObjID = refObject.ID
 		obj.{{PascalCase .Name}} = refObject.{{PascalCase .EntityField}}
 	} {{else}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}} {{end}} 
