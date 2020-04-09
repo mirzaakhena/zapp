@@ -40,7 +40,7 @@ func (g *{{PascalCase .Name}}Repository) GetOne(ctx map[string]interface{}, ID s
 
 	{{range .Fields}}
 		{{if (eq .DataType "entity")}}
-			query = query.Preload("{{PascalCase .EntityReference}}")
+			query = query.Preload("{{PascalCase .Name}}Obj")
 		{{end}}
 	{{end}}
 

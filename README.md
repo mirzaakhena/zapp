@@ -5,8 +5,11 @@ DISCLAIMER: This is still experimental project!
 
 
 ## PURPOSE
-* Accomodate your laziness to coding
+* Accomodate your laziness to start coding
+* Bootstrap your skeleton code
+* Have fix consistent folder structure
 * Learn how to code
+
 
 ## PREREQUISITE
 Make sure you already install Golang and NPM in your system. Then `git clone` this project and follow those step below for generate, compile and run it
@@ -40,6 +43,8 @@ Download webapp dependency. It will take some time to download web dependency
 ```
 npm install
 ```
+Make sure `node_modules/` is created dependency is success downloaded
+
 
 Run the client in development mode
 ```

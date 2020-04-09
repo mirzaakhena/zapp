@@ -8,10 +8,11 @@ import (
 // {{PascalCase .Name}} is
 type {{PascalCase .Name}} struct { 
 	BaseModel{{range .Fields}}{{if (eq .DataType "enum")}}
-	{{PascalCase .Name}} string `` // {{else if (eq .DataType "entity")}}
-	{{PascalCase .Name}}ObjID string `` //
-	{{PascalCase .Name}} string `` // {{else}}
-	{{PascalCase .Name}} {{.DataType}} `` // {{end}}{{end}}
+	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}"` // {{else if (eq .DataType "entity")}}
+	{{PascalCase .Name}}Obj *{{PascalCase .EntityReference}} `json:"{{CamelCase .Name}}Obj"` //
+	{{PascalCase .Name}}ObjID string `json:"{{CamelCase .Name}}ObjID"` //
+	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}"` // {{else}}
+	{{PascalCase .Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}{{end}}
 }
 
 {{if gt (len .TableName) 0}}
@@ -19,16 +20,6 @@ type {{PascalCase .Name}} struct {
 func ({{PascalCase .Name}}) TableName() string {
 	return "{{.TableName}}"
 } {{end}}
-
-// {{PascalCase .Name}}Response is
-type {{PascalCase .Name}}Response struct { 
-	ID string `json:"id"` // {{range .Fields}}{{if (eq .DataType "enum")}}
-	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}"` // {{else if (eq .DataType "entity")}}
-	{{PascalCase .Name}}Obj *{{PascalCase .EntityReference}} `json:"{{CamelCase .Name}}Obj"` //
-	{{PascalCase .Name}}ObjID string `json:"{{CamelCase .Name}}ObjID"` //
-	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}"` // {{else}}
-	{{PascalCase .Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}{{end}}
-}
 
 // Create{{PascalCase .Name}}Request is
 type Create{{PascalCase .Name}}Request struct { {{range .Fields}}{{if (eq .DataType "enum")}}

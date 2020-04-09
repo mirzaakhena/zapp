@@ -61,8 +61,8 @@ export default {
     const entity = '{{CamelCase .Name}}'
 
     const initialObject = () => {
-      return { {{range .Fields}} {{if (eq .DataType "entity")}}
-        {{CamelCase .EntityReference}}ID: '',{{else if (eq .DataType "string")}}
+      return { {{range UniqueFields .Fields}} {{if (eq .DataType "entity")}}
+        {{CamelCase .Name}}ObjID: '',{{else if (eq .DataType "string")}}
         {{CamelCase .Name}}: '{{.DefaultValue}}',{{else if (eq .DataType "enum")}}
         {{CamelCase .Name}}: '{{.DefaultValue}}',{{else if (eq .DataType "uint")}}
         {{CamelCase .Name}}: 0,{{else if (eq .DataType "int")}}
@@ -100,7 +100,7 @@ export default {
         state.inputedItem = inputedItem
       }
       {{range .Fields}}{{if (eq .DataType "entity")}}
-      refs.autocomplete{{PascalCase .Name}}Model.setValue(state.inputedItem.{{CamelCase .EntityReference}}){{end}}{{end}}
+      refs.autocomplete{{PascalCase .Name}}Model.setValue(state.inputedItem.{{CamelCase .Name}}Obj){{end}}{{end}}
     }
 
     const onHidden = () => {
@@ -137,7 +137,7 @@ export default {
       },
 
       submit (result) {
-        state.inputedItem.{{CamelCase .EntityReference}}ID = result.id
+        state.inputedItem.{{CamelCase .Name}}ObjID = result.id
       },
     }
     {{end}}{{end}}

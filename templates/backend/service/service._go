@@ -7,13 +7,12 @@ import (
 	"{{PackagePath}}/server/repository"
 	"{{PackagePath}}/server/utils/common"
 	"{{PackagePath}}/server/utils/transaction"
-	"github.com/jinzhu/copier"
 )
 
 // I{{PascalCase .Name}}Service is
 type I{{PascalCase .Name}}Service interface {
 	Create(ctx map[string]interface{}, obj model.Create{{PascalCase .Name}}Request) (string, error)
-	GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}}Response
+	GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}}
 	GetAll(ctx map[string]interface{}, req model.GetAllCommonRequest) *model.GetAllCommonResponse
 	Delete(ctx map[string]interface{}, ID string) error
 	Update(ctx map[string]interface{}, ID string, obj model.Update{{PascalCase .Name}}Request) error
@@ -56,13 +55,11 @@ func (g *{{PascalCase .Name}}Service) Create(ctx map[string]interface{}, dto mod
 }
 
 // GetOne is
-func (g *{{PascalCase .Name}}Service) GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}}Response {
+func (g *{{PascalCase .Name}}Service) GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}} {
 	ctx["trx"] = g.Trx.GetDB(false)
 	defer delete(ctx, "trx")
 	obj := g.{{PascalCase .Name}}Repository.GetOne(ctx, ID)
-	result := model.{{PascalCase .Name}}Response{}
-	copier.Copy(&result, obj)
-	return &result
+	return obj
 }
 
 // GetAll is
@@ -75,7 +72,7 @@ func (g *{{PascalCase .Name}}Service) GetAll(ctx map[string]interface{}, req mod
 	items := []interface{}{}
 
 	for _, item := range r {
-		items = append(items, item)
+		items = append(items, item)		
 	}
 
 	result := model.GetAllCommonResponse{
