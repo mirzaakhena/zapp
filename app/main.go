@@ -137,12 +137,20 @@ type TheEnum struct {
 	Values []TextAndValue `yaml:"values"`
 }
 
+// TheService is
+type TheService struct {
+	Name        string   `yaml:"name"`
+	Description string   `yaml:"description"`
+	DependOn    []string `yaml:"dependOn"`
+}
+
 // ThePackage is
 type ThePackage struct {
-	ApplicationName string     ``
-	PackagePath     string     `yaml:"packagePath"`
-	Entities        []TheClass `yaml:"entities"`
-	Enums           []TheEnum  `yaml:"enums"`
+	ApplicationName string       ``
+	PackagePath     string       `yaml:"packagePath"`
+	Entities        []TheClass   `yaml:"entities"`
+	Enums           []TheEnum    `yaml:"enums"`
+	Services        []TheService `yaml:"services"`
 }
 
 // CamelCase is
@@ -243,6 +251,16 @@ func (tp *ThePackage) Run() {
 			}
 
 			{
+				dir := fmt.Sprintf("../../../../%s/server/service.usecase", tp.PackagePath)
+				os.MkdirAll(dir, 0777)
+			}
+
+			{
+				dir := fmt.Sprintf("../../../../%s/server/service.usecase.model", tp.PackagePath)
+				os.MkdirAll(dir, 0777)
+			}
+
+			{
 				dir := fmt.Sprintf("../../../../%s/server/repository", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 			}
@@ -338,6 +356,12 @@ func (tp *ThePackage) Run() {
 			{
 				templateFile := fmt.Sprintf("../templates/backend/service/user-service._go")
 				outputFile := fmt.Sprintf("../../../../%s/server/service/system.user.go", tp.PackagePath)
+				basic(tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/service.usecase/service._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/service.usecase/service.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
@@ -582,6 +606,13 @@ func (tp *ThePackage) Run() {
 				outputFile := fmt.Sprintf("../../../../%s/server/service/%s.go", tp.PackagePath, LowerCase(et.Name))
 				basic(tp, templateFile, outputFile, et, 0664)
 			}
+
+		}
+
+		for _, sv := range tp.Services {
+			templateFile := fmt.Sprintf("../templates/backend/service.usecase/model/model._go")
+			outputFile := fmt.Sprintf("../../../../%s/server/service.usecase.model/%s.go", tp.PackagePath, LowerCase(sv.Name))
+			basic(tp, templateFile, outputFile, sv, 0664)
 		}
 
 		// frontend

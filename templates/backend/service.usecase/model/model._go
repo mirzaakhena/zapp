@@ -1,0 +1,9 @@
+package model
+
+// {{PascalCase .Name}}Request is
+type {{PascalCase .Name}}Request struct { 
+}
+
+// {{PascalCase .Name}}Response is
+type {{PascalCase .Name}}Response struct { 
+}

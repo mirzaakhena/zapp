@@ -126,3 +126,48 @@ enums:
     value: PER_WEEK
   - text: PerMonth
     value: PER_MONTH        
+
+
+services:
+- name: InitPoint
+  description: invoked when user is registered set initial point for user
+  dependOn:
+  - TheUser
+  - UserPoint
+
+- name: UpdatePoint
+  description: called whenever some event is triggered like ORDER, BUY_VOUCHER, REFFERAL    
+  dependOn:
+  - TheUser
+  - UserPoint
+  
+- name: ExpiryPoint
+  description: called when we want to reset point if it meet some condition
+  dependOn:
+  - TheUser
+  - UserPoint
+
+- name: GetCurrentPoint
+  description: giving information about point of user
+  dependOn:
+  - UserPoint
+
+- name: BuyVoucher
+  description: 
+  dependOn:
+
+- name: GetVoucherList
+  description: 
+  dependOn:  
+
+- name: ExpiryVoucher
+  description: 
+  dependOn:  
+
+- name: UserRegister
+  description: 
+  dependOn:  
+
+- name: UserRefferal
+  description: 
+  dependOn:  

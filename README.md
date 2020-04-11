@@ -105,4 +105,18 @@ cd server/dist/
 
 Open browser then access `http://localhost:8081`
 
+## RULES FOR SERVER (BACKEND)
 
+### Repository
+Is the source of data. It can be database, file, webservice, or anything.
+
+### Service
+Is the place you put the logic of your application
+
+### Controller
+Is the place where you publish your application as REST API to be used by external resource
+
+
+## NEXT IMPROVEMENT
+* Error Codes
+* 
