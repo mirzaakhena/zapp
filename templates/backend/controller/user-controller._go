@@ -6,8 +6,8 @@ import (
 
 	"{{PackagePath}}/server/model"
 	"{{PackagePath}}/server/service"
-	"{{PackagePath}}/server/utils/common"
-	"{{PackagePath}}/server/utils/log"
+	"{{PackagePath}}/server/shared/utils"
+	"{{PackagePath}}/server/shared/log"
 	"github.com/gin-gonic/gin"
 )
 
@@ -111,7 +111,7 @@ func (u *UserController) Register(c *gin.Context) {
 		return
 	}
 
-	log.GetLog().Info(sc, "REQUEST. Data %v", common.GetJSON(dto))
+	log.GetLog().Info(sc, "REQUEST. Data %v", utils.GetJSON(dto))
 
 	if err := u.userService.Register(sc, dto); err != nil {
 		message := log.GetLog().Error(sc, "RESPONSE %v", err.Error())

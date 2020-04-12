@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"{{PackagePath}}/server/model"
 	"{{PackagePath}}/server/service"
-	"{{PackagePath}}/server/utils/common"
-	"{{PackagePath}}/server/utils/log"
+	"{{PackagePath}}/server/shared/utils"
+	"{{PackagePath}}/server/shared/log"
 )
 
 // {{PascalCase .Name}}Controller is
@@ -40,7 +40,7 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 		return
 	}
 
-	log.GetLog().Info(sc, "REQUEST data %v", common.GetJSON(dto))
+	log.GetLog().Info(sc, "REQUEST data %v", utils.GetJSON(dto))
 
 	objID, err := g.{{CamelCase .Name}}Service.Create(sc, dto)
 	if err != nil {
@@ -113,7 +113,7 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 		}
 	}
 
-	log.GetLog().Info(sc, "REQUEST page %v, size %v, filter %v", page, size, common.GetJSON(filters))
+	log.GetLog().Info(sc, "REQUEST page %v, size %v, filter %v", page, size, utils.GetJSON(filters))
 
 	req := model.GetAllCommonRequest{
 		Filters:  filters,
@@ -144,7 +144,7 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 		return
 	}
 
-	log.GetLog().Info(sc, "REQUEST ID %v, data %v", id, common.GetJSON(dto))
+	log.GetLog().Info(sc, "REQUEST ID %v, data %v", id, utils.GetJSON(dto))
 
 	err := g.{{CamelCase .Name}}Service.Update(sc, id, dto)
 	if err != nil {

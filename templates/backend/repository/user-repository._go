@@ -2,7 +2,7 @@ package repository
 
 import (
 	"{{PackagePath}}/server/model"
-	"{{PackagePath}}/server/utils/transaction"
+	"{{PackagePath}}/server/shared/transaction"
 	"github.com/jinzhu/gorm"
 )
 
@@ -24,13 +24,13 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 
 // Create is
 func (u *UserRepository) Create(ctx map[string]interface{}, obj *model.User) error {
-	return transaction.GetDB(ctx).Create(obj).Error
+	return transaction.ExtractDB(ctx).Create(obj).Error
 }
 
 // GetByEmail is
 func (u *UserRepository) GetByEmail(ctx map[string]interface{}, email string) *model.User {
 	var obj model.User
-	transaction.GetDB(ctx).First(&obj, "email = ?", email)
+	transaction.ExtractDB(ctx).First(&obj, "email = ?", email)
 	if obj.ID == "" {
 		return nil
 	}
@@ -42,7 +42,7 @@ func (u *UserRepository) GetByEmail(ctx map[string]interface{}, email string) *m
 func (u *UserRepository) GetOne(ctx map[string]interface{}, ID string) *model.User {
 	var obj model.User
 
-	query := transaction.GetDB(ctx)
+	query := transaction.ExtractDB(ctx)
 
 	query.First(&obj, "id = ?", ID)
 

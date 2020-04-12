@@ -5,15 +5,15 @@ import (
 
 	"{{PackagePath}}/server/model"
 	"{{PackagePath}}/server/repository"
-	"{{PackagePath}}/server/utils/common"
-	"{{PackagePath}}/server/utils/transaction"
+	"{{PackagePath}}/server/shared/utils"
+	"{{PackagePath}}/server/shared/transaction"
 )
 
 // I{{PascalCase .Name}}Service is
 type I{{PascalCase .Name}}Service interface {
 	Create(ctx map[string]interface{}, obj model.Create{{PascalCase .Name}}Request) (string, error)
 	GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}}
-	GetAll(ctx map[string]interface{}, req model.GetAllCommonRequest) *model.GetAllCommonResponse
+	GetAll(ctx map[string]interface{}, req model.GetAllCommonRequest) model.GetAllCommonResponse
 	Delete(ctx map[string]interface{}, ID string) error
 	Update(ctx map[string]interface{}, ID string, obj model.Update{{PascalCase .Name}}Request) error
 }
@@ -45,7 +45,7 @@ func (g *{{PascalCase .Name}}Service) Create(ctx map[string]interface{}, dto mod
 		obj.{{PascalCase .Name}} = refObject.{{PascalCase .EntityField}}
 	} {{else}}
 	obj.{{.Name}} = dto.{{.Name}} {{end}} {{end}} 
-	obj.ID = common.GetUUID() 
+	obj.ID = utils.GetUUID() 
 
 	g.{{PascalCase .Name}}Repository.Create(ctx, &obj)
 
@@ -63,24 +63,24 @@ func (g *{{PascalCase .Name}}Service) GetOne(ctx map[string]interface{}, ID stri
 }
 
 // GetAll is
-func (g *{{PascalCase .Name}}Service) GetAll(ctx map[string]interface{}, req model.GetAllCommonRequest) *model.GetAllCommonResponse {
+func (g *{{PascalCase .Name}}Service) GetAll(ctx map[string]interface{}, req model.GetAllCommonRequest) model.GetAllCommonResponse {
 	ctx["trx"] = g.Trx.GetDB(false)
 	defer delete(ctx, "trx")
 
 	r, c := g.{{PascalCase .Name}}Repository.GetAll(ctx, req.Page, req.Size, req.SortBy, req.SortDesc, req.Filters)
 
-	items := []interface{}{}
-
-	for _, item := range r {
-		items = append(items, item)		
+	if c == 0 {
+		return model.GetAllCommonResponse{
+			TotalCount: 0,
+			Items:      []interface{}{},
+		}
 	}
 
-	result := model.GetAllCommonResponse{
+	return model.GetAllCommonResponse{
 		TotalCount: c,
-		Items:      items,
+		Items:      r,
 	}
 
-	return &result	
 }
 
 // Delete is

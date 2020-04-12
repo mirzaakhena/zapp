@@ -1,0 +1,7 @@
+#!/bin/bash
+
+rm -rf dist/{{AppName}}
+
+GOOS=linux GOARCH=amd64 go build -o dist/{{AppName}} ../app/api/main.go
+
+docker build -f Dockerfile -t {{AppName}} .

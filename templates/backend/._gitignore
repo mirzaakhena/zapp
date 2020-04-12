@@ -23,6 +23,5 @@ yarn-error.log*
 
 *.db
 
-*.log
 *.log.*
 server/app/logs

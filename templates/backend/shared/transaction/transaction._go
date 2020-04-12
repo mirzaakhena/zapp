@@ -1,7 +1,7 @@
 package transaction
 
 import (
-	"{{PackagePath}}/server/utils/log"
+	"{{PackagePath}}/server/shared/log"
 	"github.com/jinzhu/gorm"
 )
 
@@ -18,7 +18,7 @@ type GormTransactionDB struct {
 	DB *gorm.DB
 }
 
-func GetDB(ctx map[string]interface{}) *gorm.DB {
+func ExtractDB(ctx map[string]interface{}) *gorm.DB {
 	trx, ok := ctx["trx"]
 	if !ok {
 		log.GetLog().Fatal(ctx, "transaction not found")
@@ -42,12 +42,12 @@ func (g *GormTransactionDB) GetDB(withTransaction bool) *gorm.DB {
 
 // Commit is
 func (g *GormTransactionDB) Commit(ctx map[string]interface{}) {
-	GetDB(ctx).Commit()
+	ExtractDB(ctx).Commit()
 }
 
 // Rollback is
 func (g *GormTransactionDB) Rollback(ctx map[string]interface{}) {
-	GetDB(ctx).Rollback()
+	ExtractDB(ctx).Rollback()
 }
 
 // RollbackOnException is common handler for rollback the transaction
@@ -55,7 +55,7 @@ func (g *GormTransactionDB) Rollback(ctx map[string]interface{}) {
 // use with defer right after we call GetDB(true)
 func (g *GormTransactionDB) RollbackOnException(ctx map[string]interface{}) {
 
-	trx := GetDB(ctx)
+	trx := ExtractDB(ctx)
 
 	// catch the error
 	if err := recover(); err != nil {

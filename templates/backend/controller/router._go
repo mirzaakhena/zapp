@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"{{PackagePath}}/server/utils/common"
-	"{{PackagePath}}/server/utils/config"
+	"{{PackagePath}}/server/shared/utils"
+	"{{PackagePath}}/server/shared/config"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -23,7 +23,7 @@ type RouterConfig struct {
 func CreateServiceContext(c *gin.Context) map[string]interface{} {
 	sc := map[string]interface{}{
 		"ip":        c.ClientIP(),
-		"session":   common.GetShortUniqueID(),
+		"session":   utils.GetUUID(),
 		"source":    "API",
 		"methodURL": fmt.Sprintf("%s %s", c.Request.Method, c.Request.URL.Path),
 	}

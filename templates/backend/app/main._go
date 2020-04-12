@@ -12,10 +12,10 @@ import (
 	"{{PackagePath}}/server/controller"
 	"{{PackagePath}}/server/repository"
 	"{{PackagePath}}/server/service"
-	"{{PackagePath}}/server/utils/config"
-	"{{PackagePath}}/server/utils/log"	
-	"{{PackagePath}}/server/utils/token"	
-	"{{PackagePath}}/server/utils/transaction"
+	"{{PackagePath}}/server/shared/config"
+	"{{PackagePath}}/server/shared/log"	
+	"{{PackagePath}}/server/shared/token"	
+	"{{PackagePath}}/server/shared/transaction"
 )
 
 func main() {

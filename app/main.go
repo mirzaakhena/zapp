@@ -47,6 +47,16 @@ func processIt() {
 
 	enumsMap := map[string]TheEnum{}
 
+	for i := 0; i < len(tp.Services); i++ {
+		if tp.Services[i].Description == "" {
+			tp.Services[i] = TheService{
+				Description: "is",
+				DependOn:    tp.Services[i].DependOn,
+				Name:        tp.Services[i].Name,
+			}
+		}
+	}
+
 	for _, e := range tp.Enums {
 		enumsMap[e.Name] = e
 
@@ -268,19 +278,19 @@ func (tp *ThePackage) Run() {
 			{
 				dir := ""
 
-				dir = fmt.Sprintf("../../../../%s/server/utils/common", tp.PackagePath)
+				dir = fmt.Sprintf("../../../../%s/server/shared/common", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 
-				dir = fmt.Sprintf("../../../../%s/server/utils/token", tp.PackagePath)
+				dir = fmt.Sprintf("../../../../%s/server/shared/token", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 
-				dir = fmt.Sprintf("../../../../%s/server/utils/config", tp.PackagePath)
+				dir = fmt.Sprintf("../../../../%s/server/shared/config", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 
-				dir = fmt.Sprintf("../../../../%s/server/utils/log", tp.PackagePath)
+				dir = fmt.Sprintf("../../../../%s/server/shared/log", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 
-				dir = fmt.Sprintf("../../../../%s/server/utils/transaction", tp.PackagePath)
+				dir = fmt.Sprintf("../../../../%s/server/shared/transaction", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 			}
 		}
@@ -337,25 +347,25 @@ func (tp *ThePackage) Run() {
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/model/model_basic._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/model/system.model.go", tp.PackagePath)
+				outputFile := fmt.Sprintf("../../../../%s/server/model/system-model.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/model/user-model._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/model/system.user.go", tp.PackagePath)
+				outputFile := fmt.Sprintf("../../../../%s/server/model/system-user.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/repository/user-repository._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/repository/system.user.go", tp.PackagePath)
+				outputFile := fmt.Sprintf("../../../../%s/server/repository/system-user.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/service/user-service._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/service/system.user.go", tp.PackagePath)
+				outputFile := fmt.Sprintf("../../../../%s/server/service/system-user.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
@@ -367,61 +377,61 @@ func (tp *ThePackage) Run() {
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/controller/user-controller._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/controller/system.user.go", tp.PackagePath)
+				outputFile := fmt.Sprintf("../../../../%s/server/controller/system-user.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/controller/router._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/controller/system.router.go", tp.PackagePath)
+				outputFile := fmt.Sprintf("../../../../%s/server/controller/system-router.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
-				templateFile := fmt.Sprintf("../templates/backend/utils/common/identifier._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/utils/common/identifier.go", tp.PackagePath)
+				templateFile := fmt.Sprintf("../templates/backend/shared/utils/identifier._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/utils/identifier.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
-				templateFile := fmt.Sprintf("../templates/backend/utils/common/password._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/utils/common/password.go", tp.PackagePath)
+				templateFile := fmt.Sprintf("../templates/backend/shared/utils/password._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/utils/password.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
-				templateFile := fmt.Sprintf("../templates/backend/utils/common/json._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/utils/common/json.go", tp.PackagePath)
+				templateFile := fmt.Sprintf("../templates/backend/shared/utils/json._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/utils/json.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
-				templateFile := fmt.Sprintf("../templates/backend/utils/common/strings._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/utils/common/strings.go", tp.PackagePath)
+				templateFile := fmt.Sprintf("../templates/backend/shared/utils/strings._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/utils/strings.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
-				templateFile := fmt.Sprintf("../templates/backend/utils/token/jwt._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/utils/token/jwt.go", tp.PackagePath)
+				templateFile := fmt.Sprintf("../templates/backend/shared/token/jwt._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/token/jwt.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
-				templateFile := fmt.Sprintf("../templates/backend/utils/config/config._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/utils/config/config.go", tp.PackagePath)
+				templateFile := fmt.Sprintf("../templates/backend/shared/config/config._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/config/config.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
-				templateFile := fmt.Sprintf("../templates/backend/utils/log/log._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/utils/log/log.go", tp.PackagePath)
+				templateFile := fmt.Sprintf("../templates/backend/shared/log/log._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/log/log.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
-				templateFile := fmt.Sprintf("../templates/backend/utils/transaction/transaction._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/utils/transaction/transaction.go", tp.PackagePath)
+				templateFile := fmt.Sprintf("../templates/backend/shared/transaction/transaction._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/transaction/transaction.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 

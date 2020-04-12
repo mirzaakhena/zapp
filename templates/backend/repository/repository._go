@@ -5,8 +5,8 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"{{PackagePath}}/server/model"
-	"{{PackagePath}}/server/utils/common"
-	"{{PackagePath}}/server/utils/transaction"
+	"{{PackagePath}}/server/shared/utils"
+	"{{PackagePath}}/server/shared/transaction"
 )
 
 // I{{PascalCase .Name}}Repository is
@@ -29,14 +29,14 @@ func New{{PascalCase .Name}}Repository(db *gorm.DB) *{{PascalCase .Name}}Reposit
 
 // Create is
 func (g *{{PascalCase .Name}}Repository) Create(ctx map[string]interface{}, obj *model.{{PascalCase .Name}}) error {
-	return transaction.GetDB(ctx).Create(obj).Error
+	return transaction.ExtractDB(ctx).Create(obj).Error
 }
 
 // GetOne is 
 func (g *{{PascalCase .Name}}Repository) GetOne(ctx map[string]interface{}, ID string) *model.{{PascalCase .Name}} {
 	var obj model.{{PascalCase .Name}}
 
-	query := transaction.GetDB(ctx)
+	query := transaction.ExtractDB(ctx)
 
 	{{range .Fields}}
 		{{if (eq .DataType "entity")}}
@@ -57,12 +57,12 @@ func (g *{{PascalCase .Name}}Repository) GetAll(ctx map[string]interface{}, page
 	var objs []model.{{PascalCase .Name}}
 	var count uint
 
-	query := transaction.GetDB(ctx).Model(&model.{{PascalCase .Name}}{})
+	query := transaction.ExtractDB(ctx).Model(&model.{{PascalCase .Name}}{})
 
 	// filtering
 	if filters != nil {
 		for k, v := range filters {
-			query = query.Where(fmt.Sprintf("%s LIKE ?", common.SnakeCase(k)), fmt.Sprintf("%s%%", v))
+			query = query.Where(fmt.Sprintf("%s LIKE ?", utils.SnakeCase(k)), fmt.Sprintf("%s%%", v))
 		}
 	}
 
@@ -72,9 +72,9 @@ func (g *{{PascalCase .Name}}Repository) GetAll(ctx map[string]interface{}, page
 	// sorting
 	if sortBy != "" {
 		if sortDesc {
-			query = query.Order(fmt.Sprintf("%s DESC", common.SnakeCase(sortBy)))
+			query = query.Order(fmt.Sprintf("%s DESC", utils.SnakeCase(sortBy)))
 		} else {
-			query = query.Order(fmt.Sprintf("%s ASC", common.SnakeCase(sortBy)))
+			query = query.Order(fmt.Sprintf("%s ASC", utils.SnakeCase(sortBy)))
 		}		
 	}
 
@@ -87,10 +87,10 @@ func (g *{{PascalCase .Name}}Repository) GetAll(ctx map[string]interface{}, page
 
 // Delete is
 func (g *{{PascalCase .Name}}Repository) Delete(ctx map[string]interface{}, ID string) error {
-	return transaction.GetDB(ctx).Delete(model.{{PascalCase .Name}}{}, "id = ?", ID).Error
+	return transaction.ExtractDB(ctx).Delete(model.{{PascalCase .Name}}{}, "id = ?", ID).Error
 }
 
 // Update is
 func (g *{{PascalCase .Name}}Repository) Update(ctx map[string]interface{}, obj *model.{{PascalCase .Name}}) error {
-	return transaction.GetDB(ctx).Save(obj).Error
+	return transaction.ExtractDB(ctx).Save(obj).Error
 }

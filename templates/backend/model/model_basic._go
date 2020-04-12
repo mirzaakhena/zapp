@@ -21,6 +21,6 @@ type GetAllCommonRequest struct {
 
 // GetAllCommonResponse is
 type GetAllCommonResponse struct {
-	TotalCount uint          `json:"totalCount"`
-	Items      []interface{} `json:"items"`
+	TotalCount uint        `json:"totalCount"`
+	Items      interface{} `json:"items"`
 }

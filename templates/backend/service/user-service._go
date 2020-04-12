@@ -5,10 +5,10 @@ import (
 
 	"{{PackagePath}}/server/model"
 	"{{PackagePath}}/server/repository"
-	"{{PackagePath}}/server/utils/common"
-	"{{PackagePath}}/server/utils/log"
-	"{{PackagePath}}/server/utils/token"
-	"{{PackagePath}}/server/utils/transaction"	
+	"{{PackagePath}}/server/shared/utils"
+	"{{PackagePath}}/server/shared/log"
+	"{{PackagePath}}/server/shared/token"
+	"{{PackagePath}}/server/shared/transaction"	
 )
 
 // IUserService is
@@ -61,7 +61,7 @@ func (u *UserService) Login(ctx map[string]interface{}, dto model.LoginUserReque
 		return "", fmt.Errorf("User not exist or wrong password 1")
 	}
 
-	if !common.IsValidPassword(dto.Password, existingUser.Password) {
+	if !utils.IsValidPassword(dto.Password, existingUser.Password) {
 		return "", fmt.Errorf("User not exist or wrong password %v != %v", dto.Password, existingUser.Password)
 	}
 
@@ -101,10 +101,10 @@ func (u *UserService) Register(ctx map[string]interface{}, dto model.RegisterUse
 
 	var obj model.User
 
-	obj.ID = common.GetUUID()
+	obj.ID = utils.GetUUID()
 	obj.Name = dto.Name
 	obj.Email = dto.Email
-	obj.Password = common.GenerateHashPassword(dto.Password)
+	obj.Password = utils.GenerateHashPassword(dto.Password)
 	obj.Role = "USER"	
 	u.userRepository.Create(ctx, &obj)
 
