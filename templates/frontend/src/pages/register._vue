@@ -31,9 +31,9 @@ export default {
   data () {
     return {
       registerRequset: {
-        email: 'mirza@gmail.com',
-        name: 'mirza',
-        password: '123456'
+        email: '',
+        name: '',
+        password: ''
       }
     } 
   },

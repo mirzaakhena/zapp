@@ -82,8 +82,11 @@ func (l *logrusImpl) WithFile(path, appsName string, maxAge int) {
 	}
 }
 
-func (l *logrusImpl) getLogEntry(sc map[string]interface{}) *logrus.Entry {
-	pc, _, _, _ := runtime.Caller(2)
+func (l *logrusImpl) getLogEntry(sc map[string]interface{}) *logrus.Entry {	
+	pc, _, _, ok := runtime.Caller(2)
+	if !ok {
+		return l.theLogger.WithFields(sc)
+	}	
 	funcName := runtime.FuncForPC(pc).Name()
 	x := strings.LastIndex(funcName, "/")
 	return l.theLogger.WithFields(sc).WithField("func", funcName[x+1:])

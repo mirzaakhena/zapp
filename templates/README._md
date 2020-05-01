@@ -1,4 +1,4 @@
-# My Apps
+# {{AppName}}
 
 This Apps is include
 
@@ -24,3 +24,4 @@ https://github.com/allegro/bigcache
 https://github.com/golang-standards/project-layout
 https://github.com/golang/go/wiki/Modules
 https://www.soberkoder.com/go-gorm-logging/
+https://github.com/vektra/mockery

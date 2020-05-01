@@ -1,173 +1,23 @@
-packagePath: github.com/mirzaakhena/experiment2
+packagePath: github.com/mirzaakhena/server-with-nsq
 
 entities:
   
-- name: TheUser
+- name: Order
   fields:  
-  - name: PhoneNumber
-    dataType: string
-  - name: RefferalCode
-    dataType: string
-
-- name: TheUserRefferal
-  fields:  
-  - name: UserReferrer
-    dataType: entity
-    entityReference: TheUser
-    entityField: PhoneNumber
-  - name: UserReferee
-    dataType: entity
-    entityReference: TheUser
-    entityField: PhoneNumber
-
-- name: UserPoint
-  fields:  
-  - name: UserPhone
-    dataType: entity
-    entityReference: TheUser
-    entityField: PhoneNumber
   - name: OrderID
     dataType: string
-  - name: Amount
-    dataType: float64
-  - name: Balance
-    dataType: float64
-  - name: Description
-    dataType: string
-  - name: Event
-    dataType: enum
-    enumReference: PointEventEnum        
-
-- name: Voucher
-  fields:  
-  - name: Name
-    dataType: string
-  - name: Terms
-    dataType: string
-  - name: Type
-    dataType: string    
-  - name: ImageURL
-    dataType: string    
-  - name: Date
-    dataType: time.Time
-  - name: Value
+  - name: Delay
     dataType: int
-  - name: ActivityID
-    dataType: string
-  - name: Discount
-    dataType: float64
-  - name: State
+  - name: Status
     dataType: enum
-    enumReference: PointEventEnum  
- 
-- name: VoucherUser
-  fields:  
-  - name: UserPhone
-    dataType: entity
-    entityReference: TheUser
-    entityField: PhoneNumber
-  - name: VoucherName
-    dataType: entity
-    entityReference: Voucher
-    entityField: Name    
-  - name: ExpiryDate
-    dataType: time.Time
-  - name: Amount
-    dataType: float64
-
-- name: PointLimit
-  fields:  
-  - name: Unit
-    dataType: enum
-    enumReference: PointLimitUnitEnum
-  - name: MaxValue
-    dataType: int   
+    enumReference: OrderStatusEnum
 
 enums:
-
-- name: PointEventEnum
+- name: OrderStatusEnum
   values:
-  - text: Registration
-    value: REGISTRATION
-  - text: Order
-    value: ORDER
-  - text: Buy Voucher
-    value: BUY_VOUCHER
-  - text: Expiration
-    value: EXPIRATION
-  - text: Refferal
-    value: REFFERAL
-  - text: Compensation
-    value: COMPENSATION
-  - text: Adjustment
-    value: ADJUSTMENT
-
-- name: PointExpiryEnum
-  values:
-  - text: Active
-    value: ACTIVE
-  - text: Expired
-    value: EXPIRED
-    
-- name: VoucherStateEnum
-  values: 
-  - text: Ready To Use
-    value: READY_TO_USE
-  - text: Expired
-    value: EXPIRED
-  - text: Used
-    value: USED    
-
-- name: PointLimitUnitEnum
-  values: 
-  - text: PerDay
-    value: PER_DAY
-  - text: PerWeek
-    value: PER_WEEK
-  - text: PerMonth
-    value: PER_MONTH        
-
-
-services:
-- name: InitPoint
-  description: invoked when user is registered set initial point for user
-  dependOn:
-  - TheUser
-  - UserPoint
-
-- name: UpdatePoint
-  description: called whenever some event is triggered like ORDER, BUY_VOUCHER, REFFERAL    
-  dependOn:
-  - TheUser
-  - UserPoint
+  - text: INIT
+  - text: ON_PROCESS
+  - text: COMPLETED
   
-- name: ExpiryPoint
-  description: called when we want to reset point if it meet some condition
-  dependOn:
-  - TheUser
-  - UserPoint
 
-- name: GetCurrentPoint
-  description: giving information about point of user
-  dependOn:
-  - UserPoint
 
-- name: BuyVoucher
-  description: 
-  dependOn:
-
-- name: GetVoucherList
-  description: 
-  dependOn:  
-
-- name: ExpiryVoucher
-  description: 
-  dependOn:  
-
-- name: UserRegister
-  description: 
-  dependOn:  
-
-- name: UserRefferal
-  description: 
-  dependOn:  

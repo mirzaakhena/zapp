@@ -28,8 +28,8 @@ export default {
   data () {
     return {
       loginRequest: {
-        email: 'mirza@gmail.com',
-        password: '123456'
+        email: '',
+        password: ''
       }
     } 
   },

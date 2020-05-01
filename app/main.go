@@ -260,15 +260,15 @@ func (tp *ThePackage) Run() {
 				os.MkdirAll(dir, 0777)
 			}
 
-			{
-				dir := fmt.Sprintf("../../../../%s/server/service.usecase", tp.PackagePath)
-				os.MkdirAll(dir, 0777)
-			}
+			// {
+			// 	dir := fmt.Sprintf("../../../../%s/server/service.usecase", tp.PackagePath)
+			// 	os.MkdirAll(dir, 0777)
+			// }
 
-			{
-				dir := fmt.Sprintf("../../../../%s/server/service.usecase.model", tp.PackagePath)
-				os.MkdirAll(dir, 0777)
-			}
+			// {
+			// 	dir := fmt.Sprintf("../../../../%s/server/service.usecase.model", tp.PackagePath)
+			// 	os.MkdirAll(dir, 0777)
+			// }
 
 			{
 				dir := fmt.Sprintf("../../../../%s/server/repository", tp.PackagePath)
@@ -278,7 +278,7 @@ func (tp *ThePackage) Run() {
 			{
 				dir := ""
 
-				dir = fmt.Sprintf("../../../../%s/server/shared/common", tp.PackagePath)
+				dir = fmt.Sprintf("../../../../%s/server/shared/utils", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 
 				dir = fmt.Sprintf("../../../../%s/server/shared/token", tp.PackagePath)
@@ -291,6 +291,15 @@ func (tp *ThePackage) Run() {
 				os.MkdirAll(dir, 0777)
 
 				dir = fmt.Sprintf("../../../../%s/server/shared/transaction", tp.PackagePath)
+				os.MkdirAll(dir, 0777)
+
+				dir = fmt.Sprintf("../../../../%s/server/shared/messagebroker", tp.PackagePath)
+				os.MkdirAll(dir, 0777)
+
+				dir = fmt.Sprintf("../../../../%s/server/shared/constant", tp.PackagePath)
+				os.MkdirAll(dir, 0777)
+
+				dir = fmt.Sprintf("../../../../%s/server/shared/error", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 			}
 		}
@@ -369,11 +378,11 @@ func (tp *ThePackage) Run() {
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
-			{
-				templateFile := fmt.Sprintf("../templates/backend/service.usecase/service._go")
-				outputFile := fmt.Sprintf("../../../../%s/server/service.usecase/service.go", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
+			// {
+			// 	templateFile := fmt.Sprintf("../templates/backend/service.usecase/service._go")
+			// 	outputFile := fmt.Sprintf("../../../../%s/server/service.usecase/service.go", tp.PackagePath)
+			// 	basic(tp, templateFile, outputFile, tp, 0664)
+			// }
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/controller/user-controller._go")
@@ -432,6 +441,42 @@ func (tp *ThePackage) Run() {
 			{
 				templateFile := fmt.Sprintf("../templates/backend/shared/transaction/transaction._go")
 				outputFile := fmt.Sprintf("../../../../%s/server/shared/transaction/transaction.go", tp.PackagePath)
+				basic(tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/producer._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/messagebroker/producer.go", tp.PackagePath)
+				basic(tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/consumer._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/messagebroker/consumer.go", tp.PackagePath)
+				basic(tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/error/error_code._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/error/error_code.go", tp.PackagePath)
+				basic(tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/error/error._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/error/error.go", tp.PackagePath)
+				basic(tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/error/error_test._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/error/error_test.go", tp.PackagePath)
+				basic(tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/constant/constant._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/constant/constant.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 
@@ -619,11 +664,11 @@ func (tp *ThePackage) Run() {
 
 		}
 
-		for _, sv := range tp.Services {
-			templateFile := fmt.Sprintf("../templates/backend/service.usecase/model/model._go")
-			outputFile := fmt.Sprintf("../../../../%s/server/service.usecase.model/%s.go", tp.PackagePath, LowerCase(sv.Name))
-			basic(tp, templateFile, outputFile, sv, 0664)
-		}
+		// for _, sv := range tp.Services {
+		// 	templateFile := fmt.Sprintf("../templates/backend/service.usecase/model/model._go")
+		// 	outputFile := fmt.Sprintf("../../../../%s/server/service.usecase.model/%s.go", tp.PackagePath, LowerCase(sv.Name))
+		// 	basic(tp, templateFile, outputFile, sv, 0664)
+		// }
 
 		// frontend
 		{

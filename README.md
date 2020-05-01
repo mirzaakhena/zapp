@@ -116,6 +116,8 @@ Is the place you put the logic of your application
 ### Controller
 Is the place where you publish your application as REST API to be used by external resource
 
+### Log
+Log is free to put anywhere in layer
 
 ## NEXT IMPROVEMENT
 * Error Codes

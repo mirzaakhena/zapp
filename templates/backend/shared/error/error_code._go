@@ -1,0 +1,12 @@
+package error
+
+// All error in this system will goes here
+// Error code and the message will separated by semicolon ':'
+// Error code must use fix length char
+const (
+	UnClassified string = "User not exist or wrong password"
+
+	ErrorInvalidParams              string = "E1001:Invalid Params. Please check data structure and type"
+	ErrorUsernamePasswordIsNotValid string = "E1002:User not exist or wrong password"
+	ErrorUsernameExist              string = "E1003:User not exist or wrong password"
+)

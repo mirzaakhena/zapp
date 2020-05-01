@@ -1,0 +1,25 @@
+package error
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestNo0(t *testing.T) {
+	x := NewError(UnClassified)
+
+	assert.Equal(t, "Error(0). User not exist or wrong password. ", x.Error())
+}
+
+func TestNo1(t *testing.T) {
+	x := NewError(ErrorUsernameExist)
+
+	assert.Equal(t, "Error(E1003). User not exist or wrong password. ", x.Error())
+}
+
+func TestNo2(t *testing.T) {
+	x := NewError(ErrorUsernameExist, "password %s is not same as %s", "12", "23")
+
+	assert.Equal(t, "Error(E1003). User not exist or wrong password. password 12 is not same as 23", x.Error())
+}

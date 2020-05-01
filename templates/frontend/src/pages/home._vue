@@ -1,7 +1,7 @@
 <template>
   <div id="home" :class="[{'collapsed' : state.collapsed}]" >
     <b-navbar toggleable="lg" type="dark" variant="dark" :sticky="true">
-      <b-navbar-brand href="#">Experimenfx1</b-navbar-brand>
+      <b-navbar-brand href="#">{{AppName}}</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 

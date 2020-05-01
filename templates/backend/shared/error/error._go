@@ -1,0 +1,49 @@
+package error
+
+import (
+	"fmt"
+	"strings"
+)
+
+// CommonError is
+type CommonError struct {
+	Code              string
+	Message           string
+	AdditionalMessage string
+}
+
+// NewError is
+func NewError(constantCode string, args ...interface{}) error {
+
+	msg := ""
+	a := []interface{}{}
+	if len(args) > 0 {
+		msg = args[0].(string)
+		a = args[1:]
+	}
+
+	separatorIndex := strings.Index(constantCode, ":")
+
+	// separator not found then use the default code
+	if separatorIndex < 0 {
+
+		return &CommonError{
+			Code:              "0",
+			Message:           strings.TrimSpace(constantCode),
+			AdditionalMessage: fmt.Sprintf(msg, a...),
+		}
+	}
+
+	code := constantCode[:separatorIndex]
+	message := constantCode[separatorIndex+1:]
+
+	return &CommonError{
+		Code:              strings.TrimSpace(code),
+		Message:           strings.TrimSpace(message),
+		AdditionalMessage: fmt.Sprintf(msg, a...),
+	}
+}
+
+func (e *CommonError) Error() string {
+	return fmt.Sprintf("Error(%s). %s. %s", e.Code, e.Message, e.AdditionalMessage)
+}

@@ -18,6 +18,7 @@ type GormTransactionDB struct {
 	DB *gorm.DB
 }
 
+// ExtractDB is
 func ExtractDB(ctx map[string]interface{}) *gorm.DB {
 	trx, ok := ctx["trx"]
 	if !ok {
