@@ -11,21 +11,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// UserController is
-type UserController struct {
-	userService service.IUserService
+// SystemUserController is
+type SystemUserController struct {
+	userService service.ISystemUserService
 }
 
-// GetUserID is
-func GetUserID(c *gin.Context) string {
+// GetSystemUserID is
+func GetSystemUserID(c *gin.Context) string {
 	extendDataIntf, _ := c.Get("extendData")
 	return extendDataIntf.(map[string]interface{})["userID"].(string)
 }
 
-// NewUserController is
-func NewUserController(userService service.IUserService) *UserController {
+// NewSystemUserController is
+func NewSystemUserController(userService service.ISystemUserService) *SystemUserController {
 
-	c := UserController{
+	c := SystemUserController{
 		userService: userService,
 	}
 
@@ -33,11 +33,11 @@ func NewUserController(userService service.IUserService) *UserController {
 }
 
 // Login is
-func (u *UserController) Login(c *gin.Context) {
+func (u *SystemUserController) Login(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 
-	var dto model.LoginUserRequest
+	var dto model.LoginSystemUserRequest
 
 	if err := c.BindJSON(&dto); err != nil {
 				log.GetLog().Error(sc, "%v", err.Error())
@@ -58,7 +58,7 @@ func (u *UserController) Login(c *gin.Context) {
 }
 
 // ValidateToken is
-func (u *UserController) ValidateToken(c *gin.Context) {
+func (u *SystemUserController) ValidateToken(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
 	s := strings.Fields(token)
 	if len(s) != 2 || s[0] != "Bearer" {
@@ -77,7 +77,7 @@ func (u *UserController) ValidateToken(c *gin.Context) {
 }
 
 // EnforceAccessControl is
-func (u *UserController) EnforceAccessControl(accessName string) gin.HandlerFunc {
+func (u *SystemUserController) EnforceAccessControl(accessName string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		extendData, exist := c.Get("extendData")
@@ -99,11 +99,11 @@ func (u *UserController) EnforceAccessControl(accessName string) gin.HandlerFunc
 }
 
 // Register is
-func (u *UserController) Register(c *gin.Context) {
+func (u *SystemUserController) Register(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 
-	var dto model.RegisterUserRequest
+	var dto model.RegisterSystemUserRequest
 
 	if err := c.BindJSON(&dto); err != nil {
 		log.GetLog().Error(sc, "%v", err.Error())

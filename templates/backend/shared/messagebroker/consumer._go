@@ -1,7 +1,7 @@
 package messagebroker
 
 import (
-	"sync"
+	// "sync"
 
 	nsq "github.com/nsqio/go-nsq"
 )
@@ -69,14 +69,14 @@ func (mb *internalHandlerStruct) HandleMessage(m *nsq.Message) error {
 
 // Run is
 func (mb *Consumer) Run(nsqdURL string) {
-	wg := &sync.WaitGroup{}
+	// wg := &sync.WaitGroup{}
 	for _, cs := range mb.consumers {
-		wg.Add(1)
+		// wg.Add(1)
 
 		// if err := cs.ConnectToNSQLookupd(nsqdURL); err != nil {
 		if err := cs.ConnectToNSQD(nsqdURL); err != nil {
 			panic(err.Error())
 		}
 	}
-	wg.Wait()
+	// wg.Wait()
 }

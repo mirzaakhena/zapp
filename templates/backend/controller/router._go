@@ -13,9 +13,9 @@ import (
 
 // RouterConfig is
 type RouterConfig struct {
-	Config              config.IConfig
-	Router              *gin.Engine
-	UserController      *UserController	{{range .Entities}}
+	Config                config.IConfig
+	Router                *gin.Engine
+	SystemUserController  *SystemUserController	{{range .Entities}}
 	{{PascalCase .Name}}Controller *{{PascalCase .Name}}Controller {{end}}
 }
 
@@ -51,19 +51,19 @@ func (r *RouterConfig) Setup() {
 		c.HTML(http.StatusOK, "index.html", gin.H{"title": "MainMenu"})
 	})
 
-	r.Router.Handle("POST", "/register", r.UserController.Register)
-	r.Router.Handle("POST", "/login", r.UserController.Login)
+	r.Router.Handle("POST", "/register", r.SystemUserController.Register)
+	r.Router.Handle("POST", "/login", r.SystemUserController.Login)
 
-	apiGroup := r.Router.Group("/api", r.UserController.ValidateToken)
+	apiGroup := r.Router.Group("/api", r.SystemUserController.ValidateToken)
 
   {{range .Entities}}
   // {{PascalCase .Name}}
   {
-    apiGroup.Handle("POST", "/{{CamelCase .Name}}", r.UserController.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Controller.Create)
-    apiGroup.Handle("GET", "/{{CamelCase .Name}}", r.UserController.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Controller.GetAll)
-    apiGroup.Handle("GET", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.UserController.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Controller.GetOne)
-    apiGroup.Handle("DELETE", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.UserController.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Controller.Delete)
-    apiGroup.Handle("PUT", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.UserController.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Controller.Update)
+    apiGroup.Handle("POST", "/{{CamelCase .Name}}", r.SystemUserController.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Controller.Create)
+    apiGroup.Handle("GET", "/{{CamelCase .Name}}", r.SystemUserController.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Controller.GetAll)
+    apiGroup.Handle("GET", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.SystemUserController.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Controller.GetOne)
+    apiGroup.Handle("DELETE", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.SystemUserController.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Controller.Delete)
+    apiGroup.Handle("PUT", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.SystemUserController.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Controller.Update)
   } {{end}}
 
 }

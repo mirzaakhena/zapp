@@ -1,4 +1,4 @@
-packagePath: github.com/mirzaakhena/server-with-nsq
+packagePath: github.com/mirzaakhena/systemuser
 
 entities:
   
@@ -8,6 +8,8 @@ entities:
     dataType: string
   - name: Delay
     dataType: int
+  - name: CountDown
+    dataType: int  
   - name: Status
     dataType: enum
     enumReference: OrderStatusEnum
