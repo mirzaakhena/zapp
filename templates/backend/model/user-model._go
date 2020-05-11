@@ -1,7 +1,7 @@
 package model
 
-// UserSystem is
-type UserSystem struct {
+// SystemUser is
+type SystemUser struct {
 	BaseModel
 	Name     string `` //
 	Email    string `` //
@@ -9,23 +9,23 @@ type UserSystem struct {
 	Role     string `` //
 }
 
-// UserSystemResponse is
-type UserSystemResponse struct {
+// SystemUserResponse is
+type SystemUserResponse struct {
 	ID    string `json:"id"`    //
 	Name  string `json:"name"`  //
 	Email string `json:"email"` //
 	Role  string `json:"role"`  //
 }
 
-// RegisterUserSystemRequest is
-type RegisterUserSystemRequest struct {
+// RegisterSystemUserRequest is
+type RegisterSystemUserRequest struct {
 	Name     string `json:"name"`     //
 	Email    string `json:"email"`    //
 	Password string `json:"password"` //
 }
 
-// LoginUserSystemRequest is
-type LoginUserSystemRequest struct {
+// LoginSystemUserRequest is
+type LoginSystemUserRequest struct {
 	Email    string `json:"email"`    //
 	Password string `json:"password"` //
 }

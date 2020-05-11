@@ -31,7 +31,7 @@ func New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service service.I{{Pas
 func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
-	sc["userID"] = GetUserSystemID(c)
+	sc["userID"] = GetSystemUserID(c)
 
 	var dto model.Create{{PascalCase .Name}}Request
 	if err := c.BindJSON(&dto); err != nil {
@@ -57,7 +57,7 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
-	sc["userID"] = GetUserSystemID(c)
+	sc["userID"] = GetSystemUserID(c)
 
 	id := c.Param("{{CamelCase .Name}}ID")
 
@@ -78,7 +78,7 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
-	sc["userID"] = GetUserSystemID(c)
+	sc["userID"] = GetSystemUserID(c)
 
 	pageStr := c.DefaultQuery("page", "1")
 	page, err := strconv.Atoi(pageStr)
@@ -133,7 +133,7 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
-	sc["userID"] = GetUserSystemID(c)
+	sc["userID"] = GetSystemUserID(c)
 
 	id := c.Param("{{CamelCase .Name}}ID")
 
@@ -162,7 +162,7 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
-	sc["userID"] = GetUserSystemID(c)
+	sc["userID"] = GetSystemUserID(c)
 
 	id := c.Param("{{CamelCase .Name}}ID")
 

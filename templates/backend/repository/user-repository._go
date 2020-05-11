@@ -6,30 +6,30 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// IUserSystemRepository is
-type IUserSystemRepository interface {
-	Create(ctx map[string]interface{}, obj *model.UserSystem) error
-	GetByEmail(ctx map[string]interface{}, email string) *model.UserSystem
-	GetOne(ctx map[string]interface{}, ID string) *model.UserSystem
+// ISystemUserRepository is
+type ISystemUserRepository interface {
+	Create(ctx map[string]interface{}, obj *model.SystemUser) error
+	GetByEmail(ctx map[string]interface{}, email string) *model.SystemUser
+	GetOne(ctx map[string]interface{}, ID string) *model.SystemUser
 }
 
-// UserSystemRepository is
-type UserSystemRepository struct{}
+// SystemUserRepository is
+type SystemUserRepository struct{}
 
-// NewUserSystemRepository is
-func NewUserSystemRepository(db *gorm.DB) *UserSystemRepository {
-	db.AutoMigrate(&model.UserSystem{})
-	return &UserSystemRepository{}
+// NewSystemUserRepository is
+func NewSystemUserRepository(db *gorm.DB) *SystemUserRepository {
+	db.AutoMigrate(&model.SystemUser{})
+	return &SystemUserRepository{}
 }
 
 // Create is
-func (u *UserSystemRepository) Create(ctx map[string]interface{}, obj *model.UserSystem) error {
+func (u *SystemUserRepository) Create(ctx map[string]interface{}, obj *model.SystemUser) error {
 	return transaction.ExtractDB(ctx).Create(obj).Error
 }
 
 // GetByEmail is
-func (u *UserSystemRepository) GetByEmail(ctx map[string]interface{}, email string) *model.UserSystem {
-	var obj model.UserSystem
+func (u *SystemUserRepository) GetByEmail(ctx map[string]interface{}, email string) *model.SystemUser {
+	var obj model.SystemUser
 	transaction.ExtractDB(ctx).First(&obj, "email = ?", email)
 	if obj.ID == "" {
 		return nil
@@ -39,8 +39,8 @@ func (u *UserSystemRepository) GetByEmail(ctx map[string]interface{}, email stri
 }
 
 // GetOne is
-func (u *UserSystemRepository) GetOne(ctx map[string]interface{}, ID string) *model.UserSystem {
-	var obj model.UserSystem
+func (u *SystemUserRepository) GetOne(ctx map[string]interface{}, ID string) *model.SystemUser {
+	var obj model.SystemUser
 
 	query := transaction.ExtractDB(ctx)
 
