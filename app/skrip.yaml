@@ -1,44 +1,82 @@
-packagePath: bitbucket.org/mirzaakhena/anc4
+packagePath: github.com/mirzaakhena/coffeeshop
 
 entities:
 
-- name: PointUser
-  fields:    
-  - name: UserID
+- name: User
+  fields:
+  - name: Name
     dataType: string
-  - name: Amount
-    dataType: float64
-  - name: Balance
-    dataType: float64
-  - name: Event
-    dataType: enum
-    enumReference: PointEventEnum    
-  - name: ExtendInfo
+  - name: PhoneNumber
+    dataType: string
+  - name: Password
     dataType: string
 
-- name: PointExpiry
+
+- name: Menu
   fields:
-  - name: UserID
+  - name: Name
     dataType: string
-  - name: Date
-    dataType: time.Time
+  - name: Price
+    dataType: float64
+  - name: Category
+    dataType: enum
+    enumReference: MenuCategoryEnum
+
+
+- name: Order
+  fields:
+  - name: OrderCode
+    dataType: string
+  - name: TableNumber
+    dataType: string
+  - name: UserName
+    dataType: entity
+    entityReference: User
+    entityField: Name
+  - name: State
+    dataType: enum
+    enumReference: OrderStateEnum
+  - name: PaymentType
+    dataType: enum
+    enumReference: OrderPaymentTypeEnum   
+  - name: TotalPayment
+    dataType: float64    
+  
+
+- name:  OrderMenu
+  fields:
+  - name: OrderReference
+    dataType: entity
+    entityReference: Order
+    entityField: OrderCode
+  - name: MenuName
+    dataType: entity
+    entityReference: Menu
+    entityField: Name
+  - name: Quantity
+    dataType: int
+
   
 
 enums:
 
-- name: PointEventEnum
+- name: MenuCategoryEnum
   values:
-  - text: Registration
-    value: REGISTRATION
-  - text: Order
-    value: ORDER
-  - text: Buy Voucher
-    value: BUY_VOUCHER
-  - text: Expiration
-    value: EXPIRATION
-  - text: Refferal
-    value: REFFERAL
-  - text: Compensation
-    value: COMPENSATION
-  - text: Adjustment
-    value: ADJUSTMENT
+  - text: NASI
+  - text: MIE
+  - text: DONAT
+  - text: KOPI
+
+- name: OrderStateEnum
+  values:
+  - text: INIT
+  - text: PAYMENT_WAITING
+  - text: PAYMENT_EXPIRED
+  - text: ORDER_REJECTED
+  - text: ORDER_IN_PROCESS
+  - text: FINISH
+
+- name: OrderPaymentTypeEnum
+  values:
+  - text: TUNAI
+  - text: DANA
