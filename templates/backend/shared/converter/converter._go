@@ -2,40 +2,48 @@ package utils
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
-
-	"bitbucket.org/kfc/mthexperimental/shared/constant"
 )
 
 // GetMSI is
 func GetMSI(input map[string]interface{}, key string) map[string]interface{} {
-	objIntf, ok := input[key]
-	Check(ok, fmt.Errorf("key %s not found", key))
+	objIntf, exist := input[key]
+	if !exist {
+		return nil
+	}
 
 	objMapintf, ok := objIntf.(map[string]interface{})
-	Check(ok, fmt.Errorf("key %s cannot casting to map string interface", key))
+	if !ok {
+		return nil
+	}
+
 	return objMapintf
 }
 
 // GetARI is
 func GetARI(input map[string]interface{}, key string) []interface{} {
-	objIntf, ok := input[key]
-	Check(ok, fmt.Errorf("key %s not found", key))
+	objIntf, exist := input[key]
+	if !exist {
+		return []interface{}{}
+	}
 
 	if objIntf == nil {
 		return []interface{}{}
 	}
 
 	objArrIntf, ok := objIntf.([]interface{})
-	Check(ok, fmt.Errorf("key %s cannot casting to array of interface", key))
+	if !ok {
+		return []interface{}{}
+	}
+
 	return objArrIntf
 }
 
 // ConMSI is
 func ConMSI(input interface{}) map[string]interface{} {
 	obj, ok := input.(map[string]interface{})
-	Check(ok, fmt.Errorf("cannot casting to map string interface"))
+	if !ok {
+		return nil
+	}
 	return obj
 }
 
@@ -48,38 +56,56 @@ func GetMSIFromJSONString(bytes []byte) map[string]interface{} {
 
 // GetString is
 func GetString(input map[string]interface{}, key string) string {
-	str, ok := input[key].(string)
-	Check(ok, errors.New(constant.FailCastingToString))
+	strIntf, exist := input[key]
+	if !exist {
+		return ""
+	}
+
+	str, ok := strIntf.(string)
+	if !ok {
+		return ""
+	}
 	return str
 }
 
 // GetInt is
 func GetInt(input map[string]interface{}, key string) int {
-	float, ok := input[key].(float64)
-	Check(ok, errors.New(constant.FailCastingToFloat))
+	floatIntf, exist := input[key]
+	if !exist {
+		return 0
+	}
+
+	float, ok := floatIntf.(float64)
+	if !ok {
+		return 0
+	}
 	return int(float)
 }
 
 // GetFloat is
 func GetFloat(input map[string]interface{}, key string) float64 {
-	float, ok := input[key].(float64)
-	Check(ok, errors.New(constant.FailCastingToFloat))
+	floatIntf, exist := input[key]
+	if !exist {
+		return 0.0
+	}
+
+	float, ok := floatIntf.(float64)
+	if !ok {
+		return 0.0
+	}
 	return float
 }
 
 // GetBool is
 func GetBool(input map[string]interface{}, key string) bool {
-	boolean, ok := input[key].(bool)
-	Check(ok, errors.New(constant.FailCastingToBoolean))
-	return boolean
-}
+	boolIntf, exist := input[key]
+	if !exist {
+		return false
+	}
 
-// Check is
-func Check(ok bool, e error) {
-	if ok {
-		return
+	boolean, ok := boolIntf.(bool)
+	if !ok {
+		return false
 	}
-	if e != nil {
-		panic(e)
-	}
+	return boolean
 }

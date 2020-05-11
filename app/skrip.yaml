@@ -1,25 +1,44 @@
-packagePath: github.com/mirzaakhena/usersystem
+packagePath: bitbucket.org/mirzaakhena/anc4
 
 entities:
-  
-- name: Order
-  fields:  
-  - name: OrderID
+
+- name: PointUser
+  fields:    
+  - name: UserID
     dataType: string
-  - name: Delay
-    dataType: int
-  - name: CountDown
-    dataType: int  
-  - name: Status
+  - name: Amount
+    dataType: float64
+  - name: Balance
+    dataType: float64
+  - name: Event
     dataType: enum
-    enumReference: OrderStatusEnum
+    enumReference: PointEventEnum    
+  - name: ExtendInfo
+    dataType: string
+
+- name: PointExpiry
+  fields:
+  - name: UserID
+    dataType: string
+  - name: Date
+    dataType: time.Time
+  
 
 enums:
-- name: OrderStatusEnum
+
+- name: PointEventEnum
   values:
-  - text: INIT
-  - text: ON_PROCESS
-  - text: COMPLETED
-  
-
-
+  - text: Registration
+    value: REGISTRATION
+  - text: Order
+    value: ORDER
+  - text: Buy Voucher
+    value: BUY_VOUCHER
+  - text: Expiration
+    value: EXPIRATION
+  - text: Refferal
+    value: REFFERAL
+  - text: Compensation
+    value: COMPENSATION
+  - text: Adjustment
+    value: ADJUSTMENT
