@@ -121,5 +121,9 @@ Log is free to put anywhere in layer
 
 ## NEXT IMPROVEMENT
 * Error Codes
-* SystemUser
 * -e configfile
+* Combine with GraphQL
+* Combine with MessageBroker
+* Combine with GRPC & Protobuf
+* Generate Android/IOS Code
+* Generate Electron Code
