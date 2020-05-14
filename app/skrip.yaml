@@ -16,11 +16,12 @@ entities:
   fields:
   - name: Name
     dataType: string
+    required: true
   - name: Price
     dataType: float64
   - name: Category
     dataType: enum
-    enumReference: MenuCategoryEnum
+    enumReference: MenuCategory
 
 
 - name: Order
@@ -35,10 +36,10 @@ entities:
     entityField: Name
   - name: State
     dataType: enum
-    enumReference: OrderStateEnum
+    enumReference: OrderState
   - name: PaymentType
     dataType: enum
-    enumReference: OrderPaymentTypeEnum   
+    enumReference: OrderPaymentType   
   - name: TotalPayment
     dataType: float64    
   
@@ -60,14 +61,14 @@ entities:
 
 enums:
 
-- name: MenuCategoryEnum
+- name: MenuCategory
   values:
   - text: NASI
   - text: MIE
   - text: DONAT
   - text: KOPI
 
-- name: OrderStateEnum
+- name: OrderState
   values:
   - text: INIT
   - text: PAYMENT_WAITING
@@ -76,7 +77,7 @@ enums:
   - text: ORDER_IN_PROCESS
   - text: FINISH
 
-- name: OrderPaymentTypeEnum
+- name: OrderPaymentType
   values:
   - text: TUNAI
   - text: DANA

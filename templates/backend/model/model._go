@@ -23,14 +23,14 @@ func ({{PascalCase .Name}}) TableName() string {
 
 // Create{{PascalCase .Name}}Request is
 type Create{{PascalCase .Name}}Request struct { {{range .Fields}}{{if (eq .DataType "enum")}}
-	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}"` // {{else if (eq .DataType "entity")}}
-	{{PascalCase .Name}}ObjID string `json:"{{CamelCase .Name}}ObjID"` // {{else}}
-	{{PascalCase .Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}{{end}}
+	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}" {{if .Required}}validate:"required"{{end}}` // {{else if (eq .DataType "entity")}}
+	{{PascalCase .Name}}ObjID string `json:"{{CamelCase .Name}}ObjID" {{if .Required}}validate:"required"{{end}}` // {{else}}
+	{{PascalCase .Name}} {{.DataType}} `json:"{{CamelCase .Name}}" {{if .Required}}validate:"required"{{end}}` // {{end}}{{end}}
 }
 
 // Update{{PascalCase .Name}}Request is
 type Update{{PascalCase .Name}}Request struct { {{range .Fields}}{{if (eq .DataType "enum")}}
-	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}"` // {{else if (eq .DataType "entity")}}
-	{{PascalCase .Name}}ObjID string `json:"{{CamelCase .Name}}ObjID"` // {{else}}
-	{{PascalCase .Name}} {{.DataType}} `json:"{{CamelCase .Name}}"` // {{end}}{{end}}
+	{{PascalCase .Name}} string `json:"{{CamelCase .Name}}" {{if .Required}}validate:"required"{{end}}` // {{else if (eq .DataType "entity")}}
+	{{PascalCase .Name}}ObjID string `json:"{{CamelCase .Name}}ObjID" {{if .Required}}validate:"required"{{end}}` // {{else}}
+	{{PascalCase .Name}} {{.DataType}} `json:"{{CamelCase .Name}}" {{if .Required}}validate:"required"{{end}}` // {{end}}{{end}}
 }

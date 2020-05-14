@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator"
 	"{{PackagePath}}/server/model"
 	"{{PackagePath}}/server/service"
 	"{{PackagePath}}/server/shared/utils"
@@ -39,6 +40,11 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "Invalid Params. Please check data structure and type"})
 		return
 	}
+
+	if err := validator.New().Struct(dto); err != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": err.Error()})
+		return
+	}	
 
 	log.GetLog().Info(sc, "REQUEST data %v", utils.GetJSON(dto))
 
@@ -143,6 +149,11 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Invalid Params. Please check data structure and type")})
 		return
 	}
+
+	if err := validator.New().Struct(dto); err != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": err.Error()})
+		return
+	}	
 
 	log.GetLog().Info(sc, "REQUEST ID %v, data %v", id, utils.GetJSON(dto))
 

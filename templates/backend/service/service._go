@@ -3,10 +3,11 @@ package service
 import (
 	"fmt"
 
-	"{{PackagePath}}/server/model"
+	"{{PackagePath}}/server/model" {{if (.HasEnum)}}
+	"{{PackagePath}}/server/model/enum" {{end}}
 	"{{PackagePath}}/server/repository"
 	"{{PackagePath}}/server/shared/utils"
-	"{{PackagePath}}/server/shared/transaction"
+	"{{PackagePath}}/server/shared/transaction"	
 )
 
 // I{{PascalCase .Name}}Service is
@@ -43,8 +44,14 @@ func (g *{{PascalCase .Name}}Service) Create(ctx map[string]interface{}, dto mod
 		}
 		obj.{{PascalCase .Name}}ObjID = refObject.ID
 		obj.{{PascalCase .Name}} = refObject.{{PascalCase .EntityField}}
+	} {{else if (eq .DataType "enum")}}
+	{
+		if !enum.{{.EnumReference}}Exist(dto.{{.Name}}) {
+			return "", fmt.Errorf("{{.Name}} %s is not valid", dto.{{.Name}})
+		}
+		obj.{{PascalCase .Name}} = dto.{{PascalCase .Name}}
 	} {{else}}
-	obj.{{.Name}} = dto.{{.Name}} {{end}} {{end}} 
+	obj.{{PascalCase .Name}} = dto.{{PascalCase .Name}} {{end}} {{end}} 
 	obj.ID = utils.GetUUID() 
 
 	g.{{PascalCase .Name}}Repository.Create(ctx, &obj)

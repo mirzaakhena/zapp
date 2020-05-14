@@ -75,6 +75,9 @@ func processIt() {
 		for j := 0; j < len(tp.Entities[i].Fields); j++ {
 			if tp.Entities[i].Fields[j].DataType == "entity" {
 				tp.Entities[i].HasAutocomplete = true
+			}
+			if tp.Entities[i].Fields[j].DataType == "enum" {
+				tp.Entities[i].HasEnum = true
 				break
 			}
 		}
@@ -129,8 +132,8 @@ type TheField struct {
 	Sortable        string `yaml:"sortable"`
 	Filterable      string `yaml:"filterable"`
 	Regex           string `yaml:"regex"`
-
-	EnumValues []TextAndValue
+	Required        bool   `yaml:"required"`
+	EnumValues      []TextAndValue
 }
 
 // TheClass is
@@ -139,6 +142,7 @@ type TheClass struct {
 	Fields          []TheField `yaml:"fields"`
 	TableName       string     `yaml:"tableName"`
 	HasAutocomplete bool
+	HasEnum         bool
 }
 
 // TheEnum is
@@ -252,6 +256,11 @@ func (tp *ThePackage) Run() {
 
 			{
 				dir := fmt.Sprintf("../../../../%s/server/model", tp.PackagePath)
+				os.MkdirAll(dir, 0777)
+			}
+
+			{
+				dir := fmt.Sprintf("../../../../%s/server/model/enum", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 			}
 
@@ -506,31 +515,32 @@ func (tp *ThePackage) Run() {
 		}
 
 		// frontend
+
 		{
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/public/favicon._ico")
-				outputFile := fmt.Sprintf("../../../../%s/client/public/favicon.ico", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
+			templateFile := fmt.Sprintf("../templates/frontend/public/favicon._ico")
+			outputFile := fmt.Sprintf("../../../../%s/client/public/favicon.ico", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
 
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/public/index._html")
-				outputFile := fmt.Sprintf("../../../../%s/client/public/index.html", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/public/index._html")
+			outputFile := fmt.Sprintf("../../../../%s/client/public/index.html", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
 
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/babel.config._js")
-				outputFile := fmt.Sprintf("../../../../%s/client/babel.config.js", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/babel.config._js")
+			outputFile := fmt.Sprintf("../../../../%s/client/babel.config.js", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
 
-			{
-				templateFile := fmt.Sprintf("../templates/frontend/vue.config._js")
-				outputFile := fmt.Sprintf("../../../../%s/client/vue.config.js", tp.PackagePath)
-				basic(tp, templateFile, outputFile, tp, 0664)
-			}
+		{
+			templateFile := fmt.Sprintf("../templates/frontend/vue.config._js")
+			outputFile := fmt.Sprintf("../../../../%s/client/vue.config.js", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
 
+		{
 			templateFile := fmt.Sprintf("../templates/frontend/package._json")
 			outputFile := fmt.Sprintf("../../../../%s/client/package.json", tp.PackagePath)
 			basic(tp, templateFile, outputFile, tp, 0664)
@@ -633,7 +643,7 @@ func (tp *ThePackage) Run() {
 		}
 	}
 
-	// multiple generated file
+	// multiple generated file for entity
 	for _, et := range tp.Entities {
 
 		// backend
@@ -708,6 +718,16 @@ func (tp *ThePackage) Run() {
 
 			}
 
+		}
+
+	}
+
+	// multiple generated file for enum
+	for _, en := range tp.Enums {
+		{
+			templateFile := fmt.Sprintf("../templates/backend/model/enum/enum._go")
+			outputFile := fmt.Sprintf("../../../../%s/server/model/enum/%s.go", tp.PackagePath, LowerCase(en.Name))
+			basic(tp, templateFile, outputFile, en, 0664)
 		}
 
 	}

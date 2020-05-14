@@ -1,0 +1,18 @@
+package enum
+
+// all const for {{PascalCase .Name}}
+const (
+  {{range .Values}}
+	{{PascalCase $.Name}}{{UpperCase .Value}}  = "{{UpperCase .Value}}" {{end}}
+)
+
+// {{CamelCase .Name}}Enum is
+var {{CamelCase .Name}}Enum = map[string]byte{ {{range .Values}}
+	{{PascalCase $.Name}}{{UpperCase .Value}}:  1, {{end}}
+}
+
+// {{PascalCase .Name}}Exist is
+func {{PascalCase .Name}}Exist(key string) bool {
+	_, exist := {{CamelCase .Name}}Enum[key]
+	return exist
+}

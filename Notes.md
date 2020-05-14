@@ -12,17 +12,25 @@
 3. Config
 4. User Management (Login, Register, )
 5. RESTfull
-6. 
+6. Validator
 
 ## Library used
 1. github.com/gin-gonic/gin
+2. github.com/gin-gonic/autotls
+2. github.com/gin-contrib/cors
+2. github.com/go-playground/validator
 2. github.com/jinzhu/gorm
-3. golang.org/x/crypto/bcrypt
 4. github.com/satori/go.uuid
 5. github.com/segmentio/ksuid
 6. github.com/spf13/viper
 7. github.com/sirupsen/logrus
+9. github.com/lestrrat-go/file-rotatelogs
+9. github.com/stretchr/testify/assert
+9. github.com/rifflock/lfshook
 8. github.com/dgrijalva/jwt-go
+9. github.com/nsqio/go-nsq
+3. golang.org/x/crypto/bcrypt
+
 
 ## Layer
 1. Controller
