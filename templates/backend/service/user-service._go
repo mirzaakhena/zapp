@@ -24,12 +24,12 @@ func GetSystemUserID(ctx map[string]interface{}) string {
 
 	userIDIntf, okHaveSystemUserID := ctx["userID"]
 	if !okHaveSystemUserID {
-		log.GetLog().Fatal(ctx, "Does not have userID")
+		log.GetLog().Fatal("Does not have userID")
 	}
 
 	userID, okCast2 := userIDIntf.(string)
 	if !okCast2 {
-		log.GetLog().Fatal(ctx, "userID cannot cast to string")
+		log.GetLog().Fatal("userID cannot cast to string")
 	}
 
 	return userID
