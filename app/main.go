@@ -308,6 +308,9 @@ func (tp *ThePackage) Run() {
 				dir = fmt.Sprintf("../../../../%s/server/shared/constant", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 
+				dir = fmt.Sprintf("../../../../%s/server/shared/converter", tp.PackagePath)
+				os.MkdirAll(dir, 0777)
+
 				dir = fmt.Sprintf("../../../../%s/server/shared/error", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 			}
@@ -486,6 +489,12 @@ func (tp *ThePackage) Run() {
 			{
 				templateFile := fmt.Sprintf("../templates/backend/shared/constant/constant._go")
 				outputFile := fmt.Sprintf("../../../../%s/server/shared/constant/constant.go", tp.PackagePath)
+				basic(tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/converter/converter._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/converter/converter.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 

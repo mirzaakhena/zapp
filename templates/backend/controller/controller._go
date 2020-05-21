@@ -48,7 +48,7 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 
 	log.GetLog().Info(sc, "REQUEST data %v", utils.GetJSON(dto))
 
-	objID, err := g.{{CamelCase .Name}}Service.Create(sc, dto)
+	objID, err := g.{{CamelCase .Name}}Service.Create(dto)
 	if err != nil {
 		message := log.GetLog().Error(sc, "RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
@@ -69,7 +69,7 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 
 	log.GetLog().Info(sc, "REQUEST %v", id)
 
-	obj := g.{{CamelCase .Name}}Service.GetOne(sc, id)
+	obj := g.{{CamelCase .Name}}Service.GetOne(id)
 	if obj == nil {
 		message := log.GetLog().Info(sc, "RESPONSE ID %v not found", id)
 		c.JSON(http.StatusOK, map[string]interface{}{"message": message})
@@ -129,7 +129,7 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 		SortDesc: sortDesc,
 	}
 
-	objs := g.{{CamelCase .Name}}Service.GetAll(sc, req)
+	objs := g.{{CamelCase .Name}}Service.GetAll(req)
 
 	message := log.GetLog().Info(sc, "RESPONSE found %v objects", objs.TotalCount)
 	c.JSON(http.StatusOK, map[string]interface{}{"message": message, "data": objs})
@@ -157,7 +157,7 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 
 	log.GetLog().Info(sc, "REQUEST ID %v, data %v", id, utils.GetJSON(dto))
 
-	err := g.{{CamelCase .Name}}Service.Update(sc, id, dto)
+	err := g.{{CamelCase .Name}}Service.Update(id, dto)
 	if err != nil {
 		message := log.GetLog().Error(sc, "RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
@@ -179,7 +179,7 @@ func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
 
 	log.GetLog().Info(sc, "REQUEST ID %v", id)
 
-	err := g.{{CamelCase .Name}}Service.Delete(sc, id)
+	err := g.{{CamelCase .Name}}Service.Delete(id)
 	if err != nil {
 		log.GetLog().Error(sc, "RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": fmt.Sprintf("Error when delete record with ID %v", id)})

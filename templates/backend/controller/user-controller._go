@@ -40,14 +40,14 @@ func (u *SystemUserController) Login(c *gin.Context) {
 	var dto model.LoginSystemUserRequest
 
 	if err := c.BindJSON(&dto); err != nil {
-				log.GetLog().Error(sc, "%v", err.Error())
+		log.GetLog().Error(sc, "%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "Invalid Params. Please check data structure and type"})
 		return
 	}
 
-	token, err := u.systemUserService.Login(sc, dto)
+	token, err := u.systemUserService.Login(dto)
 	if err != nil {
-		message := log.GetLog().Error(sc, "RESPONSE %v", err.Error())
+		message := log.GetLog().Error(nil, "RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
 		return
 	}
@@ -66,7 +66,7 @@ func (u *SystemUserController) ValidateToken(c *gin.Context) {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
-	extendDataObj := u.systemUserService.ValidateLoginToken(nil, s[1])
+	extendDataObj := u.systemUserService.ValidateLoginToken(s[1])
 	if extendDataObj == nil {
 		log.GetLog().Error(nil, "Not Valid token")
 		c.AbortWithStatus(http.StatusForbidden)
@@ -113,7 +113,7 @@ func (u *SystemUserController) Register(c *gin.Context) {
 
 	log.GetLog().Info(sc, "REQUEST. Data %v", utils.GetJSON(dto))
 
-	if err := u.systemUserService.Register(sc, dto); err != nil {
+	if err := u.systemUserService.Register(dto); err != nil {
 		message := log.GetLog().Error(sc, "RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
 		return

@@ -8,9 +8,9 @@ import (
 
 // ISystemUserRepository is
 type ISystemUserRepository interface {
-	Create(ctx map[string]interface{}, obj *model.SystemUser) error
-	GetByEmail(ctx map[string]interface{}, email string) *model.SystemUser
-	GetOne(ctx map[string]interface{}, ID string) *model.SystemUser
+	Create(db interface{}, obj *model.SystemUser) error
+	GetByEmail(db interface{}, email string) *model.SystemUser
+	GetOne(db interface{}, ID string) *model.SystemUser
 }
 
 // SystemUserRepository is
@@ -23,14 +23,14 @@ func NewSystemUserRepository(db *gorm.DB) *SystemUserRepository {
 }
 
 // Create is
-func (u *SystemUserRepository) Create(ctx map[string]interface{}, obj *model.SystemUser) error {
-	return transaction.ExtractDB(ctx).Create(obj).Error
+func (u *SystemUserRepository) Create(db interface{}, obj *model.SystemUser) error {
+	return transaction.ExtractDB(db).Create(obj).Error
 }
 
 // GetByEmail is
-func (u *SystemUserRepository) GetByEmail(ctx map[string]interface{}, email string) *model.SystemUser {
+func (u *SystemUserRepository) GetByEmail(db interface{}, email string) *model.SystemUser {
 	var obj model.SystemUser
-	transaction.ExtractDB(ctx).First(&obj, "email = ?", email)
+	transaction.ExtractDB(db).First(&obj, "email = ?", email)
 	if obj.ID == "" {
 		return nil
 	}
@@ -39,10 +39,10 @@ func (u *SystemUserRepository) GetByEmail(ctx map[string]interface{}, email stri
 }
 
 // GetOne is
-func (u *SystemUserRepository) GetOne(ctx map[string]interface{}, ID string) *model.SystemUser {
+func (u *SystemUserRepository) GetOne(db interface{}, ID string) *model.SystemUser {
 	var obj model.SystemUser
 
-	query := transaction.ExtractDB(ctx)
+	query := transaction.ExtractDB(db)
 
 	query.First(&obj, "id = ?", ID)
 
