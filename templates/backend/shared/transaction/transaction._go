@@ -1,16 +1,15 @@
 package transaction
 
 import (
-	"{{PackagePath}}/server/shared/log"
 	"github.com/jinzhu/gorm"
 )
 
 // ITransaction is
 type ITransaction interface {
-	GetDB(withTransaction bool) *gorm.DB            // this is for get the database with two mode with transaction or without transaction
-	Commit(ctx map[string]interface{})              // commit the transaction
-	Rollback(ctx map[string]interface{})            // rollback transaction
-	RollbackOnException(ctx map[string]interface{}) // for emergency rollback
+	GetDB(withTransaction bool) *gorm.DB // this is for get the database with two mode with transaction or without transaction
+	Commit(db interface{})               // commit the transaction
+	Rollback(db interface{})             // rollback transaction
+	RollbackOnException(db interface{})  // for emergency rollback
 }
 
 // GormTransactionDB is
@@ -19,14 +18,13 @@ type GormTransactionDB struct {
 }
 
 // ExtractDB is
-func ExtractDB(ctx map[string]interface{}) *gorm.DB {
-	trx, ok := ctx["trx"]
+func ExtractDB(db interface{}) *gorm.DB {
+	dbx, ok := db.(*gorm.DB)
 	if !ok {
-		log.GetLog().Fatal(ctx, "transaction not found")
+		return nil
 	}
-	return trx.(*gorm.DB)
+	return dbx
 }
-
 
 // NewGormTransactionDB is
 func NewGormTransactionDB(db *gorm.DB) *GormTransactionDB {
@@ -42,21 +40,21 @@ func (g *GormTransactionDB) GetDB(withTransaction bool) *gorm.DB {
 }
 
 // Commit is
-func (g *GormTransactionDB) Commit(ctx map[string]interface{}) {
-	ExtractDB(ctx).Commit()
+func (g *GormTransactionDB) Commit(db interface{}) {
+	ExtractDB(db).Commit()
 }
 
 // Rollback is
-func (g *GormTransactionDB) Rollback(ctx map[string]interface{}) {
-	ExtractDB(ctx).Rollback()
+func (g *GormTransactionDB) Rollback(db interface{}) {
+	ExtractDB(db).Rollback()
 }
 
 // RollbackOnException is common handler for rollback the transaction
 // to avoid database lock when something goes wrong in transaction state
 // use with defer right after we call GetDB(true)
-func (g *GormTransactionDB) RollbackOnException(ctx map[string]interface{}) {
+func (g *GormTransactionDB) RollbackOnException(db interface{}) {
 
-	trx := ExtractDB(ctx)
+	trx := ExtractDB(db)
 
 	// catch the error
 	if err := recover(); err != nil {
@@ -65,6 +63,6 @@ func (g *GormTransactionDB) RollbackOnException(ctx map[string]interface{}) {
 		trx.Rollback()
 
 		// repanic so we can get where it happen in log!
-		log.GetLog().Panic(ctx, "%v", err)
+		// log.GetLog().Panic(ctx, "%v", err)
 	}
 }

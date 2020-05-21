@@ -34,7 +34,7 @@ func main() {
 
 func processIt() {
 
-	content, err := ioutil.ReadFile("skrip.yaml")
+	content, err := ioutil.ReadFile("skrip-accounting.yaml")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -220,11 +220,16 @@ func HasTime(dataTypes []TheField) bool {
 }
 
 // GetUniqueFields is
-func GetUniqueFields(dataTypes []TheField) []TheField {
+func GetUniqueFields(dataTypes []TheField, currentEntityName string) []TheField {
 	uniqueFields := []TheField{}
 	existing := map[string]TheField{}
 	for _, tm := range dataTypes {
 		_, exist := existing[tm.EntityReference]
+
+		if currentEntityName != "" && tm.EntityReference == currentEntityName {
+			continue
+		}
+
 		if !exist {
 			existing[tm.EntityReference] = tm
 			uniqueFields = append(uniqueFields, tm)
@@ -306,6 +311,9 @@ func (tp *ThePackage) Run() {
 				os.MkdirAll(dir, 0777)
 
 				dir = fmt.Sprintf("../../../../%s/server/shared/constant", tp.PackagePath)
+				os.MkdirAll(dir, 0777)
+
+				dir = fmt.Sprintf("../../../../%s/server/shared/converter", tp.PackagePath)
 				os.MkdirAll(dir, 0777)
 
 				dir = fmt.Sprintf("../../../../%s/server/shared/error", tp.PackagePath)
@@ -486,6 +494,12 @@ func (tp *ThePackage) Run() {
 			{
 				templateFile := fmt.Sprintf("../templates/backend/shared/constant/constant._go")
 				outputFile := fmt.Sprintf("../../../../%s/server/shared/constant/constant.go", tp.PackagePath)
+				basic(tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/converter/converter._go")
+				outputFile := fmt.Sprintf("../../../../%s/server/shared/converter/converter.go", tp.PackagePath)
 				basic(tp, templateFile, outputFile, tp, 0664)
 			}
 

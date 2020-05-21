@@ -18,12 +18,12 @@ var defaultLoggerOnce sync.Once
 
 // ILogger is
 type ILogger interface {
-	Debug(sc map[string]interface{}, description string, args ...interface{}) string
-	Info(sc map[string]interface{}, description string, args ...interface{}) string
-	Warn(sc map[string]interface{}, description string, args ...interface{}) string
-	Error(sc map[string]interface{}, description string, args ...interface{}) string
-	Fatal(sc map[string]interface{}, description string, args ...interface{}) string
-	Panic(sc map[string]interface{}, description string, args ...interface{}) string
+	Debug(description string, args ...interface{}) string
+	Info(description string, args ...interface{}) string
+	Warn(description string, args ...interface{}) string
+	Error(description string, args ...interface{}) string
+	Fatal(description string, args ...interface{}) string
+	Panic(description string, args ...interface{}) string
 	WithFile(path, appsName string, maxAge int)
 }
 
@@ -82,54 +82,52 @@ func (l *logrusImpl) WithFile(path, appsName string, maxAge int) {
 	}
 }
 
-func (l *logrusImpl) getLogEntry(sc map[string]interface{}) *logrus.Entry {	
-	pc, _, _, ok := runtime.Caller(2)
-	if !ok {
-		return l.theLogger.WithFields(sc)
-	}	
+func (l *logrusImpl) getLogEntry() *logrus.Entry {	
+	pc, _, _, _ := runtime.Caller(2)
+
 	funcName := runtime.FuncForPC(pc).Name()
 	x := strings.LastIndex(funcName, "/")
-	return l.theLogger.WithFields(sc).WithField("func", funcName[x+1:])
+	return l.theLogger.WithField("func", funcName[x+1:])
 }
 
 // Debug is
-func (l *logrusImpl) Debug(sc map[string]interface{}, description string, args ...interface{}) string {
+func (l *logrusImpl) Debug(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	l.getLogEntry(sc).Debug(message)
+	l.getLogEntry().Debug(message)
 	return message
 }
 
 // Info is
-func (l *logrusImpl) Info(sc map[string]interface{}, description string, args ...interface{}) string {
+func (l *logrusImpl) Info(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	l.getLogEntry(sc).Info(message)
+	l.getLogEntry().Info(message)
 	return message
 }
 
 // Warn is
-func (l *logrusImpl) Warn(sc map[string]interface{}, description string, args ...interface{}) string {
+func (l *logrusImpl) Warn(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	l.getLogEntry(sc).Warn(message)
+	l.getLogEntry().Warn(message)
 	return message
 }
 
 // Error is
-func (l *logrusImpl) Error(sc map[string]interface{}, description string, args ...interface{}) string {
+func (l *logrusImpl) Error(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	l.getLogEntry(sc).Error(message)
+	l.getLogEntry().Error(message)
 	return message
 }
 
 // Fatal is
-func (l *logrusImpl) Fatal(sc map[string]interface{}, description string, args ...interface{}) string {
+func (l *logrusImpl) Fatal(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	l.getLogEntry(sc).Fatal(message)
+	l.getLogEntry().Fatal(message)
 	return message
 }
 
 // Panic is
-func (l *logrusImpl) Panic(sc map[string]interface{}, description string, args ...interface{}) string {
+func (l *logrusImpl) Panic(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	l.getLogEntry(sc).Panic(message)
+	l.getLogEntry().Panic(message)
 	return message
 }

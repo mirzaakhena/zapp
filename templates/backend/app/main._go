@@ -24,7 +24,7 @@ func main() {
 
 	log.GetLog().WithFile(cf.GetString("log.path", "."), cf.GetString("application.name", "{{AppName}}"), cf.GetInt("log.max_age", 14))
 
-	log.GetLog().Info(nil, "Apps is start running")
+	log.GetLog().Info("Apps is start running")
 
 	db, err := gorm.Open(cf.GetString("database.dialect", "sqlite3"), cf.GetString("database.connection_string", "database.db"))
 	if err != nil {
@@ -35,7 +35,7 @@ func main() {
 	// {
 	// 	f, err := os.OpenFile("sql.debug.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	// 	if err != nil {
-	// 		log.GetLog().Fatal(nil, "Error opening file %v", err.Error())
+	// 		log.GetLog().Fatal("Error opening file %v", err.Error())
 	// 	}
 	// 	db.SetLogger(defaultLog.New(f, "[SQL] ", 0))
 	// 	gin.DefaultWriter = f
@@ -52,7 +52,7 @@ func main() {
 	SystemUserService := service.NewSystemUserService(trx, &token.Jwt{SecretKey: secretKey}, SystemUserRepository) {{range .Entities}}
 	{{CamelCase .Name}}Service := &service.{{PascalCase .Name}}Service{
 		Trx: trx,
-		{{PascalCase .Name}}Repository: {{CamelCase .Name}}Repository, {{range UniqueFields .Fields}} {{if (eq .DataType "entity")}}
+		{{PascalCase .Name}}Repository: {{CamelCase .Name}}Repository, {{range UniqueFields .Fields .Name}} {{if (eq .DataType "entity")}}
 		{{PascalCase .EntityReference}}Repository: {{CamelCase .EntityReference}}Repository, {{end}} {{end}}
 	} {{end}}
 
@@ -67,7 +67,7 @@ func main() {
 
 	if gin.Mode() == gin.ReleaseMode {
 		if err := autotls.Run(ginRouter, cf.GetString("server.domain", "{{AppName}}.com")); err != nil {
-			log.GetLog().Fatal(nil, "Error on TLS %v", err.Error())
+			log.GetLog().Fatal("Error on TLS %v", err.Error())
 		}
 
 	} else {

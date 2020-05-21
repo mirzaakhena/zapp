@@ -13,9 +13,9 @@ import (
 
 // ISystemUserService is
 type ISystemUserService interface {
-	Login(ctx map[string]interface{}, dto model.LoginSystemUserRequest) (string, error)
-	ValidateLoginToken(ctx map[string]interface{}, token string) interface{}
-	Register(ctx map[string]interface{}, dto model.RegisterSystemUserRequest) error
+	Login(dto model.LoginSystemUserRequest) (string, error)
+	ValidateLoginToken(token string) interface{}
+	Register(dto model.RegisterSystemUserRequest) error
 	HasAccess(extendData map[string]interface{}, accessName string) bool
 }
 
@@ -24,12 +24,12 @@ func GetSystemUserID(ctx map[string]interface{}) string {
 
 	userIDIntf, okHaveSystemUserID := ctx["userID"]
 	if !okHaveSystemUserID {
-		log.GetLog().Fatal(ctx, "Does not have userID")
+		log.GetLog().Fatal("Does not have userID")
 	}
 
 	userID, okCast2 := userIDIntf.(string)
 	if !okCast2 {
-		log.GetLog().Fatal(ctx, "userID cannot cast to string")
+		log.GetLog().Fatal("userID cannot cast to string")
 	}
 
 	return userID
@@ -52,11 +52,9 @@ func NewSystemUserService(trx transaction.ITransaction, jwt *token.Jwt, SystemUs
 }
 
 // Login is
-func (u *SystemUserService) Login(ctx map[string]interface{}, dto model.LoginSystemUserRequest) (string, error) {
-	ctx["trx"] = u.trx.GetDB(false)
-	defer delete(ctx, "trx")
+func (u *SystemUserService) Login(dto model.LoginSystemUserRequest) (string, error) {
 
-	existingSystemUser := u.SystemUserRepository.GetByEmail(ctx, dto.Email)
+	existingSystemUser := u.SystemUserRepository.GetByEmail(u.trx.GetDB(false), dto.Email)
 	if existingSystemUser == nil {
 		return "", fmt.Errorf("SystemUser not exist or wrong password 1")
 	}
@@ -77,7 +75,7 @@ func (u *SystemUserService) Login(ctx map[string]interface{}, dto model.LoginSys
 }
 
 // ValidateLoginToken is
-func (u *SystemUserService) ValidateLoginToken(ctx map[string]interface{}, loginToken string) interface{} {
+func (u *SystemUserService) ValidateLoginToken(loginToken string) interface{} {
 
 	jwtObject := u.jwt.ValidateToken("LOGIN", loginToken)
 	if jwtObject == nil {
@@ -88,14 +86,13 @@ func (u *SystemUserService) ValidateLoginToken(ctx map[string]interface{}, login
 }
 
 // Register is
-func (u *SystemUserService) Register(ctx map[string]interface{}, dto model.RegisterSystemUserRequest) error {
+func (u *SystemUserService) Register(dto model.RegisterSystemUserRequest) error {
 
-	ctx["trx"] = u.trx.GetDB(true)
-	defer delete(ctx, "trx")
-	defer u.trx.RollbackOnException(ctx)
+	trx := u.trx.GetDB(true)
+	defer u.trx.RollbackOnException(trx)
 
-	if existingSystemUser := u.SystemUserRepository.GetByEmail(ctx, dto.Email); existingSystemUser != nil {
-		u.trx.Rollback(ctx)
+	if existingSystemUser := u.SystemUserRepository.GetByEmail(trx, dto.Email); existingSystemUser != nil {
+		u.trx.Rollback(trx)
 		return fmt.Errorf("Email %v already exist", dto.Email)
 	}
 
@@ -106,9 +103,9 @@ func (u *SystemUserService) Register(ctx map[string]interface{}, dto model.Regis
 	obj.Email = dto.Email
 	obj.Password = utils.GenerateHashPassword(dto.Password)
 	obj.Role = "USER"	
-	u.SystemUserRepository.Create(ctx, &obj)
+	u.SystemUserRepository.Create(trx, &obj)
 
-	u.trx.Commit(ctx)
+	u.trx.Commit(trx)
 
 	return nil
 }

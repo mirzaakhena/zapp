@@ -1,111 +1,111 @@
-package utils
+package converter
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // GetMSI is
-func GetMSI(input map[string]interface{}, key string) map[string]interface{} {
+func GetMSI(input map[string]interface{}, key string) (map[string]interface{}, error) {
 	objIntf, exist := input[key]
 	if !exist {
-		return nil
+		return nil, fmt.Errorf("key %s is not found", key)
 	}
 
 	objMapintf, ok := objIntf.(map[string]interface{})
 	if !ok {
-		return nil
+		return nil, fmt.Errorf("cannot convert to map[string]interface{}")
 	}
 
-	return objMapintf
+	return objMapintf, nil
 }
 
 // GetARI is
-func GetARI(input map[string]interface{}, key string) []interface{} {
+func GetARI(input map[string]interface{}, key string) ([]interface{}, error) {
 	objIntf, exist := input[key]
 	if !exist {
-		return []interface{}{}
-	}
-
-	if objIntf == nil {
-		return []interface{}{}
+		return nil, fmt.Errorf("key %s is not found", key)
 	}
 
 	objArrIntf, ok := objIntf.([]interface{})
 	if !ok {
-		return []interface{}{}
+		return nil, fmt.Errorf("cannot convert to []interface{}")
 	}
 
-	return objArrIntf
+	return objArrIntf, nil
 }
 
 // ConMSI is
-func ConMSI(input interface{}) map[string]interface{} {
+func ConMSI(input interface{}) (map[string]interface{}, error) {
 	obj, ok := input.(map[string]interface{})
 	if !ok {
-		return nil
+		return nil, fmt.Errorf("cannot convert to map[string]interface{}")
 	}
-	return obj
+	return obj, nil
 }
 
 // GetMSIFromJSONString is
-func GetMSIFromJSONString(bytes []byte) map[string]interface{} {
+func GetMSIFromJSONString(bytes []byte) (map[string]interface{}, error) {
 	var obj interface{}
-	json.Unmarshal(bytes, &obj)
+	err := json.Unmarshal(bytes, &obj)
+	if err != nil {
+		return nil, err
+	}
 	return ConMSI(obj)
 }
 
 // GetString is
-func GetString(input map[string]interface{}, key string) string {
+func GetString(input map[string]interface{}, key string) (string, error) {
 	strIntf, exist := input[key]
 	if !exist {
-		return ""
+		return "", fmt.Errorf("key %s is not found", key)
 	}
 
 	str, ok := strIntf.(string)
 	if !ok {
-		return ""
+		return "", fmt.Errorf("cannot convert to string")
 	}
-	return str
+	return str, nil
 }
 
 // GetInt is
-func GetInt(input map[string]interface{}, key string) int {
+func GetInt(input map[string]interface{}, key string) (int, error) {
 	floatIntf, exist := input[key]
 	if !exist {
-		return 0
+		return 0, fmt.Errorf("key %s is not found", key)
 	}
 
 	float, ok := floatIntf.(float64)
 	if !ok {
-		return 0
+		return 0, fmt.Errorf("cannot convert to int")
 	}
-	return int(float)
+	return int(float), nil
 }
 
 // GetFloat is
-func GetFloat(input map[string]interface{}, key string) float64 {
+func GetFloat(input map[string]interface{}, key string) (float64, error) {
 	floatIntf, exist := input[key]
 	if !exist {
-		return 0.0
+		return 0.0, fmt.Errorf("key %s is not found", key)
 	}
 
 	float, ok := floatIntf.(float64)
 	if !ok {
-		return 0.0
+		return 0.0, fmt.Errorf("cannot convert to float")
 	}
-	return float
+	return float, nil
 }
 
 // GetBool is
-func GetBool(input map[string]interface{}, key string) bool {
+func GetBool(input map[string]interface{}, key string) (bool, error) {
 	boolIntf, exist := input[key]
 	if !exist {
-		return false
+		return false, fmt.Errorf("key %s is not found", key)
 	}
 
 	boolean, ok := boolIntf.(bool)
 	if !ok {
-		return false
+		return false, fmt.Errorf("cannot convert to bool")
 	}
-	return boolean
+	return boolean, nil
 }
