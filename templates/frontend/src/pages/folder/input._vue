@@ -61,7 +61,7 @@ export default {
     const entity = '{{CamelCase .Name}}'
 
     const initialObject = () => {
-      return { {{range UniqueFields .Fields}} {{if (eq .DataType "entity")}}
+      return { {{range UniqueFields .Fields ""}} {{if (eq .DataType "entity")}}
         {{CamelCase .Name}}ObjID: '',{{else if (eq .DataType "string")}}
         {{CamelCase .Name}}: '{{.DefaultValue}}',{{else if (eq .DataType "enum")}}
         {{CamelCase .Name}}: '{{.DefaultValue}}',{{else if (eq .DataType "uint")}}

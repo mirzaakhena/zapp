@@ -22,7 +22,7 @@ type I{{PascalCase .Name}}Service interface {
 // {{PascalCase .Name}}Service is
 type {{PascalCase .Name}}Service struct {
 	Trx transaction.ITransaction	
-	{{PascalCase .Name}}Repository repository.I{{PascalCase .Name}}Repository {{range UniqueFields .Fields}} {{if (eq .DataType "entity")}}
+	{{PascalCase .Name}}Repository repository.I{{PascalCase .Name}}Repository {{range UniqueFields .Fields .Name}} {{if (eq .DataType "entity")}}
 	{{PascalCase .EntityReference}}Repository repository.I{{PascalCase .EntityReference}}Repository {{end}} {{end}}
 }
 
@@ -36,9 +36,9 @@ func (g *{{PascalCase .Name}}Service) Create(dto model.Create{{PascalCase .Name}
 
 	{{range .Fields}} {{if (eq .DataType "entity")}}
 	{
-		refObject := g.{{PascalCase .EntityReference}}Repository.GetOne(ctx, dto.{{PascalCase .Name}}ObjID)
+		refObject := g.{{PascalCase .EntityReference}}Repository.GetOne(trx, dto.{{PascalCase .Name}}ObjID)
 		if refObject == nil {
-			g.Trx.Rollback(ctx)
+			g.Trx.Rollback(trx)
 			return "", fmt.Errorf("obj with id %v not found", dto.{{PascalCase .Name}}ObjID)
 		}
 		obj.{{PascalCase .Name}}ObjID = refObject.ID
