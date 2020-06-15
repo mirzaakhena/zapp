@@ -34,7 +34,7 @@ func main() {
 
 func processIt() {
 
-	content, err := ioutil.ReadFile("skrip-accounting.yaml")
+	content, err := ioutil.ReadFile("skrip-space.yaml")
 	if err != nil {
 		log.Fatal(err)
 	}
