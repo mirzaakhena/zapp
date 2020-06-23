@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -14,26 +14,32 @@ import (
 	"github.com/mirzaakhena/zapp/app/model"
 )
 
-func basic(pkg *model.ThePackage, templateFile, outputFile string, object interface{}, perm os.FileMode) {
+func basic(pkg *model.ThePackage, templateFile, outputFilePath string, object interface{}, perm os.FileMode) {
 
-	fmt.Println(outputFile)
-	file, err := os.Open(templateFile)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
+	fmt.Println(outputFilePath)
 
 	var buffer bytes.Buffer
 
-	for scanner.Scan() {
-		row := scanner.Text()
-		buffer.WriteString(row)
-		buffer.WriteString("\n")
+	// this process can be refactor later
+	{
+		// open template file
+		file, err := os.Open(templateFile)
+		if err != nil {
+			panic(err)
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+
+		for scanner.Scan() {
+			row := scanner.Text()
+			buffer.WriteString(row)
+			buffer.WriteString("\n")
+		}
 	}
 
-	FuncMap := template.FuncMap{
+	// function that used in templates
+	funcMap := template.FuncMap{
 		"UniqueFields": GetUniqueFields,
 		"HasTime":      HasTime,
 		"CamelCase":    CamelCase,
@@ -45,21 +51,19 @@ func basic(pkg *model.ThePackage, templateFile, outputFile string, object interf
 		"PackagePath":  func() string { return pkg.PackagePath },
 	}
 
-	t, err := template.
-		New("todos").
-		Funcs(FuncMap).
-		Parse(buffer.String())
+	// bind func and template
+	t := template.Must(template.New("codes").Funcs(funcMap).Parse(buffer.String()))
 
+	// prepare output file
+	outputFile, err := os.Create(outputFilePath)
 	if err != nil {
-		panic(err)
+		log.Println("create file: ", err)
+		return
 	}
+	defer outputFile.Close()
 
-	var bf bytes.Buffer
-	if err := t.Execute(&bf, object); err != nil {
-		panic(err)
-	}
-
-	if err := ioutil.WriteFile(outputFile, bf.Bytes(), perm); err != nil {
+	// write template into the file
+	if err := t.Execute(outputFile, object); err != nil {
 		panic(err)
 	}
 
@@ -69,12 +73,15 @@ func basic(pkg *model.ThePackage, templateFile, outputFile string, object interf
 func CamelCase(name string) string {
 
 	// force it!
-	if name == "IPAddress" {
-		return "ipAddress"
-	}
+	// this is bad. But we can figure out later
+	{
+		if name == "IPAddress" {
+			return "ipAddress"
+		}
 
-	if name == "ID" {
-		return "id"
+		if name == "ID" {
+			return "id"
+		}
 	}
 
 	out := []rune(name)
