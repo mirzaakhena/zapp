@@ -23,7 +23,7 @@ Notice that you have template script in `app/skrip.yaml` that describe the model
 Open this cloned project with your IDE (Visual Studio Code is recommended) and then run with console
 ```
 cd app/
-go run main.go
+go run cmd/main.go sample/skrip.yaml
 ```
 At the first time you call this, it will take some time maybe 5 minutes because Golang dependency is being downloaded
 The project will generated in `$GOPATH/src/bitbucket.org/mirzaakhena/experimenfx1`. Under that path, you will see there is 2 directory which is `client/` and `server/`
