@@ -9,8 +9,8 @@ import (
 	"{{PackagePath}}/backend/shared/transaction"
 )
 
-// I{{PascalCase .Name}}Repository is
-type I{{PascalCase .Name}}Repository interface {
+// {{PascalCase .Name}}Repository is
+type {{PascalCase .Name}}Repository interface {
 	Create(db interface{}, obj *model.{{PascalCase .Name}}) error
 	GetOne(db interface{}, ID string) *model.{{PascalCase .Name}}
 	GetAll(db interface{}, page, size int, sortBy string, sortDesc bool, filters map[string]string) ([]model.{{PascalCase .Name}}, uint)
@@ -18,22 +18,22 @@ type I{{PascalCase .Name}}Repository interface {
 	Update(db interface{}, obj *model.{{PascalCase .Name}}) error
 }
 
-// {{PascalCase .Name}}Repository is
-type {{PascalCase .Name}}Repository struct{}
+// {{CamelCase .Name}}Repository is
+type {{CamelCase .Name}}Repository struct{}
 
 // New{{PascalCase .Name}}Repository is
-func New{{PascalCase .Name}}Repository(db *gorm.DB) *{{PascalCase .Name}}Repository {
+func New{{PascalCase .Name}}Repository(db *gorm.DB) {{PascalCase .Name}}Repository {
 	db.AutoMigrate(&model.{{PascalCase .Name}}{})
-	return &{{PascalCase .Name}}Repository{}
+	return &{{CamelCase .Name}}Repository{}
 }
 
 // Create is
-func (g *{{PascalCase .Name}}Repository) Create(db interface{}, obj *model.{{PascalCase .Name}}) error {
+func (g *{{CamelCase .Name}}Repository) Create(db interface{}, obj *model.{{PascalCase .Name}}) error {
 	return transaction.ExtractDB(db).Create(obj).Error
 }
 
 // GetOne is 
-func (g *{{PascalCase .Name}}Repository) GetOne(db interface{}, ID string) *model.{{PascalCase .Name}} {
+func (g *{{CamelCase .Name}}Repository) GetOne(db interface{}, ID string) *model.{{PascalCase .Name}} {
 	var obj model.{{PascalCase .Name}}
 
 	query := transaction.ExtractDB(db)
@@ -53,7 +53,7 @@ func (g *{{PascalCase .Name}}Repository) GetOne(db interface{}, ID string) *mode
 }
 
 // GetAll is
-func (g *{{PascalCase .Name}}Repository) GetAll(db interface{}, page, size int, sortBy string, sortDesc bool, filters map[string]string) ([]model.{{PascalCase .Name}}, uint) {
+func (g *{{CamelCase .Name}}Repository) GetAll(db interface{}, page, size int, sortBy string, sortDesc bool, filters map[string]string) ([]model.{{PascalCase .Name}}, uint) {
 	var objs []model.{{PascalCase .Name}}
 	var count uint
 
@@ -86,11 +86,11 @@ func (g *{{PascalCase .Name}}Repository) GetAll(db interface{}, page, size int, 
 }
 
 // Delete is
-func (g *{{PascalCase .Name}}Repository) Delete(db interface{}, ID string) error {
+func (g *{{CamelCase .Name}}Repository) Delete(db interface{}, ID string) error {
 	return transaction.ExtractDB(db).Delete(model.{{PascalCase .Name}}{}, "id = ?", ID).Error
 }
 
 // Update is
-func (g *{{PascalCase .Name}}Repository) Update(db interface{}, obj *model.{{PascalCase .Name}}) error {
+func (g *{{CamelCase .Name}}Repository) Update(db interface{}, obj *model.{{PascalCase .Name}}) error {
 	return transaction.ExtractDB(db).Save(obj).Error
 }

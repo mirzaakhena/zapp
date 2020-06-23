@@ -6,29 +6,29 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// ISystemUserRepository is
-type ISystemUserRepository interface {
+// SystemUserRepository is
+type SystemUserRepository interface {
 	Create(db interface{}, obj *model.SystemUser) error
 	GetByEmail(db interface{}, email string) *model.SystemUser
 	GetOne(db interface{}, ID string) *model.SystemUser
 }
 
-// SystemUserRepository is
-type SystemUserRepository struct{}
+// systemUserRepository is
+type systemUserRepository struct{}
 
 // NewSystemUserRepository is
-func NewSystemUserRepository(db *gorm.DB) *SystemUserRepository {
+func NewSystemUserRepository(db *gorm.DB) SystemUserRepository {
 	db.AutoMigrate(&model.SystemUser{})
-	return &SystemUserRepository{}
+	return &systemUserRepository{}
 }
 
 // Create is
-func (u *SystemUserRepository) Create(db interface{}, obj *model.SystemUser) error {
+func (u *systemUserRepository) Create(db interface{}, obj *model.SystemUser) error {
 	return transaction.ExtractDB(db).Create(obj).Error
 }
 
 // GetByEmail is
-func (u *SystemUserRepository) GetByEmail(db interface{}, email string) *model.SystemUser {
+func (u *systemUserRepository) GetByEmail(db interface{}, email string) *model.SystemUser {
 	var obj model.SystemUser
 	transaction.ExtractDB(db).First(&obj, "email = ?", email)
 	if obj.ID == "" {
@@ -39,7 +39,7 @@ func (u *SystemUserRepository) GetByEmail(db interface{}, email string) *model.S
 }
 
 // GetOne is
-func (u *SystemUserRepository) GetOne(db interface{}, ID string) *model.SystemUser {
+func (u *systemUserRepository) GetOne(db interface{}, ID string) *model.SystemUser {
 	var obj model.SystemUser
 
 	query := transaction.ExtractDB(db)

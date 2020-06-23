@@ -24,5 +24,5 @@ yarn-error.log*
 *.db
 
 *.log.*
-server/app/*.log
-server/app/logs
+backend/app/*.log
+backend/app/logs

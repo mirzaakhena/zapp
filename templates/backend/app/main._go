@@ -46,11 +46,11 @@ func main() {
 
 	trx := transaction.NewGormTransactionDB(db)
 
-	SystemUserRepository := repository.NewSystemUserRepository(db) {{range .Entities}}
+	systemUserRepository := repository.NewSystemUserRepository(db) {{range .Entities}}
 	{{CamelCase .Name}}Repository := repository.New{{PascalCase .Name}}Repository(db) {{end}}
 
 	secretKey := []byte(cf.GetString("apps.secret_key", ""))
-	SystemUserService := auth.NewSystemUserService(trx, &token.Jwt{SecretKey: secretKey}, SystemUserRepository) {{range .Entities}}
+	systemUserService := auth.NewSystemUserService(trx, &token.Jwt{SecretKey: secretKey}, systemUserRepository) {{range .Entities}}
 	{{CamelCase .Name}}Service := &crud.{{PascalCase .Name}}Service{
 		Trx: trx,
 		{{PascalCase .Name}}Repository: {{CamelCase .Name}}Repository, {{range UniqueFields .Fields .Name}} {{if (eq .DataType "entity")}}
@@ -60,7 +60,7 @@ func main() {
 	rc := controller.RouterConfig{
 		Config: cf,
 		Router: ginRouter, 
-		SystemUserApi: controller.NewSystemUserApi(SystemUserService),	{{range .Entities}}
+		SystemUserApi: controller.NewSystemUserApi(systemUserService),	{{range .Entities}}
 		{{PascalCase .Name}}Api: controller.New{{PascalCase .Name}}Api({{CamelCase .Name}}Service), {{end}}
 	}
 

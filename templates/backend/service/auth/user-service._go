@@ -39,11 +39,11 @@ func GetSystemUserID(ctx map[string]interface{}) string {
 type SystemUserService struct {
 	trx            transaction.ITransaction
 	jwt            *token.Jwt
-	SystemUserRepository repository.ISystemUserRepository
+	SystemUserRepository repository.SystemUserRepository
 }
 
 // NewSystemUserService is
-func NewSystemUserService(trx transaction.ITransaction, jwt *token.Jwt, SystemUserRepository repository.ISystemUserRepository) *SystemUserService {
+func NewSystemUserService(trx transaction.ITransaction, jwt *token.Jwt, SystemUserRepository repository.SystemUserRepository) *SystemUserService {
 	return &SystemUserService{
 		trx:            trx,
 		jwt:            jwt,

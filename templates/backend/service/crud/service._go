@@ -22,8 +22,8 @@ type I{{PascalCase .Name}}Service interface {
 // {{PascalCase .Name}}Service is
 type {{PascalCase .Name}}Service struct {
 	Trx transaction.ITransaction	
-	{{PascalCase .Name}}Repository repository.I{{PascalCase .Name}}Repository {{range UniqueFields .Fields .Name}} {{if (eq .DataType "entity")}}
-	{{PascalCase .EntityReference}}Repository repository.I{{PascalCase .EntityReference}}Repository {{end}} {{end}}
+	{{PascalCase .Name}}Repository repository.{{PascalCase .Name}}Repository {{range UniqueFields .Fields .Name}} {{if (eq .DataType "entity")}}
+	{{PascalCase .EntityReference}}Repository repository.{{PascalCase .EntityReference}}Repository {{end}} {{end}}
 }
 
 // Create is
