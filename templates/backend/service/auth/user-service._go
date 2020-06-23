@@ -1,14 +1,14 @@
-package service
+package auth
 
 import (
 	"fmt"
 
-	"{{PackagePath}}/server/model"
-	"{{PackagePath}}/server/repository"
-	"{{PackagePath}}/server/shared/utils"
-	"{{PackagePath}}/server/shared/log"
-	"{{PackagePath}}/server/shared/token"
-	"{{PackagePath}}/server/shared/transaction"	
+	"{{PackagePath}}/backend/model"
+	"{{PackagePath}}/backend/repository"
+	"{{PackagePath}}/backend/shared/utils"
+	"{{PackagePath}}/backend/shared/log"
+	"{{PackagePath}}/backend/shared/token"
+	"{{PackagePath}}/backend/shared/transaction"	
 )
 
 // ISystemUserService is

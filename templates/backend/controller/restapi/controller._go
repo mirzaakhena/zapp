@@ -1,4 +1,4 @@
-package controller
+package restapi
 
 import (
 	"fmt"
@@ -7,21 +7,21 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
-	"{{PackagePath}}/server/model"
-	"{{PackagePath}}/server/service"
-	"{{PackagePath}}/server/shared/utils"
-	"{{PackagePath}}/server/shared/log"
+	service "{{PackagePath}}/backend/service/crud"
+	"{{PackagePath}}/backend/model"		
+	"{{PackagePath}}/backend/shared/utils"
+	"{{PackagePath}}/backend/shared/log"
 )
 
-// {{PascalCase .Name}}Controller is
-type {{PascalCase .Name}}Controller struct {
+// {{PascalCase .Name}}Api is
+type {{PascalCase .Name}}Api struct {
 	{{CamelCase .Name}}Service service.I{{PascalCase .Name}}Service
 }
 
-// New{{PascalCase .Name}}Controller is
-func New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service service.I{{PascalCase .Name}}Service) *{{PascalCase .Name}}Controller {
+// New{{PascalCase .Name}}Api is
+func New{{PascalCase .Name}}Api({{CamelCase .Name}}Service service.I{{PascalCase .Name}}Service) *{{PascalCase .Name}}Api {
 
-	c := {{PascalCase .Name}}Controller{
+	c := {{PascalCase .Name}}Api{
 		{{CamelCase .Name}}Service: {{CamelCase .Name}}Service,
 	}
 
@@ -29,7 +29,7 @@ func New{{PascalCase .Name}}Controller({{CamelCase .Name}}Service service.I{{Pas
 }
 
 // Create is
-func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
+func (g *{{PascalCase .Name}}Api) Create(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 	sc["userID"] = GetSystemUserID(c)
@@ -60,7 +60,7 @@ func (g *{{PascalCase .Name}}Controller) Create(c *gin.Context) {
 }
 
 // GetOne is
-func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
+func (g *{{PascalCase .Name}}Api) GetOne(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 	sc["userID"] = GetSystemUserID(c)
@@ -81,7 +81,7 @@ func (g *{{PascalCase .Name}}Controller) GetOne(c *gin.Context) {
 }
 
 // GetAll is
-func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
+func (g *{{PascalCase .Name}}Api) GetAll(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 	sc["userID"] = GetSystemUserID(c)
@@ -136,7 +136,7 @@ func (g *{{PascalCase .Name}}Controller) GetAll(c *gin.Context) {
 }
 
 // Update is
-func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
+func (g *{{PascalCase .Name}}Api) Update(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 	sc["userID"] = GetSystemUserID(c)
@@ -170,7 +170,7 @@ func (g *{{PascalCase .Name}}Controller) Update(c *gin.Context) {
 }
 
 // Delete is
-func (g *{{PascalCase .Name}}Controller) Delete(c *gin.Context) {
+func (g *{{PascalCase .Name}}Api) Delete(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 	sc["userID"] = GetSystemUserID(c)

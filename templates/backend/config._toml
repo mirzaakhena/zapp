@@ -20,7 +20,7 @@ activation = "/activate"
 resetpassword = "/resetpassword"
 
 [html]
-dist_path = "../../client/dist"
+dist_path = "../../frontend/dist"
 
 [log]
 path = "."

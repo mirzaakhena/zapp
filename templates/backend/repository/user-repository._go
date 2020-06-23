@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"{{PackagePath}}/server/model"
-	"{{PackagePath}}/server/shared/transaction"
+	"{{PackagePath}}/backend/model"
+	"{{PackagePath}}/backend/shared/transaction"
 	"github.com/jinzhu/gorm"
 )
 

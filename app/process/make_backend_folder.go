@@ -11,49 +11,52 @@ func makeBackendDirectory(tp *model.ThePackage) {
 
 	var dir string
 
-	dir = fmt.Sprintf("../../../../%s/server/app", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/app", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/controller", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/controller/restapi", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/model", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/model", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/model/enum", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/model/enum", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/service", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/service/auth", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/repository", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/service/crud", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/shared/utils", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/repository", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/shared/token", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/shared/utils", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/shared/config", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/shared/token", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/shared/log", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/shared/config", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/shared/transaction", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/shared/log", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/shared/messagebroker", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/shared/transaction", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/shared/constant", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/shared/messagebroker", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/shared/converter", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/shared/constant", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/server/shared/error", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/shared/converter", tp.PackagePath)
+	os.MkdirAll(dir, 0777)
+
+	dir = fmt.Sprintf("../../../../%s/backend/shared/error", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
 }

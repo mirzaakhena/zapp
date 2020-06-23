@@ -11,25 +11,25 @@ func makeFrontendDirectory(tp *model.ThePackage) {
 
 	var dir string
 
-	dir = fmt.Sprintf("../../../../%s/client/public", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/frontend/public", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/client/src/assets", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/frontend/src/assets", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/client/src/store/modules", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/frontend/src/store/modules", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/client/src/router/modules", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/frontend/src/router/modules", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/client/src/pages", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/frontend/src/pages", tp.PackagePath)
 	os.Mkdir(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/client/dist", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/frontend/dist", tp.PackagePath)
 	os.Mkdir(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/client/src/utils", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/frontend/src/utils", tp.PackagePath)
 	os.Mkdir(dir, 0777)
 
 }

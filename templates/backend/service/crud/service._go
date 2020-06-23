@@ -1,13 +1,13 @@
-package service
+package crud
 
 import (
 	"fmt"
 
-	"{{PackagePath}}/server/model" {{if (.HasEnum)}}
-	"{{PackagePath}}/server/model/enum" {{end}}
-	"{{PackagePath}}/server/repository"
-	"{{PackagePath}}/server/shared/utils"
-	"{{PackagePath}}/server/shared/transaction"	
+	"{{PackagePath}}/backend/model" {{if (.HasEnum)}}
+	"{{PackagePath}}/backend/model/enum" {{end}}
+	"{{PackagePath}}/backend/repository"
+	"{{PackagePath}}/backend/shared/utils"
+	"{{PackagePath}}/backend/shared/transaction"	
 )
 
 // I{{PascalCase .Name}}Service is

@@ -1,18 +1,18 @@
-package controller
+package restapi
 
 import (
 	"net/http"
 	"strings"
 
-	"{{PackagePath}}/server/model"
-	"{{PackagePath}}/server/service"
-	"{{PackagePath}}/server/shared/utils"
-	"{{PackagePath}}/server/shared/log"
+	"{{PackagePath}}/backend/model"
+	service "{{PackagePath}}/backend/service/auth"
+	"{{PackagePath}}/backend/shared/utils"
+	"{{PackagePath}}/backend/shared/log"
 	"github.com/gin-gonic/gin"
 )
 
-// SystemUserController is
-type SystemUserController struct {
+// SystemUserApi is
+type SystemUserApi struct {
 	systemUserService service.ISystemUserService
 }
 
@@ -22,10 +22,10 @@ func GetSystemUserID(c *gin.Context) string {
 	return extendDataIntf.(map[string]interface{})["userID"].(string)
 }
 
-// NewSystemUserController is
-func NewSystemUserController(systemUserService service.ISystemUserService) *SystemUserController {
+// NewSystemUserApi is
+func NewSystemUserApi(systemUserService service.ISystemUserService) *SystemUserApi {
 
-	c := SystemUserController{
+	c := SystemUserApi{
 		systemUserService: systemUserService,
 	}
 
@@ -33,7 +33,7 @@ func NewSystemUserController(systemUserService service.ISystemUserService) *Syst
 }
 
 // Login is
-func (u *SystemUserController) Login(c *gin.Context) {
+func (u *SystemUserApi) Login(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 
@@ -58,7 +58,7 @@ func (u *SystemUserController) Login(c *gin.Context) {
 }
 
 // ValidateToken is
-func (u *SystemUserController) ValidateToken(c *gin.Context) {
+func (u *SystemUserApi) ValidateToken(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
 	s := strings.Fields(token)
 	if len(s) != 2 || s[0] != "Bearer" {
@@ -77,7 +77,7 @@ func (u *SystemUserController) ValidateToken(c *gin.Context) {
 }
 
 // EnforceAccessControl is
-func (u *SystemUserController) EnforceAccessControl(accessName string) gin.HandlerFunc {
+func (u *SystemUserApi) EnforceAccessControl(accessName string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		extendData, exist := c.Get("extendData")
@@ -99,7 +99,7 @@ func (u *SystemUserController) EnforceAccessControl(accessName string) gin.Handl
 }
 
 // Register is
-func (u *SystemUserController) Register(c *gin.Context) {
+func (u *SystemUserApi) Register(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 

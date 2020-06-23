@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	"{{PackagePath}}/server/model"
-	"{{PackagePath}}/server/shared/utils"
-	"{{PackagePath}}/server/shared/transaction"
+	"{{PackagePath}}/backend/model"
+	"{{PackagePath}}/backend/shared/utils"
+	"{{PackagePath}}/backend/shared/transaction"
 )
 
 // I{{PascalCase .Name}}Repository is
