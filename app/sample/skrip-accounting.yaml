@@ -1,0 +1,103 @@
+packagePath: github.com/mirzaakhena/accountingsystem
+
+entities:
+
+- name: Account
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: Code
+    dataType: string
+  - name: Name
+    dataType: string
+  - name: Level
+    dataType: uint
+  - name: Side
+    dataType: enum
+    enumReference: AccountSide
+  - name: ChildType
+    dataType: enum
+    enumReference: AccountChildType
+  - name: ParentAccountID
+    dataType: string
+
+- name: Subaccount
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: AccountID
+    dataType: string
+  - name: ExtendSubaccountID
+    dataType: string
+  - name: Code
+    dataType: string
+  - name: Name
+    dataType: string
+
+- name: AccountBalance
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: JournalID
+    dataType: string
+  - name: AccountID
+    dataType: string    
+  - name: Sequence
+    dataType: int
+  - name: Amount
+    dataType: float64    
+  - name: Balance
+    dataType: float64    
+  - name: Direction
+    dataType: enum
+    enumReference: DirectionEnum
+    
+- name: SubaccountBalance
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: JournalID
+    dataType: string
+  - name: SubaccountID
+    dataType: string    
+  - name: Sequence
+    dataType: int
+  - name: Amount
+    dataType: float64    
+  - name: Balance
+    dataType: float64    
+  - name: Direction
+    dataType: enum
+    enumReference: DirectionEnum    
+    
+
+- name: Journal
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: OperationalUserID
+    dataType: string
+  - name: Code
+    dataType: string
+  - name: Description
+    dataType: string
+  - name: Date
+    dataType: time.Time    
+
+
+enums:
+
+- name: AccountSide
+  values:
+  - text: ACTIVA    
+  - text: PASSIVA    
+
+- name: AccountChildType
+  values:
+  - text: ACCOUNT    
+  - text: SUBACCOUNT
+
+- name: DirectionEnum
+  values:
+  - text: DEBET
+  - text: CREDIT   

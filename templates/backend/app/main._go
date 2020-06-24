@@ -21,7 +21,7 @@ import (
 
 func main() {
 
-	cf := config.NewSimpleConfig("config", "$GOPATH/src/{{PackagePath}}/backend")
+	cf := config.NewDefaultConfig("config", "$GOPATH/src/{{PackagePath}}/backend")
 
 	log.GetLog().WithFile(cf.GetString("log.path", "."), cf.GetString("application.name", "{{AppName}}"), cf.GetInt("log.max_age", 14))
 
@@ -60,8 +60,8 @@ func main() {
 	rc := controller.RouterConfig{
 		Config: cf,
 		Router: ginRouter, 
-		SystemUserApi: controller.NewSystemUserApi(systemUserService),	{{range .Entities}}
-		{{PascalCase .Name}}Api: controller.New{{PascalCase .Name}}Api({{CamelCase .Name}}Service), {{end}}
+		SystemUserRestAPI: controller.NewSystemUserRestAPI(systemUserService),	{{range .Entities}}
+		{{PascalCase .Name}}RestAPI: controller.New{{PascalCase .Name}}RestAPI({{CamelCase .Name}}Service), {{end}}
 	}
 
 	rc.Setup()	

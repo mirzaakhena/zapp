@@ -13,10 +13,10 @@ import (
 
 // RouterConfig is
 type RouterConfig struct {
-	Config                config.IConfig
+	Config                config.Config
 	Router                *gin.Engine
-	SystemUserApi  *SystemUserApi	{{range .Entities}}
-	{{PascalCase .Name}}Api *{{PascalCase .Name}}Api {{end}}
+	SystemUserRestAPI  *SystemUserRestAPI	{{range .Entities}}
+	{{PascalCase .Name}}RestAPI *{{PascalCase .Name}}RestAPI {{end}}
 }
 
 // CreateServiceContext is
@@ -51,19 +51,19 @@ func (r *RouterConfig) Setup() {
 		c.HTML(http.StatusOK, "index.html", gin.H{"title": "MainMenu"})
 	})
 
-	r.Router.Handle("POST", "/register", r.SystemUserApi.Register)
-	r.Router.Handle("POST", "/login", r.SystemUserApi.Login)
+	r.Router.Handle("POST", "/register", r.SystemUserRestAPI.Register)
+	r.Router.Handle("POST", "/login", r.SystemUserRestAPI.Login)
 
-	apiGroup := r.Router.Group("/api", r.SystemUserApi.ValidateToken)
+	apiGroup := r.Router.Group("/api", r.SystemUserRestAPI.ValidateToken)
 
   {{range .Entities}}
   // {{PascalCase .Name}}
   {
-    apiGroup.Handle("POST", "/{{CamelCase .Name}}", r.SystemUserApi.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Api.Create)
-    apiGroup.Handle("GET", "/{{CamelCase .Name}}", r.SystemUserApi.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Api.GetAll)
-    apiGroup.Handle("GET", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.SystemUserApi.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Api.GetOne)
-    apiGroup.Handle("DELETE", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.SystemUserApi.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Api.Delete)
-    apiGroup.Handle("PUT", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.SystemUserApi.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}Api.Update)
+    apiGroup.Handle("POST", "/{{CamelCase .Name}}", r.SystemUserRestAPI.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}RestAPI.Create)
+    apiGroup.Handle("GET", "/{{CamelCase .Name}}", r.SystemUserRestAPI.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}RestAPI.GetAll)
+    apiGroup.Handle("GET", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.SystemUserRestAPI.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}RestAPI.GetOne)
+    apiGroup.Handle("DELETE", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.SystemUserRestAPI.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}RestAPI.Delete)
+    apiGroup.Handle("PUT", "/{{CamelCase .Name}}/:{{CamelCase .Name}}ID", r.SystemUserRestAPI.EnforceAccessControl("{{UpperCase .Name}}"), r.{{PascalCase .Name}}RestAPI.Update)
   } {{end}}
 
 }

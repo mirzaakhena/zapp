@@ -1,0 +1,40 @@
+package config
+
+import "github.com/spf13/viper"
+
+type defaultConfig struct {
+}
+
+func initConfig(configName, path string) *defaultConfig {
+	viper.SetConfigName(configName)
+	viper.AddConfigPath(path)
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
+	return &defaultConfig{}
+}
+
+// GetString is
+func (r *defaultConfig) GetString(key string, defaultValue string) string {
+	if !viper.IsSet(key) {
+		return defaultValue
+	}
+	return viper.GetString(key)
+}
+
+// GetInt is
+func (r *defaultConfig) GetInt(key string, defaultValue int) int {
+	if !viper.IsSet(key) {
+		return defaultValue
+	}
+	return viper.GetInt(key)
+}
+
+// GetBool is
+func (r *defaultConfig) GetBool(key string, defaultValue bool) bool {
+	if !viper.IsSet(key) {
+		return defaultValue
+	}
+	return viper.GetBool(key)
+}

@@ -1,0 +1,36 @@
+packagePath: github.com/mirzaakhena/space
+
+entities:
+
+- name: OperationalUser
+  fields:
+  - name: Name
+    dataType: string
+  - name: Password
+    dataType: string
+
+- name: Space
+  fields:
+  - name: Name
+    dataType: string
+  - name: Description
+    dataType: string
+  - name: SpaceType
+    dataType: string        
+
+- name: UserSpace
+  fields:
+  - name: OperationalUserID
+    dataType: string
+  - name: SpaceID
+    dataType: string
+  - name: SpaceAccessID
+    dataType: string
+    
+- name: SpaceAccess
+  fields:
+  - name: SpaceID
+    dataType: string
+  - name: Name
+    dataType: string 
+

@@ -13,15 +13,15 @@ import (
 	"{{PackagePath}}/backend/shared/log"
 )
 
-// {{PascalCase .Name}}Api is
-type {{PascalCase .Name}}Api struct {
+// {{PascalCase .Name}}RestAPI is
+type {{PascalCase .Name}}RestAPI struct {
 	{{CamelCase .Name}}Service service.I{{PascalCase .Name}}Service
 }
 
-// New{{PascalCase .Name}}Api is
-func New{{PascalCase .Name}}Api({{CamelCase .Name}}Service service.I{{PascalCase .Name}}Service) *{{PascalCase .Name}}Api {
+// New{{PascalCase .Name}}RestAPI is
+func New{{PascalCase .Name}}RestAPI({{CamelCase .Name}}Service service.I{{PascalCase .Name}}Service) *{{PascalCase .Name}}RestAPI {
 
-	c := {{PascalCase .Name}}Api{
+	c := {{PascalCase .Name}}RestAPI{
 		{{CamelCase .Name}}Service: {{CamelCase .Name}}Service,
 	}
 
@@ -29,7 +29,7 @@ func New{{PascalCase .Name}}Api({{CamelCase .Name}}Service service.I{{PascalCase
 }
 
 // Create is
-func (g *{{PascalCase .Name}}Api) Create(c *gin.Context) {
+func (g *{{PascalCase .Name}}RestAPI) Create(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 	sc["userID"] = GetSystemUserID(c)
@@ -60,7 +60,7 @@ func (g *{{PascalCase .Name}}Api) Create(c *gin.Context) {
 }
 
 // GetOne is
-func (g *{{PascalCase .Name}}Api) GetOne(c *gin.Context) {
+func (g *{{PascalCase .Name}}RestAPI) GetOne(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 	sc["userID"] = GetSystemUserID(c)
@@ -81,7 +81,7 @@ func (g *{{PascalCase .Name}}Api) GetOne(c *gin.Context) {
 }
 
 // GetAll is
-func (g *{{PascalCase .Name}}Api) GetAll(c *gin.Context) {
+func (g *{{PascalCase .Name}}RestAPI) GetAll(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 	sc["userID"] = GetSystemUserID(c)
@@ -136,7 +136,7 @@ func (g *{{PascalCase .Name}}Api) GetAll(c *gin.Context) {
 }
 
 // Update is
-func (g *{{PascalCase .Name}}Api) Update(c *gin.Context) {
+func (g *{{PascalCase .Name}}RestAPI) Update(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 	sc["userID"] = GetSystemUserID(c)
@@ -170,7 +170,7 @@ func (g *{{PascalCase .Name}}Api) Update(c *gin.Context) {
 }
 
 // Delete is
-func (g *{{PascalCase .Name}}Api) Delete(c *gin.Context) {
+func (g *{{PascalCase .Name}}RestAPI) Delete(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 	sc["userID"] = GetSystemUserID(c)

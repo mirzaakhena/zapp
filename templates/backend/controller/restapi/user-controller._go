@@ -4,15 +4,16 @@ import (
 	"net/http"
 	"strings"
 
-	"{{PackagePath}}/backend/model"
+	"github.com/gin-gonic/gin"
+		
+	"{{PackagePath}}/backend/model"	
 	service "{{PackagePath}}/backend/service/auth"
 	"{{PackagePath}}/backend/shared/utils"
-	"{{PackagePath}}/backend/shared/log"
-	"github.com/gin-gonic/gin"
+	"{{PackagePath}}/backend/shared/log"	
 )
 
-// SystemUserApi is
-type SystemUserApi struct {
+// SystemUserRestAPI is
+type SystemUserRestAPI struct {
 	systemUserService service.ISystemUserService
 }
 
@@ -22,10 +23,10 @@ func GetSystemUserID(c *gin.Context) string {
 	return extendDataIntf.(map[string]interface{})["userID"].(string)
 }
 
-// NewSystemUserApi is
-func NewSystemUserApi(systemUserService service.ISystemUserService) *SystemUserApi {
+// NewSystemUserRestAPI is
+func NewSystemUserRestAPI(systemUserService service.ISystemUserService) *SystemUserRestAPI {
 
-	c := SystemUserApi{
+	c := SystemUserRestAPI{
 		systemUserService: systemUserService,
 	}
 
@@ -33,7 +34,7 @@ func NewSystemUserApi(systemUserService service.ISystemUserService) *SystemUserA
 }
 
 // Login is
-func (u *SystemUserApi) Login(c *gin.Context) {
+func (u *SystemUserRestAPI) Login(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 
@@ -58,7 +59,7 @@ func (u *SystemUserApi) Login(c *gin.Context) {
 }
 
 // ValidateToken is
-func (u *SystemUserApi) ValidateToken(c *gin.Context) {
+func (u *SystemUserRestAPI) ValidateToken(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
 	s := strings.Fields(token)
 	if len(s) != 2 || s[0] != "Bearer" {
@@ -77,7 +78,7 @@ func (u *SystemUserApi) ValidateToken(c *gin.Context) {
 }
 
 // EnforceAccessControl is
-func (u *SystemUserApi) EnforceAccessControl(accessName string) gin.HandlerFunc {
+func (u *SystemUserRestAPI) EnforceAccessControl(accessName string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		extendData, exist := c.Get("extendData")
@@ -99,7 +100,7 @@ func (u *SystemUserApi) EnforceAccessControl(accessName string) gin.HandlerFunc 
 }
 
 // Register is
-func (u *SystemUserApi) Register(c *gin.Context) {
+func (u *SystemUserRestAPI) Register(c *gin.Context) {
 
 	sc := CreateServiceContext(c)
 
