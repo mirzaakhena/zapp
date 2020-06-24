@@ -1,0 +1,6 @@
+package httpclient
+
+// NewSimpleHTTPClient is
+func NewSimpleHTTPClient() SimpleHTTPClient {
+	return &simplehttpclient{}
+}

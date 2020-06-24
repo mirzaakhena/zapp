@@ -1,0 +1,6 @@
+package token
+
+// GetJWTToken is
+func GetJWTToken(secretKey []byte) JwtToken {
+	return &jwtToken{secretKey: secretKey}
+}

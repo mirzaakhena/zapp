@@ -1,0 +1,36 @@
+package log
+
+// Debug is
+func Debug(description string, args ...interface{}) string {
+	return getLogImpl().Debug(description, args...)
+}
+
+// Info is
+func Info(description string, args ...interface{}) string {
+	return getLogImpl().Info(description, args...)
+}
+
+// Warn is
+func Warn(description string, args ...interface{}) string {
+	return getLogImpl().Warn(description, args...)
+}
+
+// Error is
+func Error(description string, args ...interface{}) string {
+	return getLogImpl().Error(description, args...)
+}
+
+// Fatal is
+func Fatal(description string, args ...interface{}) string {
+	return getLogImpl().Fatal(description, args...)
+}
+
+// Panic is
+func Panic(description string, args ...interface{}) string {
+	return getLogImpl().Panic(description, args...)
+}
+
+// UseRotateFile is
+func UseRotateFile(path, name string, maxAgeInDays int) {
+	setFile(path, name, maxAgeInDays)
+}

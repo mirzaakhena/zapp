@@ -7,56 +7,50 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-// IToken is
-type IToken interface {
-	GenerateToken(subject, issuer, audience string, extendData interface{}, expiredInHour uint) string
-	ValidateToken(subject, token string) *JwtObject
+// jwtToken is
+type jwtToken struct {
+	secretKey []byte
 }
 
-// Jwt is
-type Jwt struct {
-	SecretKey []byte
-}
-
-// JwtObject is
-type JwtObject struct {
+// jwtObject is
+type jwtObject struct {
 	jwt.StandardClaims
 	ExtendData interface{} `json:"extendData"`
 }
 
 // GenerateToken is
-func (j *Jwt) GenerateToken(subject, issuer, audience string, extendData interface{}, expiredInHour uint) string {
+func (j *jwtToken) GenerateToken(subject string, extendData interface{}, expiredInHour uint) string {
 	t := time.Now().UTC()
-	claims := &JwtObject{
+	claims := &jwtObject{
 		ExtendData: extendData,
 		StandardClaims: jwt.StandardClaims{
 			Subject:   subject,
-			Issuer:    issuer,
-			Audience:  audience,
+			Issuer:    "system",
+			Audience:  "system",
 			IssuedAt:  t.Unix(),
 			ExpiresAt: t.Add(time.Duration(expiredInHour) * time.Hour).Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, _ := token.SignedString(j.SecretKey)
+	tokenString, _ := token.SignedString(j.secretKey)
 	return tokenString
 }
 
 // ValidateToken is
-func (j *Jwt) ValidateToken(subject, tokenString string) *JwtObject {
+func (j *jwtToken) ValidateToken(subject, tokenString string) interface{} {
 
-	token, err := jwt.ParseWithClaims(tokenString, &JwtObject{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &jwtObject{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
-		return j.SecretKey, nil
+		return j.secretKey, nil
 	})
 
 	if err != nil {
 		return nil
 	}
 
-	claims, ok := token.Claims.(*JwtObject)
+	claims, ok := token.Claims.(*jwtObject)
 	if !ok {
 		// invalid token
 		return nil
@@ -73,5 +67,5 @@ func (j *Jwt) ValidateToken(subject, tokenString string) *JwtObject {
 		return nil
 	}
 
-	return claims
+	return claims.ExtendData
 }

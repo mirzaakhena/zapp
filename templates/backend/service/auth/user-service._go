@@ -24,12 +24,12 @@ func GetSystemUserID(ctx map[string]interface{}) string {
 
 	userIDIntf, okHaveSystemUserID := ctx["userID"]
 	if !okHaveSystemUserID {
-		log.GetLog().Fatal("Does not have userID")
+		log.Fatal("Does not have userID")
 	}
 
 	userID, okCast2 := userIDIntf.(string)
 	if !okCast2 {
-		log.GetLog().Fatal("userID cannot cast to string")
+		log.Fatal("userID cannot cast to string")
 	}
 
 	return userID
@@ -38,12 +38,12 @@ func GetSystemUserID(ctx map[string]interface{}) string {
 // SystemUserService is
 type SystemUserService struct {
 	trx            transaction.Transaction
-	jwt            *token.Jwt
+	jwt            token.JwtToken
 	SystemUserRepository repository.SystemUserRepository
 }
 
 // NewSystemUserService is
-func NewSystemUserService(trx transaction.Transaction, jwt *token.Jwt, SystemUserRepository repository.SystemUserRepository) *SystemUserService {
+func NewSystemUserService(trx transaction.Transaction, jwt token.JwtToken, SystemUserRepository repository.SystemUserRepository) *SystemUserService {
 	return &SystemUserService{
 		trx:            trx,
 		jwt:            jwt,
@@ -69,7 +69,7 @@ func (u *SystemUserService) Login(dto model.LoginSystemUserRequest) (string, err
 		"name":   existingSystemUser.Name,
 	}
 
-	token := u.jwt.GenerateToken("LOGIN", "INTERNAL", "USER", extendData, 24)
+	token := u.jwt.GenerateToken("LOGIN", extendData, 24)
 
 	return token, nil
 }
@@ -82,7 +82,7 @@ func (u *SystemUserService) ValidateLoginToken(loginToken string) interface{} {
 		return nil
 	}
 
-	return jwtObject.ExtendData
+	return jwtObject
 }
 
 // Register is

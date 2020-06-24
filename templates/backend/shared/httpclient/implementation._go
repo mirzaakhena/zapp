@@ -1,0 +1,38 @@
+package httpclient
+
+import "github.com/go-resty/resty"
+
+type simplehttpclient struct {
+}
+
+// Post is
+func (r *simplehttpclient) Post(url string, body interface{}) ([]byte, error) {
+
+	client := resty.New()
+
+	resp, err := client.R().
+		SetBody(body).
+		Post(url)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Body(), nil
+}
+
+// Get is
+func (r *simplehttpclient) Get(url string, query map[string]string) ([]byte, error) {
+
+	client := resty.New()
+
+	resp, err := client.R().
+		SetQueryParams(query).
+		Get(url)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Body(), nil
+}

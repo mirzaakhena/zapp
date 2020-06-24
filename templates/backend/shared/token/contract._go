@@ -1,0 +1,7 @@
+package token
+
+// JwtToken is
+type JwtToken interface {
+	GenerateToken(subject string, extendData interface{}, expiredInHour uint) string
+	ValidateToken(subject, token string) interface{}
+}

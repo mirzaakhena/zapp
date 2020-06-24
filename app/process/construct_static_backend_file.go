@@ -76,8 +76,20 @@ func createStaticBackendFile(tp *model.ThePackage) {
 		}
 
 		{
-			templateFile := fmt.Sprintf("../templates/backend/shared/token/jwt._go")
-			outputFile := fmt.Sprintf("../../../../%s/backend/shared/token/jwt.go", tp.PackagePath)
+			templateFile := fmt.Sprintf("../templates/backend/shared/token/contract._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/token/contract.go", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/backend/shared/token/implementation._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/token/implementation.go", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/backend/shared/token/public._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/token/public.go", tp.PackagePath)
 			basic(tp, templateFile, outputFile, tp, 0664)
 		}
 
@@ -100,8 +112,20 @@ func createStaticBackendFile(tp *model.ThePackage) {
 		}
 
 		{
-			templateFile := fmt.Sprintf("../templates/backend/shared/log/log._go")
-			outputFile := fmt.Sprintf("../../../../%s/backend/shared/log/log.go", tp.PackagePath)
+			templateFile := fmt.Sprintf("../templates/backend/shared/log/contract._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/log/contract.go", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/backend/shared/log/implementation._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/log/implementation.go", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/backend/shared/log/public._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/log/public.go", tp.PackagePath)
 			basic(tp, templateFile, outputFile, tp, 0664)
 		}
 
@@ -124,14 +148,44 @@ func createStaticBackendFile(tp *model.ThePackage) {
 		}
 
 		{
-			templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/producer._go")
-			outputFile := fmt.Sprintf("../../../../%s/backend/shared/messagebroker/producer.go", tp.PackagePath)
+			templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/implementation-producer._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/messagebroker/implementation-producer.go", tp.PackagePath)
 			basic(tp, templateFile, outputFile, tp, 0664)
 		}
 
 		{
-			templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/consumer._go")
-			outputFile := fmt.Sprintf("../../../../%s/backend/shared/messagebroker/consumer.go", tp.PackagePath)
+			templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/implementation-consumer._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/messagebroker/implementation-consumer.go", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/contract._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/messagebroker/contract.go", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/public._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/messagebroker/public.go", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/backend/shared/httpclient/contract._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/httpclient/contract.go", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/backend/shared/httpclient/implementation._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/httpclient/implementation.go", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/backend/shared/httpclient/public._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/httpclient/public.go", tp.PackagePath)
 			basic(tp, templateFile, outputFile, tp, 0664)
 		}
 

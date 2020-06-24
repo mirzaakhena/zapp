@@ -1,0 +1,11 @@
+package log
+
+// Logger is
+type Logger interface {
+	Debug(description string, args ...interface{}) string
+	Info(description string, args ...interface{}) string
+	Warn(description string, args ...interface{}) string
+	Error(description string, args ...interface{}) string
+	Fatal(description string, args ...interface{}) string
+	Panic(description string, args ...interface{}) string
+}

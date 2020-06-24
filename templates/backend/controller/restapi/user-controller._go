@@ -41,19 +41,19 @@ func (u *SystemUserRestAPI) Login(c *gin.Context) {
 	var dto model.LoginSystemUserRequest
 
 	if err := c.BindJSON(&dto); err != nil {
-		log.GetLog().Error("%v", err.Error())
+		log.Error("%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "Invalid Params. Please check data structure and type"})
 		return
 	}
 
 	token, err := u.systemUserService.Login(dto)
 	if err != nil {
-		message := log.GetLog().Error("RESPONSE %v", err.Error())
+		message := log.Error("RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
 		return
 	}
 
-	message := log.GetLog().Info("RESPONSE. Login success with token %v. %v", token, utils.GetJSON(sc))
+	message := log.Info("RESPONSE. Login success with token %v. %v", token, utils.GetJSON(sc))
 	c.JSON(http.StatusCreated, map[string]interface{}{"message": message, "data": token})
 
 }
@@ -63,13 +63,13 @@ func (u *SystemUserRestAPI) ValidateToken(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
 	s := strings.Fields(token)
 	if len(s) != 2 || s[0] != "Bearer" {
-		log.GetLog().Error("Not proper Authorization token")
+		log.Error("Not proper Authorization token")
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 	extendDataObj := u.systemUserService.ValidateLoginToken(s[1])
 	if extendDataObj == nil {
-		log.GetLog().Error("Not Valid token")
+		log.Error("Not Valid token")
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
@@ -83,14 +83,14 @@ func (u *SystemUserRestAPI) EnforceAccessControl(accessName string) gin.HandlerF
 
 		extendData, exist := c.Get("extendData")
 		if !exist {
-			log.GetLog().Error("extendData not exist")			
+			log.Error("extendData not exist")			
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}
 
 		extendDataMap := extendData.(map[string]interface{})
 		if !u.systemUserService.HasAccess(extendDataMap, accessName) {
-			log.GetLog().Error("%s does not have access to %s", extendDataMap["name"].(string), accessName)
+			log.Error("%s does not have access to %s", extendDataMap["name"].(string), accessName)
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}
@@ -107,19 +107,19 @@ func (u *SystemUserRestAPI) Register(c *gin.Context) {
 	var dto model.RegisterSystemUserRequest
 
 	if err := c.BindJSON(&dto); err != nil {
-		log.GetLog().Error("%v", err.Error())
+		log.Error("%v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "Invalid Params. Please check data structure and type"})
 		return
 	}
 
-	log.GetLog().Info("REQUEST. Data %v", utils.GetJSON(dto))
+	log.Info("REQUEST. Data %v", utils.GetJSON(dto))
 
 	if err := u.systemUserService.Register(dto); err != nil {
-		message := log.GetLog().Error("RESPONSE %v", err.Error())
+		message := log.Error("RESPONSE %v", err.Error())
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"message": message})
 		return
 	}
 
-	message := log.GetLog().Info("RESPONSE. Register success. %v", utils.GetJSON(sc))
+	message := log.Info("RESPONSE. Register success. %v", utils.GetJSON(sc))
 	c.JSON(http.StatusCreated, map[string]interface{}{"message": message})
 }

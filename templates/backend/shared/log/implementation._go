@@ -1,0 +1,100 @@
+package log
+
+import (
+	"fmt"
+	"sync"
+	"time"
+
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/rifflock/lfshook"
+	"github.com/sirupsen/logrus"
+)
+
+var defaultLoggerOnce sync.Once
+
+var useFile bool = false
+var path, name string
+var maxAge int
+
+func setFile(pathFile, nameFile string, maxAgeInDays int) {
+	path = pathFile
+	name = nameFile
+	maxAge = maxAgeInDays
+	useFile = true
+}
+
+func getLogImpl() Logger {
+	defaultLoggerOnce.Do(func() {
+		defaultLogger = logrusImpl{theLogger: logrus.New()}
+		defaultLogger.theLogger.SetFormatter(&logrus.JSONFormatter{
+			TimestampFormat: "0102 150405.000",
+		})
+
+		if !useFile {
+			return
+		}
+
+		writer, _ := rotatelogs.New(
+			fmt.Sprintf("%s/logs/%s.log.%s", path, name, "%Y%m%d"),
+			rotatelogs.WithLinkName(fmt.Sprintf("%s/%s.log", path, name)),
+			rotatelogs.WithMaxAge(time.Duration(maxAge*24)*time.Hour),
+			rotatelogs.WithRotationTime(time.Duration(1*24)*time.Hour),
+		)
+
+		defaultLogger.theLogger.AddHook(lfshook.NewHook(
+			lfshook.WriterMap{
+				logrus.InfoLevel:  writer,
+				logrus.WarnLevel:  writer,
+				logrus.ErrorLevel: writer,
+				logrus.DebugLevel: writer,
+				logrus.FatalLevel: writer,
+				logrus.PanicLevel: writer,
+			},
+			defaultLogger.theLogger.Formatter,
+		))
+
+	})
+	return &defaultLogger
+}
+
+type logrusImpl struct {
+	theLogger *logrus.Logger
+}
+
+var defaultLogger logrusImpl
+
+func (x *logrusImpl) Debug(description string, args ...interface{}) string {
+	message := fmt.Sprintf(description, args...)
+	x.theLogger.Debug(message)
+	return message
+}
+
+func (x *logrusImpl) Info(description string, args ...interface{}) string {
+	message := fmt.Sprintf(description, args...)
+	x.theLogger.Info(message)
+	return message
+}
+
+func (x *logrusImpl) Warn(description string, args ...interface{}) string {
+	message := fmt.Sprintf(description, args...)
+	x.theLogger.Warn(message)
+	return message
+}
+
+func (x *logrusImpl) Error(description string, args ...interface{}) string {
+	message := fmt.Sprintf(description, args...)
+	x.theLogger.Error(message)
+	return message
+}
+
+func (x *logrusImpl) Fatal(description string, args ...interface{}) string {
+	message := fmt.Sprintf(description, args...)
+	x.theLogger.Fatal(message)
+	return message
+}
+
+func (x *logrusImpl) Panic(description string, args ...interface{}) string {
+	message := fmt.Sprintf(description, args...)
+	x.theLogger.Panic(message)
+	return message
+}
