@@ -6,7 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"{{PackagePath}}/backend/model"
 	"{{PackagePath}}/backend/shared/utils"
-	"{{PackagePath}}/backend/shared/transaction"
 )
 
 // {{PascalCase .Name}}Repository is
@@ -29,14 +28,14 @@ func New{{PascalCase .Name}}Repository(db *gorm.DB) {{PascalCase .Name}}Reposito
 
 // Create is
 func (g *{{CamelCase .Name}}Repository) Create(db interface{}, obj *model.{{PascalCase .Name}}) error {
-	return transaction.ExtractDB(db).Create(obj).Error
+	return db.(*gorm.DB).Create(obj).Error
 }
 
 // GetOne is 
 func (g *{{CamelCase .Name}}Repository) GetOne(db interface{}, ID string) *model.{{PascalCase .Name}} {
 	var obj model.{{PascalCase .Name}}
 
-	query := transaction.ExtractDB(db)
+	query := db.(*gorm.DB)
 
 	{{range .Fields}}
 		{{if (eq .DataType "entity")}}
@@ -57,7 +56,7 @@ func (g *{{CamelCase .Name}}Repository) GetAll(db interface{}, page, size int, s
 	var objs []model.{{PascalCase .Name}}
 	var count uint
 
-	query := transaction.ExtractDB(db).Model(&model.{{PascalCase .Name}}{})
+	query := db.(*gorm.DB).Model(&model.{{PascalCase .Name}}{})
 
 	// filtering
 	if filters != nil {
@@ -87,10 +86,10 @@ func (g *{{CamelCase .Name}}Repository) GetAll(db interface{}, page, size int, s
 
 // Delete is
 func (g *{{CamelCase .Name}}Repository) Delete(db interface{}, ID string) error {
-	return transaction.ExtractDB(db).Delete(model.{{PascalCase .Name}}{}, "id = ?", ID).Error
+	return db.(*gorm.DB).Delete(model.{{PascalCase .Name}}{}, "id = ?", ID).Error
 }
 
 // Update is
 func (g *{{CamelCase .Name}}Repository) Update(db interface{}, obj *model.{{PascalCase .Name}}) error {
-	return transaction.ExtractDB(db).Save(obj).Error
+	return db.(*gorm.DB).Save(obj).Error
 }

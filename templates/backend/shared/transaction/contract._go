@@ -1,0 +1,9 @@
+package transaction
+
+// Transaction is
+type Transaction interface {
+	GetDB(withTransaction bool) interface{} // this is for get the database with two mode with transaction or without transaction
+	Commit(db interface{})                  // commit the transaction
+	Rollback(db interface{})                // rollback transaction
+	RollbackOnException(db interface{})     // for emergency rollback
+}

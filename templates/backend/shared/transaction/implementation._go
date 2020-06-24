@@ -1,0 +1,52 @@
+package transaction
+
+import "github.com/jinzhu/gorm"
+
+type transaction struct {
+	DB *gorm.DB
+}
+
+// extractDB is
+func extractDB(db interface{}) *gorm.DB {
+	DB, ok := db.(*gorm.DB)
+	if !ok {
+		panic("cannot assert to *gorm.DB")
+	}
+	return DB
+}
+
+// GetDB is
+func (g *transaction) GetDB(withTransaction bool) interface{} {
+	if withTransaction {
+		return g.DB.Begin()
+	}
+	return g.DB
+}
+
+// Commit is
+func (g *transaction) Commit(db interface{}) {
+	extractDB(db).Commit()
+}
+
+// Rollback is
+func (g *transaction) Rollback(db interface{}) {
+	extractDB(db).Rollback()
+}
+
+// RollbackOnException is common handler for rollback the transaction
+// to avoid database lock when something goes wrong in transaction state
+// use with defer right after we call GetDB(true)
+func (g *transaction) RollbackOnException(db interface{}) {
+
+	trx := extractDB(db)
+
+	// catch the error
+	if err := recover(); err != nil {
+
+		// rollback it!
+		trx.Rollback()
+
+		// repanic so we can get where it happen in log!
+		panic(err)
+	}
+}

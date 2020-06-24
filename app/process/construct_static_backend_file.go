@@ -94,8 +94,20 @@ func createStaticBackendFile(tp *model.ThePackage) {
 		}
 
 		{
-			templateFile := fmt.Sprintf("../templates/backend/shared/transaction/transaction._go")
-			outputFile := fmt.Sprintf("../../../../%s/backend/shared/transaction/transaction.go", tp.PackagePath)
+			templateFile := fmt.Sprintf("../templates/backend/shared/transaction/contract._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/transaction/contract.go", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/backend/shared/transaction/implementation._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/transaction/implementation.go", tp.PackagePath)
+			basic(tp, templateFile, outputFile, tp, 0664)
+		}
+
+		{
+			templateFile := fmt.Sprintf("../templates/backend/shared/transaction/public._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/transaction/public.go", tp.PackagePath)
 			basic(tp, templateFile, outputFile, tp, 0664)
 		}
 

@@ -1,0 +1,6 @@
+package transaction
+
+// NewTransactionDB is
+func NewTransactionDB(db interface{}) Transaction {
+	return &transaction{DB: extractDB(db)}
+}

@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"{{PackagePath}}/backend/model"
-	"{{PackagePath}}/backend/shared/transaction"
 	"github.com/jinzhu/gorm"
+	
+	"{{PackagePath}}/backend/model"	
 )
 
 // SystemUserRepository is
@@ -24,13 +24,13 @@ func NewSystemUserRepository(db *gorm.DB) SystemUserRepository {
 
 // Create is
 func (u *systemUserRepository) Create(db interface{}, obj *model.SystemUser) error {
-	return transaction.ExtractDB(db).Create(obj).Error
+	return db.(*gorm.DB).Create(obj).Error
 }
 
 // GetByEmail is
 func (u *systemUserRepository) GetByEmail(db interface{}, email string) *model.SystemUser {
 	var obj model.SystemUser
-	transaction.ExtractDB(db).First(&obj, "email = ?", email)
+	db.(*gorm.DB).First(&obj, "email = ?", email)
 	if obj.ID == "" {
 		return nil
 	}
@@ -42,7 +42,7 @@ func (u *systemUserRepository) GetByEmail(db interface{}, email string) *model.S
 func (u *systemUserRepository) GetOne(db interface{}, ID string) *model.SystemUser {
 	var obj model.SystemUser
 
-	query := transaction.ExtractDB(db)
+	query := db.(*gorm.DB)
 
 	query.First(&obj, "id = ?", ID)
 

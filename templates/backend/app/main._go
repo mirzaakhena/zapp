@@ -44,7 +44,7 @@ func main() {
 
 	ginRouter := gin.Default()
 
-	trx := transaction.NewGormTransactionDB(db)
+	trx := transaction.NewTransactionDB(db)
 
 	systemUserRepository := repository.NewSystemUserRepository(db) {{range .Entities}}
 	{{CamelCase .Name}}Repository := repository.New{{PascalCase .Name}}Repository(db) {{end}}
