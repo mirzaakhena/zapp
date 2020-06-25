@@ -1,11 +1,11 @@
-package converter
+package extractor
 
 import (
 	"encoding/json"
 	"fmt"
 )
 
-// GetMSI is
+// GetMSI is extractor map string interface from another map string interface
 func GetMSI(input map[string]interface{}, key string) (map[string]interface{}, error) {
 	objIntf, exist := input[key]
 	if !exist {
@@ -20,7 +20,7 @@ func GetMSI(input map[string]interface{}, key string) (map[string]interface{}, e
 	return objMapintf, nil
 }
 
-// GetARI is
+// GetARI is extractor array of interface from a map string interface
 func GetARI(input map[string]interface{}, key string) ([]interface{}, error) {
 	objIntf, exist := input[key]
 	if !exist {
@@ -35,7 +35,7 @@ func GetARI(input map[string]interface{}, key string) ([]interface{}, error) {
 	return objArrIntf, nil
 }
 
-// ConMSI is
+// ConMSI is converter interface to map string interface
 func ConMSI(input interface{}) (map[string]interface{}, error) {
 	obj, ok := input.(map[string]interface{})
 	if !ok {
@@ -44,7 +44,7 @@ func ConMSI(input interface{}) (map[string]interface{}, error) {
 	return obj, nil
 }
 
-// GetMSIFromJSONString is
+// GetMSIFromJSONString is to convert from json byte to map string interface
 func GetMSIFromJSONString(bytes []byte) (map[string]interface{}, error) {
 	var obj interface{}
 	err := json.Unmarshal(bytes, &obj)
@@ -54,7 +54,7 @@ func GetMSIFromJSONString(bytes []byte) (map[string]interface{}, error) {
 	return ConMSI(obj)
 }
 
-// GetString is
+// GetString is for extract string from map string interface
 func GetString(input map[string]interface{}, key string) (string, error) {
 	strIntf, exist := input[key]
 	if !exist {
@@ -68,7 +68,7 @@ func GetString(input map[string]interface{}, key string) (string, error) {
 	return str, nil
 }
 
-// GetInt is
+// GetInt is for extract int from map string interface
 func GetInt(input map[string]interface{}, key string) (int, error) {
 	floatIntf, exist := input[key]
 	if !exist {
@@ -82,7 +82,7 @@ func GetInt(input map[string]interface{}, key string) (int, error) {
 	return int(float), nil
 }
 
-// GetFloat is
+// GetFloat is for extract float from map string interface
 func GetFloat(input map[string]interface{}, key string) (float64, error) {
 	floatIntf, exist := input[key]
 	if !exist {
@@ -96,7 +96,7 @@ func GetFloat(input map[string]interface{}, key string) (float64, error) {
 	return float, nil
 }
 
-// GetBool is
+// GetBool is for extract bool from map string interface
 func GetBool(input map[string]interface{}, key string) (bool, error) {
 	boolIntf, exist := input[key]
 	if !exist {

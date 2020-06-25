@@ -214,8 +214,8 @@ func createStaticBackendFile(tp *model.ThePackage) {
 		}
 
 		{
-			templateFile := fmt.Sprintf("../templates/backend/shared/converter/converter._go")
-			outputFile := fmt.Sprintf("../../../../%s/backend/shared/converter/converter.go", tp.PackagePath)
+			templateFile := fmt.Sprintf("../templates/backend/shared/extractor/extractor._go")
+			outputFile := fmt.Sprintf("../../../../%s/backend/shared/extractor/extractor.go", tp.PackagePath)
 			basic(tp, templateFile, outputFile, tp, 0664)
 		}
 

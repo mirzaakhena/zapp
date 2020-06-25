@@ -56,7 +56,7 @@ func makeBackendDirectory(tp *model.ThePackage) {
 	dir = fmt.Sprintf("../../../../%s/backend/shared/constant", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
-	dir = fmt.Sprintf("../../../../%s/backend/shared/converter", tp.PackagePath)
+	dir = fmt.Sprintf("../../../../%s/backend/shared/extractor", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
 	dir = fmt.Sprintf("../../../../%s/backend/shared/error", tp.PackagePath)
