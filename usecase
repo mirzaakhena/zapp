@@ -1,0 +1,64 @@
+
+Create
+{
+  "PhoneNumber": "0813412341341",
+  "OutletCode": "0203",
+  "MenuItems": [
+    {
+      "MenuCode": "4081",
+      "Quantity": 4,
+    },
+  ],
+}
+
+DataSource
+  Remote
+  Local
+
+Entity
+ValueObject
+Domain
+Infrastructure
+Controller
+Presenter
+Repository
+Adapter
+EventHandler
+Scheduller
+DatabaseAdapter
+EventPublisherAdapter
+Mapper
+Facade
+Core
+Interactor
+Port
+Incoming
+Outgoing
+Application
+BoundedContexts, 
+Specifications,
+
+
+
+Usecase: CreateOrder
+  Input: 
+    PhoneNumber
+    OutletCode
+    MenuItems:
+      MenuCode
+      Quantity
+  Output:
+    
+  Story:
+    
+  DataSource: (Remote, Local)
+    - StoreRepo
+        GetByCode(outletCode): Outlet
+        IsActive(outletCode, time): bool
+    - MenuRepo
+        GetByCode(menuCode, outletCode): Menu
+        IsAvailableNow(menuCode): bool
+    - 
+        
+
+

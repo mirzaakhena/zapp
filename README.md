@@ -26,7 +26,7 @@ cd app/
 go run cmd/main.go sample/skrip.yaml
 ```
 At the first time you call this, it will take some time maybe 5 minutes because Golang dependency is being downloaded
-The project will generated in `$GOPATH/src/bitbucket.org/mirzaakhena/experimenfx1`. Under that path, you will see there is 2 directory which is `client/` and `server/`
+The project will generated in `$GOPATH/src/bitbucket.org/mirzaakhena/coffeeshop`. Under that path, you will see there is 2 directory which is `backend/` and `frontend/`
 
 
 ## WORKING ON DEVELOPMENT MODE
@@ -34,9 +34,9 @@ Open that new project with your IDE And you need 2 console
 
 #1 console will run the frontend side
 
-Go to `client/` directory
+Go to `frontend/` directory
 ```
-cd client/
+cd frontend/
 ```
 
 Download webapp dependency. It will take some time to download web dependency
@@ -46,19 +46,19 @@ npm install
 Make sure `node_modules/` is created dependency is success downloaded
 
 
-Run the client in development mode
+Run the frontend in development mode
 ```
 npm run serve
 ```
 
 #2 console will run the backend side
 
-Go to `server/app/` directory
+Go to `backend/app/` directory
 ```
-cd server/app/
+cd backend/app/
 ```
 
-Run the server application
+Run the backend application
 ```
 go run main.go
 ```
@@ -73,9 +73,9 @@ By default it use SQLite DB. But you can easily change it into other database th
 
 ## BUILD FOR PRODUCTION
 
-Go to `client/` directory
+Go to `frontend/` directory
 ```
-cd client/
+cd frontend/
 ```
 
 Build it
@@ -83,11 +83,11 @@ Build it
 npm run build
 ```
 
-Client distribution file will be on `client/dist/`
+Client distribution file will be on `frontend/dist/`
 
-Go to `server/` directory
+Go to `backend/` directory
 ```
-cd server/
+cd backend/
 ```
 
 Build it
@@ -95,17 +95,17 @@ Build it
 ./build.sh
 ```
 
-Server executable file will be on `server/dist/`
+Server executable file will be on `backend/dist/`
 
 Run it by
 ```
-cd server/dist/
-./experimenfx1
+cd backend/dist/
+./coffeeshop
 ```
 
 Open browser then access `http://localhost:8081`
 
-## RULES FOR SERVER (BACKEND)
+## BACKEND structure
 
 ### Repository
 Is the source of data. It can be database, file, webservice, or anything.
@@ -118,12 +118,3 @@ Is the place where you publish your application as REST API to be used by extern
 
 ### Log
 Log is free to put anywhere in layer
-
-## NEXT IMPROVEMENT
-* Error Codes
-* -e configfile
-* Combine with GraphQL
-* Combine with MessageBroker
-* Combine with GRPC & Protobuf
-* Generate Android/IOS Code
-* Generate Electron Code
