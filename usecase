@@ -1,4 +1,52 @@
 
+
+
+domain
+  xxxxxx
+    delivery
+      model
+      restapi
+      consumer
+      grpc
+    core
+      model
+      inputports
+      outputports
+        incoming
+        outgoing
+    infrastructure
+
+The challenge in software design is to scream the use cases in source code in a way that the first look tells us what the software does instead of frameworks that it is made of.
+
+
+infrastructure
+
+https://khalilstemmler.com/articles/software-design-architecture/domain-driven-design-vs-clean-architecture/
+
+https://stackoverflow.com/questions/3173070/design-methodology-use-case-driven-vs-domain-driven#:~:text=Use%20Cases%20focus%20on%20Users,creating%20software%20that%20solves%20problems.
+
+https://crosp.net/blog/software-architecture/clean-architecture-part-1-databse-vs-domain/
+
+https://crosp.net/blog/software-architecture/clean-architecture-part-2-the-clean-architecture/
+
+https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/#fundamental-blocks-of-the-system
+
+https://medium.com/@wkrzywiec/ports-adapters-architecture-on-example-19cab9e93be7
+
+https://android.jlelse.eu/a-complete-idiots-guide-to-clean-architecture-2422f428946f
+
+https://www.tech101.in/introduction-to-clean-architecture-part-2/
+
+https://dev.to/wahibhaq/a-brief-summary-of-thoughts-on-clean-architecture-and-mvp-48h9
+
+https://pusher.com/tutorials/clean-architecture-introduction
+
+https://dev.to/ivanpaulovich/clean-architecture-essentials-5a0ms
+
+
+Common Reuse Principle (CRP)
+
+
 Create
 {
   "PhoneNumber": "0813412341341",
@@ -38,7 +86,8 @@ Application
 BoundedContexts, 
 Specifications,
 
-
+Primary Actor
+Secondary Actor
 
 Usecase: CreateOrder
   Input: 
@@ -60,5 +109,75 @@ Usecase: CreateOrder
         IsAvailableNow(menuCode): bool
     - 
         
+the interesting things is i tried to manage the folder so it can as close as possible to the respective 
+
+my goal is create the folder structure as simple as possible
+
+
+What is 
+	clean architecture?
+	domain driven design
+	usecase driven design
+	structure
+
+What is benefit
+	easy for testing
+  easy to switch datasource
+  easy to switch the controller input
+	separation of concern
+	fix structure
+	easy to learn
+  simple to organize the structure
+
+why datasource is in function not in struct?
+  because we are focusing on the usecase
+  And not all usecase is using all datasource
+
+command query
+
+why we put create a folder with usecase name?
+  because under one usecase we can have a test code that related to the usecase
+  in golang, test code must as close as possible with the core logic
+  and we can focus create a test with different scenario in separated file
+  It will increase readability
+
+why fix structure is helping the team?
+  we can imagine someone that is first time join the project and look at the code
+
+what do you want to achieve?
+  implementing the clean architecture
+
+what is the benefit of implementing clean architecture?
+
+what the meaning of arrow in CA diagram
+
+why separating the inport and outport?
+  because it is different things. 
+  Need to understand about how it works rather then assuming it is the same things
+
+which one we start from domain or usecase?
+  it is depend. If we have the domain expert (clear picture of domain), 
+  then we can start from domain. If we dont have it, then we can start from usecase
+
+under datasource, we can name the datasource by folder name like
+  mocks
+  inmemory
+  database
+  local
+  remote
+  experiment
+  testing
+
+under controller we can have different input media like
+  restapi
+  cli
+  consumer
+  grpc
+
+
+show that we are easily switching the controller input
+show that we are esily create a test file in interactor
+show that we are easily create a mock for datasource
+
 
 

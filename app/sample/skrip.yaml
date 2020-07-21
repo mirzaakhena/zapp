@@ -1,83 +1,36 @@
-packagePath: github.com/mirzaakhena/coffeeshop
+packagePath: github.com/mirzaakhena/loyaltyengine2
 
 entities:
 
-- name: User
+- name: UserPoint
   fields:
-  - name: Name
+  - name: UserID
     dataType: string
-  - name: PhoneNumber
-    dataType: string
-  - name: Password
-    dataType: string
-
-
-- name: Menu
-  fields:
-  - name: Name
-    dataType: string
-    required: true
-  - name: Price
-    dataType: float64
-  - name: Category
-    dataType: enum
-    enumReference: MenuCategory
-
-
-- name: Order
-  fields:
-  - name: OrderCode
-    dataType: string
-  - name: TableNumber
-    dataType: string
-  - name: UserName
-    dataType: entity
-    entityReference: User
-    entityField: Name
-  - name: State
-    dataType: enum
-    enumReference: OrderState
-  - name: PaymentType
-    dataType: enum
-    enumReference: OrderPaymentType   
-  - name: TotalPayment
-    dataType: float64    
-  
-
-- name:  OrderMenu
-  fields:
-  - name: OrderReference
-    dataType: entity
-    entityReference: Order
-    entityField: OrderCode
-  - name: MenuName
-    dataType: entity
-    entityReference: Menu
-    entityField: Name
-  - name: Quantity
+  - name: Point
     dataType: int
+  - name: PointBalance
+    dataType: int
+  - name: EventState
+    dataType: enum
+    enumReference: EventStateEnum
 
-  
+- name: UserPointExpired
+  fields:
+  - name: UserID
+    dataType: string
+  - name: TotalPoint
+    dataType: int
+  - name: StartPeriod
+    dataType: time.Time
+  - name: EndPeriod
+    dataType: time.Time
+  - name: ExpiryDate
+    dataType: time.Time        
 
 enums:
-
-- name: MenuCategory
+- name: EventStateEnum
   values:
-  - text: NASI
-  - text: MIE
-  - text: DONAT
-  - text: KOPI
-
-- name: OrderState
-  values:
-  - text: INIT
-  - text: PAYMENT_WAITING
-  - text: PAYMENT_EXPIRED
-  - text: ORDER_REJECTED
-  - text: ORDER_IN_PROCESS
-  - text: FINISH
-
-- name: OrderPaymentType
-  values:
-  - text: TUNAI
-  - text: DANA
+  - text: REGISTER
+  - text: ORDER
+  - text: EXPIRED
+  - text: BUY_VOUCHER          

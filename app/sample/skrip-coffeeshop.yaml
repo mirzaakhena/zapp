@@ -1,0 +1,83 @@
+packagePath: github.com/mirzaakhena/coffeeshop
+
+entities:
+
+- name: User
+  fields:
+  - name: Name
+    dataType: string
+  - name: PhoneNumber
+    dataType: string
+  - name: Password
+    dataType: string
+
+
+- name: Menu
+  fields:
+  - name: Name
+    dataType: string
+    required: true
+  - name: Price
+    dataType: float64
+  - name: Category
+    dataType: enum
+    enumReference: MenuCategory
+
+
+- name: Order
+  fields:
+  - name: OrderCode
+    dataType: string
+  - name: TableNumber
+    dataType: string
+  - name: UserName
+    dataType: entity
+    entityReference: User
+    entityField: Name
+  - name: State
+    dataType: enum
+    enumReference: OrderState
+  - name: PaymentType
+    dataType: enum
+    enumReference: OrderPaymentType   
+  - name: TotalPayment
+    dataType: float64    
+  
+
+- name:  OrderMenu
+  fields:
+  - name: OrderReference
+    dataType: entity
+    entityReference: Order
+    entityField: OrderCode
+  - name: MenuName
+    dataType: entity
+    entityReference: Menu
+    entityField: Name
+  - name: Quantity
+    dataType: int
+
+  
+
+enums:
+
+- name: MenuCategory
+  values:
+  - text: NASI
+  - text: MIE
+  - text: DONAT
+  - text: KOPI
+
+- name: OrderState
+  values:
+  - text: INIT
+  - text: PAYMENT_WAITING
+  - text: PAYMENT_EXPIRED
+  - text: ORDER_REJECTED
+  - text: ORDER_IN_PROCESS
+  - text: FINISH
+
+- name: OrderPaymentType
+  values:
+  - text: TUNAI
+  - text: DANA
