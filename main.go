@@ -11,6 +11,6 @@ func main() {
 	if len(args) > 1 {
 		process.RunProcess(args[1])
 	} else {
-		process.RunProcess("skrip.yaml")
+		process.RunProcess("app/sample/skrip.yaml")
 	}
 }

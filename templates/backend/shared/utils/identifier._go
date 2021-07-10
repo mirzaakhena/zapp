@@ -1,7 +1,7 @@
 package utils
 
 import (
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"github.com/segmentio/ksuid"
 )
 
@@ -16,6 +16,5 @@ func GetShortUniqueID() string {
 
 // GetUUID is
 func GetUUID() string {
-	x, _ := uuid.NewV4()
-	return x.String()
+	return uuid.New().String()
 }
